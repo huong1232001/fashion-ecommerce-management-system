@@ -175,10 +175,12 @@
                 <img src="{% static 'images/logo.png' %}" alt="Logo" />
             </div>
             <ul class="nav-links">
-                <a href="{% url 'home' %}">Home</a>
-<a href="{% url 'about' %}">About Us</a>
-<a href="{% url 'product' %}">Product</a>
-<a href="{% url 'blog' %}">Blog</a>
+                <ul class="nav-links">
+    <li><a href="{% url 'home' %}">Home</a></li>
+    <li><a href="{% url 'about' %}">About Us</a></li>
+    <li><a href="{% url 'product' %}">Product</a></li>
+    <li><a href="{% url 'blog' %}">Blog</a></li>
+</ul>
             </ul>
             <div class="user-section">
                 <a href="{% url 'favorite' %}">
