@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manager H.H.U.O.N.G shop</title>
+    {% load static %}
+    <!-- Link đến tệp CSS -->
+    <!--link rel="stylesheet" href="{% static 'css/manager/login.css' %}" /-->
+
+    <!-- CSS nội tuyến -->
+    <style>
+      /* Reset margin và padding */
+      body {
+        margin: 0;
+        padding: 0;
+        position: relative; /* Để định vị logo và text */
+        font-family: Arial, sans-serif;
+      }
+
+      /* Ảnh nằm sát mép trái */
+      .background-image {
+        width: 35%;
+        height: auto;
+        display: block;
+      }
+
+      /* Logo bên phải */
+      .logo {
+        position: absolute;
+        top: 13%;
+        right: 25%;
+        transform: translateY(-50%);
+        width: 13%;
+        height: auto;
+      }
+
+      /* Dòng chữ dưới logo */
+      .welcome-container {
+        position: absolute;
+        top: 25%;
+        right: 17%;
+        transform: translateY(-50%);
+        text-align: center;
+      }
+
+      .welcome-text {
+        font-size: 20px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 5px;
+      }
+
+      .signin-text {
+        font-size: 14px;
+        color: #a6a6a6;
+        margin-bottom: 15px;
+      }
+
+      /* Form đăng nhập */
+      .login-form-container {
+        position: absolute;
+        top: 64%;
+        right: 17%;
+        transform: translateY(-50%);
+        text-align: left;
+      }
+
+      .login-form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .login-form label {
+        font-size: 14px;
+        color: #333;
+      }
+
+      .login-form input {
+        width: 343px;
+        height: 25px;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+      }
+
+      .login-button{
+        width: 363px;
+        height: 40px;
+        margin-top: 10px;
+        background-color: rgb(184, 184, 184);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      .login-button:hover {
+        background-color: rgb(84, 84, 84);
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Phần hình ảnh -->
+    <img
+      id="slideshow"
+      src="{% static 'images/background01.jpg' %}"
+      alt="Background Test"
+      class="background-image"
+    />
+
+    <!-- Thêm logo bên phải -->
+    <img src="{% static 'images/logo.png' %}" alt="Logo" class="logo" />
+
+    <!-- Dòng chữ dưới logo -->
+    <div class="welcome-container">
+      <div class="welcome-text">Welcome to H H.H.U.O.N.G!</div>
+      <div class="signin-text">
+        Sign in now to have a great shopping experience with us.
+      </div>
+    </div>
+
+    <!-- Form đăng nhập được tách ra -->
+    <div class="login-form-container">
+      <form class="login-form" action="/manager/login/" method="POST">
+        <label for="email-phone">Enter your phone or email</label>
+        <input
+          type="text"
+          id="email-phone"
+          name="email-phone"
+          placeholder="Phone or Email"
+          required
+        />
+
+        <label for="password">Enter your password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Password"
+          required
+        />
+
+        <button type="submit" class="login-button">Login</button>
+        
+      </form>
+    </div>
+
+    <!-- JavaScript để chuyển ảnh -->
+    <script>
+      document.querySelector(".login-form")
+  .addEventListener("submit", function (event) {
+    event.preventDefault(); // Ngăn chặn reload trang khi submit form
+
+    const emailPhone = document.getElementById("email-phone").value;
+    const password = document.getElementById("password").value;
+
+    // Kiểm tra xem các trường không để trống
+    if (!emailPhone || !password) {
+      alert("Both fields are required.");
+      return;
+    }
+
+    fetch("/manager/login/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCookie("csrftoken"), // Đảm bảo gửi CSRF token
+      },
+      body: JSON.stringify({
+        "email-phone": emailPhone,
+        "password": password,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          window.location.href = data.redirect_url; // Chuyển hướng đến trang quản lý sau khi đăng nhập thành công
+        } else {
+          alert(data.error); // Hiển thị lỗi nếu đăng nhập thất bại
+        }
+      })
+      .catch((error) => console.error("Error:", error));
+  });
+
+// Hàm lấy CSRF token (nếu cần)
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
+    </script>
+  </body>
+</html>

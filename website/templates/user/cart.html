@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>H.H.U.O.N.G shop</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/user/login.css' %}" />
+    <style>
+      /* CSS đã có */
+      .navbar {
+        display: flex;
+        align-items: center;
+        background-color: #333; 
+        padding: 10px 20px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        background-color: #fff;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      }
+      .nav-links {
+        list-style: none;
+        display: flex;
+        margin: 0;
+        padding: 0;
+        margin-right: auto;
+        margin-left: 8%;
+      }
+      .nav-links li {
+        margin: 0 15px;
+      }
+      .nav-links a {
+        text-decoration: none;
+        color: rgb(84, 84, 84);
+        font-size: 20px;
+        font-weight: bold;
+        opacity: 0.8;
+        transition: color 0.3s ease, opacity 0.3s ease;
+      }
+      .nav-links a:hover {
+        color: rgb(59, 59, 59);
+        opacity: 1;
+      }
+      .logo {
+        margin-left: 10%;
+      }
+      .logo img {
+        height: 40px;
+      }
+      .user-section {
+        display: flex;
+        align-items: center;
+        margin-left: auto;
+        gap: 15px;
+        margin-right: 12%;
+      }
+      .menu-icon {
+        width: 27px;
+        height: 27px;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+      }
+      .user-section img[alt="Notify"] {
+        width: 22px;
+        height: 22px;
+      }
+      .user-section img[alt="Cart"] {
+        width: 33px;
+        height: 33px;
+      }
+      .menu-icon:hover {
+        transform: scale(1.1);
+      }
+      .user-info {
+        display: flex;
+        align-items: center;
+        background-color: #ffffff;
+        padding: 5px 12px;
+        border: 2px solid rgb(77, 76, 76);
+        border-radius: 20px;
+        border: 1px solid rgb(150, 150, 150);
+      }
+      .account-icon {
+        width: 25px;
+        height: 25px;
+        margin-right: 8px;
+      }
+      .username {
+        font-size: 15px;
+        color: rgb(59, 59, 59);
+        font-weight: bold;
+      }
+      .dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background-color: #ffffff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+        overflow: hidden;
+        min-width: 180px;
+        z-index: 1000;
+      }
+      .dropdown-menu a {
+        display: block;
+        padding: 10px 15px;
+        text-decoration: none;
+        color: #333;
+        font-size: 14px;
+        transition: background 0.2s;
+      }
+      .dropdown-menu a:hover {
+        background-color: #f1f1f1;
+      }
+      .user-info {
+        position: relative;
+        cursor: pointer;
+      }
+      .continue-shopping-btn {
+        display: inline-flex;
+        align-items: center;
+        margin-top: 10px;
+        margin-left: 5%; /* Đặt lại margin-left thành 0 để căn trái */
+        background-color: transparent;
+        color: rgb(129, 127, 127);
+        padding: 10px 25px;
+        font-size: 13px;
+        border-radius: 15px;
+        border: 1px solid rgb(150, 150, 150);
+        text-decoration: none;
+        transition: background-color 0.3s ease, border-color 0.3s ease;
+      }
+      
+      .continue-shopping-btn::before {
+        content: "←";
+        margin-right: 8px;
+        font-size: 13px;
+      }
+      
+      .continue-shopping-btn:hover {
+        background-color: #f1f1f1;
+        border-color: #333;
+      }
+      
+      .continue-shopping-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start; /* Sửa thành flex-start để căn trái */
+        margin-top: 20px;
+      }
+      
+      .cart-container {
+        margin-top: 5px; /* Giảm khoảng cách trên */
+        padding: 20px;
+        width: 100%;  /* Chiếm toàn bộ chiều rộng màn hình */
+        max-width: 1200px; /* Đảm bảo không quá rộng */
+        margin-left: auto;
+        margin-right: auto;
+      }
+      
+      .cart-item {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr); /* 6 cột, mỗi cột chiếm 1 phần bằng nhau */
+        align-items: center;
+        gap: 15px;
+        padding: 15px 20px;
+        margin-bottom: 15px;
+        background-color: #f9f9f9;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        width: 100%; /* Đảm bảo grid chiếm toàn bộ chiều rộng của container */
+      }
+      
+      
+    .cart-label {
+      font-size: 30px;
+      font-weight: bold;
+      color: #333;
+      margin-top: 20px; /* Tạo khoảng cách vừa phải giữa tiêu đề và giỏ hàng */
+    }
+    
+    
+
+    /*checkbox------------------------------------------------------------------------- */
+    .cart-checkbox {
+      appearance: none;
+      -webkit-appearance: none;
+      background-color: #fff;
+      border: 2px solid #555; /* Viền mảnh hơn */
+      border-radius: 50%;      /* Bo tròn */
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      position: relative;
+      transition: background-color 0.2s, border-color 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;         /* Dấu check nhỏ hơn */
+      line-height: 1;
+      margin-right: 15px;      /* Khoảng cách từ checkbox đến hình ảnh */
+    }
+    
+    .cart-checkbox:checked {
+      background-color: #fff;
+      border-color: black;
+    }
+    
+    .cart-checkbox:checked::after {
+      content: '✔';           /* Dấu check */
+      color: black;
+      font-size: 12px;        /* Dấu check mảnh */
+      font-weight: normal;    /* Không in đậm */
+    }
+    
+    /*-------------------------------------------------------------------------- */
+    .cart-item {
+      display: flex;
+      align-items: center;  /* Căn giữa các phần tử theo chiều dọc */
+      gap: 15px;  /* Khoảng cách giữa các phần tử */
+    }
+    
+    .cart-product-img {
+      width: 70px;
+      height: 70px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-right: 15px; /* Khoảng cách giữa hình ảnh và các phần tử bên cạnh */
+    }
+    
+    .cart-product-info {
+      display: flex;
+      flex-direction: column;
+      gap: 5px; /* Khoảng cách giữa các phần tử con trong info */
+    }
+    
+    .cart-product-name {
+      font-weight: bold;
+      color: #333;
+      white-space: nowrap;  /* Ngăn không cho chữ xuống dòng */
+      overflow: hidden;     /* Ẩn phần chữ bị tràn ra ngoài */
+      text-overflow: ellipsis; /* Thêm dấu ba chấm "..." nếu chữ quá dài */
+    }
+    
+    .cart-product-size select {
+      font-size: 14px;
+      padding: 8px 12px;
+      border-radius: 20px;
+      border: 1px solid #ccc;
+      background-color: #fff;
+      color: #333;
+      cursor: pointer;
+      width: 100px; /* Có thể điều chỉnh kích thước của dropdown */
+      transition: border-color 0.2s ease;
+  }
+  
+  .cart-product-size select:focus {
+      border-color: rgb(150, 150, 150);
+  }
+ 
+  /*-------------------------------------------------------------------------- */
+    
+    .cart-product-price {
+      color: rgb(0, 0, 0);
+      font-size: 14px;
+      margin-left: 80px; 
+      font-size: 18px;
+      font-weight: 700;
+    }
+    /*-------------------------------------------------------------------------- */
+    .cart-product-info {
+      width: 400px; /* Đảm bảo chiều rộng đủ để hiển thị phần mô tả */
+      white-space: nowrap; /* Không cho phép xuống dòng */
+      overflow: hidden; /* Ẩn phần văn bản vượt quá */
+      text-overflow: ellipsis; /* Thêm ba chấm "..." khi văn bản bị cắt ngắn */
+      font-weight: bold;
+    }
+    /*-------------------------------------------------------------------------- */
+    .cart-product-quantity::-webkit-inner-spin-button,
+    .cart-product-quantity::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    
+    .cart-product-quantity {
+      -moz-appearance: textfield; /* Firefox */
+     
+      width: 50px; /* Giảm chiều rộng khung */
+      text-align: center; /* Căn giữa chữ theo chiều ngang */
+      vertical-align: middle; /* Căn giữa chữ theo chiều dọc */
+      line-height: 30px; /* Điều chỉnh chiều cao của dòng để căn giữa theo chiều dọc */
+      
+      pointer-events: none;
+     
+    }    
+    .quantity-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 150px;
+      margin-left: 200px;
+    }
+    
+    .cart-product-quantity {
+      -moz-appearance: textfield;
+      width: 50px;
+      text-align: center;
+      margin: 0 10px;
+      padding: 5px;
+      font-size: 16px;
+      border-radius: 20px;
+      border: 1px solid #ccc;
+    }
+    
+    button {
+      width: 30px;
+      height: 30px;
+      font-size: 18px;
+      background-color: transparent;  /* Bỏ màu nền */
+      border: none;  /* Bỏ viền */
+      cursor: pointer;
+    }
+    .cart-item {
+      position: relative; /* Đảm bảo rằng nút X được xếp đúng vị trí */
+    }
+    
+    .remove-item-btn {
+      position: absolute;
+      top: 2px; /* Điều chỉnh khoảng cách từ trên */
+      right: 5px; /* Điều chỉnh khoảng cách từ phải */
+      background-color: transparent;
+      border: none;
+      font-size: 25px;
+     color: rgb(0, 0, 0);
+      cursor: pointer;
+    }
+    .empty-cart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
+  margin-bottom: 50px;
+}
+.empty-cart-container {
+  border-top: 2px solid #ccc; /* Hoặc màu/bề dày khác tùy ý */
+  padding-top: 10px; /* Thêm khoảng cách bên trong nếu cần */
+  margin-top: 20px; /* Tạo khoảng cách với phần trên nếu cần */
+}
+
+.empty-cart-message {
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.empty-cart-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70vh; /* Hoặc 100vh nếu bạn muốn căn giữa cả trang */
+}
+
+.empty-cart-container img {
+  max-width: 350px; /* Tuỳ chỉnh kích thước ảnh */
+  height: auto;
+  margin-left: 260%;
+  margin-top: -50%;
+}
+.cart-total-container {
+    display: flex;
+    justify-content: flex-end;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-top: 20px;
+    padding-right: 20px;
+}
+
+.cart-action-buttons {
+    margin-top: 7%; /* Tăng khoảng cách giữa tổng và các nút */
+    display: grid; /* Sử dụng grid để chiếm đầy chiều rộng */
+    grid-template-columns: 35% 65%; /* 35% cho nút Select more products, 65% cho nút Payment */
+    gap: 20px; /* Tạo khoảng cách giữa 2 nút */
+    justify-items: stretch; /* Đảm bảo các nút chiếm toàn bộ chiều rộng của từng cột */
+}
+
+.cart-action-buttons a {
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 17px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    display: flex; /* Sử dụng flex để căn giữa chữ */
+    justify-content: center; /* Căn giữa chữ theo chiều ngang */
+    align-items: center; /* Căn giữa chữ theo chiều dọc */
+    width: 100%; /* Đảm bảo nút chiếm toàn bộ chiều rộng cột */
+    box-sizing: border-box; /* Đảm bảo padding không ảnh hưởng đến chiều rộng */
+}
+
+/* Nút Select more products */
+.cart-action-buttons .btn-continue {
+    background-color: white;
+    color: rgb(129, 127, 127);
+    border: 1px solid rgb(129, 127, 127); /* Viền đen */
+    font-weight: normal; /* Chữ không đậm */
+}
+
+.cart-action-buttons .btn-continue:hover {
+    background-color: #f0f0f0; /* Màu nền khi hover */
+}
+
+/* Nút Payment */
+.cart-action-buttons .btn-checkout {
+    background-color: rgb(59, 59, 59);
+    color: white;
+    font-weight: normal; /* Chữ không đậm */
+}
+
+.cart-action-buttons .btn-checkout:hover {
+    background-color: #333333; /* Màu nền khi hover */
+}
+.btn-checkout.disabled {
+    background-color: #ccc !important;
+    color: #888 !important;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+.cart-item.inactive {
+    opacity: 0.5;
+    pointer-events: none;
+    background-color: #f2f2f2;
+}
+
+.cart-item.inactive .remove-item-btn {
+    pointer-events: auto; /* vẫn cho phép bấm nút X */
+    opacity: 1;
+}
+.deleted-label {
+    position: absolute;
+    top: 8px;
+    left: 8px; /* Đổi từ right → left */
+    background-color: #ff4d4f;
+    color: white;
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 0px;
+    z-index: 1;
+    font-weight: bold;
+}
+.sold-out-label {
+    position: absolute;
+    top: 8px;
+    left: 8px; /* giống .deleted-label */
+    background-color:rgb(227, 115, 10); /* màu đỏ cảnh báo */
+    color: white;
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 0px;
+    z-index: 1;
+    font-weight: bold;
+}
+.cart-item {
+    position: relative; /* để nhãn position: absolute hoạt động đúng */
+}
+
+
+    
+
+    /*-------------------------------------------------------------------------- */
+    
+
+      body {
+        padding-top: 60px;
+        /*overflow-y: hidden;*/
+      }
+
+     
+    </style>
+  </head>
+
+  <body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <img src="{% static 'images/logo.png' %}" alt="Logo" />
+            </div>
+            <ul class="nav-links">
+                <li><a href="http://127.0.0.1:8000/user/home/">Home</a></li>
+                <li><a href="http://127.0.0.1:8000/user/about/">About Us</a></li>
+                <li><a href="http://127.0.0.1:8000/user/product/">Product</a></li>
+                <li><a href="http://127.0.0.1:8000/user/blog/">Blog</a></li>
+            </ul>
+            <div class="user-section">
+                <a href="http://127.0.0.1:8000/user/favorite/">
+    <img src="{% static 'images/favorite-icon.png' %}"
+         alt="Favorite"
+         class="menu-icon" />
+</a>
+                <img src="{% static 'images/notify-icon.png' %}" alt="Notify" class="menu-icon" />
+                <img src="{% static 'images/cart-icon.png' %}" alt="Cart" class="menu-icon" />
+                
+                <div class="user-info">
+                    <img src="{% static 'images/account-icon.png' %}" alt="Account" class="account-icon" />
+                    <span class="username" id="username-dropdown">
+                        {% if request.session.user_name %}
+                            {% with request.session.user_name as username %}
+                                {% if username|length > 12 %}
+                                    {{ username|slice:":12" }}...
+                                {% else %}
+                                    {{ username }}
+                                {% endif %}
+                            {% endwith %}
+                        {% else %}
+                            Guest
+                        {% endif %}
+                    </span>
+                    <div class="dropdown-menu" id="dropdown-menu">
+                        <a href="">Manage Orders</a>
+                        <a href="http://127.0.0.1:8000/user/profile/">Account Information</a>
+                        <a href="http://127.0.0.1:8000/user/login/">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <!-- Thêm button tiếp tục mua sắm ở dưới menu -->
+        <!-- Thêm button tiếp tục mua sắm ở dưới menu -->
+<div class="continue-shopping-container">
+    <a href="http://127.0.0.1:8000/user/product/" class="continue-shopping-btn">Continue Shopping</a>
+    <div class="cart-container">
+        <div class="cart-label">CART</div>
+
+        {% for item in cart_items %}
+        <div class="cart-item {% if item.is_product_deleted or item.product.quality_inventory_total == 0 %}inactive{% endif %}">
+    {% if item.is_product_deleted %}
+        <div class="deleted-label">Deleted</div>
+    {% endif %}
+    
+    {% if item.product.quality_inventory_total == 0 %}
+        <div class="sold-out-label">Sold Out</div>
+    {% endif %}
+
+    <input type="checkbox" class="cart-checkbox" data-id="{{ item.order_cart_id }}" {% if item.is_product_deleted or item.product.quality_inventory_total == 0 %}disabled{% endif %}>
+
+    <img src="{{ item.product_image }}" class="cart-product-img" alt="Product Image">
+
+    <div class="cart-product-info">
+        <td>{{ item.description }}</td>
+        <div class="cart-product-size">
+            <select class="size-dropdown" {% if item.is_product_deleted or item.product.quality_inventory_total == 0 %}disabled{% endif %}>
+                {% if item.product_size == 'freesize' %}
+                    <option value="freesize" selected>Freesize</option>
+                {% else %}
+                    <option value="S" {% if item.product_size == 'S' %} selected {% endif %}>S</option>
+                    <option value="M" {% if item.product_size == 'M' %} selected {% endif %}>M</option>
+                    <option value="L" {% if item.product_size == 'L' %} selected {% endif %}>L</option>
+                {% endif %}
+            </select>
+        </div>
+    </div>
+
+    <div class="quantity-container">
+        <button class="decrease-btn" {% if item.is_product_deleted or item.product.quality_inventory_total == 0 %}disabled{% endif %}>-</button>
+        <input type="number" class="cart-product-quantity"
+               value="{{ item.product_quality_cart }}"
+               min="1"
+               data-price="{{ item.product_price }}"
+               data-max="{{ item.quality_inventory_total }}"
+               {% if item.is_product_deleted or item.product.quality_inventory_total == 0 %}disabled{% endif %}>
+        <button class="increase-btn" {% if item.is_product_deleted or item.product.quality_inventory_total == 0 %}disabled{% endif %}>+</button>
+    </div>
+
+    <div class="cart-product-price" data-price="{{ item.product.price }}">
+        {{ item.total_price|floatformat:0 }}₫
+    </div>
+
+    <!-- Luôn bật nút X -->
+    <button class="remove-item-btn" data-id="{{ item.order_cart_id }}">X</button>
+</div>
+
+        {% empty %}
+        <div class="empty-cart">
+            <p class="empty-cart-message">Your shopping cart is empty.</p>
+            <div class="empty-cart-container">
+                <img src="{% static 'images/emtycart-icon.png' %}" alt="Giỏ hàng trống">
+            </div>
+        </div>
+        {% endfor %}
+
+        {% if cart_items %}
+        <div class="cart-total-container">
+            <span class="total-label">Total:</span>
+            <span id="cart-total-price">0₫</span>
+        </div>
+
+        <div class="cart-action-buttons">
+            <a href="http://127.0.0.1:8000/user/product/" class="btn-continue">Select more products</a>
+            <a href="http://127.0.0.1:8000/user/payment/" class="btn-checkout" id="checkout-btn" disabled>Checkout</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+
+    </header>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const username = document.getElementById("username-dropdown");
+            const dropdownMenu = document.getElementById("dropdown-menu");
+    
+            username.addEventListener("click", function (event) {
+                dropdownMenu.style.display = dropdownMenu.style.display === "block" ? "none" : "block";
+                event.stopPropagation();
+            });
+    
+            document.addEventListener("click", function (event) {
+                if (!username.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                    dropdownMenu.style.display = "none";
+                }
+            });
+        });
+        document.addEventListener("DOMContentLoaded", function() {
+          var descriptions = document.querySelectorAll('.description');
+          
+          descriptions.forEach(function(description) {
+              if (description.textContent.length > 31) {
+                  description.textContent = description.textContent.slice(0, 10) + '...';
+              }
+          });
+      });
+
+/*--------Lấy tất cả các nút giảm và tăng----------------------------------------------------------------*/
+//const decreaseButtons = document.querySelectorAll('.decrease-btn');
+//const increaseButtons = document.querySelectorAll('.increase-btn');
+//const quantityInputs = document.querySelectorAll('.cart-product-quantity');
+
+// Duyệt qua tất cả các nút giảm và tăng
+
+
+/*---price---------------------------------------------------------------------*/
+document.addEventListener("DOMContentLoaded", function () {
+    const decreaseButtons = document.querySelectorAll('.decrease-btn');
+    const increaseButtons = document.querySelectorAll('.increase-btn');
+    const quantityInputs = document.querySelectorAll('.cart-product-quantity');
+    const priceElements = document.querySelectorAll('.cart-product-price');
+
+    // Hàm cập nhật giá dựa trên số lượng
+    function updatePrice(index) {
+        const quantity = parseInt(quantityInputs[index].value);
+        const pricePerUnit = parseFloat(priceElements[index].getAttribute('data-price'));
+
+        const newTotalPrice = pricePerUnit * quantity;
+        priceElements[index].textContent = `${newTotalPrice.toLocaleString("vi-VN")} đ`;
+    }
+
+    // Sự kiện click nút giảm
+    decreaseButtons.forEach((button, index) => {
+        button.addEventListener('click', () => {
+            let currentValue = parseInt(quantityInputs[index].value);
+            if (currentValue > 1) {
+                quantityInputs[index].value = currentValue - 1;
+                updatePrice(index);
+            }
+        });
+    });
+
+    // Sự kiện click nút tăng
+    increaseButtons.forEach((button, index) => {
+        button.addEventListener('click', () => {
+            let currentValue = parseInt(quantityInputs[index].value);
+            quantityInputs[index].value = currentValue + 1;
+            updatePrice(index);
+        });
+    });
+
+    // Cập nhật lại toàn bộ giá ngay khi trang load (dựa vào đơn giá * số lượng)
+    quantityInputs.forEach((input, index) => {
+        updatePrice(index);
+    });
+});
+
+
+/*---button delete cart---------------------------------------------------------------------*/
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll(".remove-item-btn").forEach(button => {
+    button.addEventListener("click", function () {
+      const cartItemDiv = this.closest(".cart-item");
+      const checkbox = cartItemDiv.querySelector(".cart-checkbox");
+      const isChecked = checkbox.checked;
+
+      const quantity = parseInt(cartItemDiv.querySelector(".cart-product-quantity").value);
+      const pricePerUnit = parseFloat(cartItemDiv.querySelector(".cart-product-price").getAttribute("data-price"));
+      const itemTotal = quantity * pricePerUnit;
+
+      const orderCartId = checkbox.getAttribute("data-id");
+
+      fetch(`/user/cart/delete/${orderCartId}/`, {
+        method: 'DELETE',
+        headers: {
+          'X-CSRFToken': getCookie('csrftoken')
+        }
+      })
+      .then(res => {
+        if (res.ok) {
+          // Nếu item đang được chọn, trừ nó khỏi tổng
+          if (isChecked) {
+            const totalPriceDisplay = document.getElementById('cart-total-price');
+            let currentTotal = parseFloat(totalPriceDisplay.textContent.replace(/[^\d]/g, '')) || 0;
+            let newTotal = currentTotal - itemTotal;
+            totalPriceDisplay.textContent = newTotal.toLocaleString('vi-VN') + "₫";
+          }
+
+          cartItemDiv.remove();
+          checkEmptyCart();
+        } else {
+          alert("Delete failed.");
+        }
+      })
+      .catch(err => console.error("Lỗi:", err));
+    });
+  });
+
+  function checkEmptyCart() {
+    const cartItems = document.querySelectorAll('.cart-item');
+    if (cartItems.length === 0) {
+      setTimeout(function () {
+        location.reload();
+      }, 500);
+    }
+  }
+
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let cookie of cookies) {
+        cookie = cookie.trim();
+        if (cookie.startsWith(name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+});
+
+
+/*--Total price----------------------------------------------------------------------------------------------*/
+document.addEventListener("DOMContentLoaded", function () {
+    const checkboxes = document.querySelectorAll('.cart-checkbox');
+    const quantityInputs = document.querySelectorAll('.cart-product-quantity');
+    const priceElements = document.querySelectorAll('.cart-product-price');
+    const totalPriceDisplay = document.getElementById('cart-total-price');
+
+    function formatCurrency(value) {
+        return value.toLocaleString('vi-VN') + "₫";
+    }
+
+    function updateTotalPrice() {
+    const checkboxes = document.querySelectorAll('.cart-checkbox');
+    const totalPriceDisplay = document.getElementById('cart-total-price');
+    let total = 0;
+
+    checkboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+            const cartItem = checkbox.closest('.cart-item');
+            const quantityInput = cartItem.querySelector('.cart-product-quantity');
+            const priceElement = cartItem.querySelector('.cart-product-price');
+
+            const quantity = parseInt(quantityInput.value);
+            const pricePerUnit = parseFloat(priceElement.getAttribute('data-price'));
+
+            total += quantity * pricePerUnit;
+        }
+    });
+
+    if (totalPriceDisplay) {
+        totalPriceDisplay.textContent = total.toLocaleString('vi-VN') + "₫";
+    }
+}
+
+    // Cập nhật mỗi khi checkbox, nút tăng/giảm hoặc input số lượng thay đổi
+    checkboxes.forEach(cb => cb.addEventListener('change', updateTotalPrice));
+    quantityInputs.forEach(input => input.addEventListener('input', updateTotalPrice));
+
+    document.querySelectorAll('.increase-btn, .decrease-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            setTimeout(updateTotalPrice, 50); // delay nhẹ để đảm bảo input đã cập nhật
+        });
+    });
+
+    // Gọi khi load
+    updateTotalPrice();
+});
+document.addEventListener('DOMContentLoaded', function () {
+    const checkoutBtn = document.querySelector('.btn-checkout');
+
+    function updateCheckoutButton() {
+        const checkboxes = document.querySelectorAll('.cart-checkbox');
+        const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
+        if (anyChecked) {
+            checkoutBtn.classList.remove('disabled');
+        } else {
+            checkoutBtn.classList.add('disabled');
+        }
+    }
+
+    // Đăng ký sự kiện change cho tất cả checkbox hiện tại
+    function bindCheckboxEvents() {
+        const checkboxes = document.querySelectorAll('.cart-checkbox');
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', updateCheckoutButton);
+        });
+    }
+
+    // Gọi khi DOM load
+    bindCheckboxEvents();
+    updateCheckoutButton();
+
+    // Nếu bạn có nút xóa sản phẩm, thêm sự kiện cập nhật lại sau khi xóa
+    document.querySelectorAll('.remove-item-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            // Delay một chút để chờ DOM cập nhật
+            setTimeout(() => {
+                bindCheckboxEvents();      // Gắn lại checkbox mới
+                updateCheckoutButton();    // Cập nhật trạng thái nút
+            }, 100);
+        });
+    });
+});
+document.getElementById("checkout-btn").addEventListener("click", function (e) {
+    e.preventDefault();
+
+    const checkedItems = Array.from(document.querySelectorAll(".cart-checkbox:checked")).map(cb =>
+        cb.getAttribute("data-id")
+    );
+
+    if (checkedItems.length === 0) {
+        alert("Bạn chưa chọn sản phẩm nào!");
+        return;
+    }
+
+    fetch('/user/checkout/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({ order_cart_id: checkedItems })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            window.location.href = data.redirect_url;
+        } else {
+            alert(data.message);
+            window.location.reload(); // Reload nếu có sản phẩm hết hàng hoặc bị xóa
+        }
+    })
+    .catch(error => {
+        alert("Có lỗi xảy ra, vui lòng thử lại.");
+        window.location.reload(); // Reload khi có lỗi
+    });
+});
+document.getElementById("checkout-btn").addEventListener("click", function () {
+    const checkedItems = Array.from(document.querySelectorAll(".cart-checkbox:checked")).map(cb => {
+        const cartItem = cb.closest(".cart-item");
+        return {
+            order_cart_id: cb.getAttribute("data-id"),
+            product_size: cartItem.querySelector(".size-dropdown")?.value,
+            product_quantity: cartItem.querySelector(".cart-product-quantity")?.value,
+            product_price: cartItem.querySelector(".cart-product-price")?.innerText?.replace(/[^\d]/g, "")
+        };
+    });
+
+    // Gửi thông tin đầy đủ đến endpoint mở rộng
+    fetch("/user/checkout/details/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": "{{ csrf_token }}"
+        },
+        body: JSON.stringify({ cart_items: checkedItems })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (!data.success) {
+            console.warn("Tính năng mở rộng thất bại:", data.message);
+        }
+    })
+    .catch(err => console.error("Lỗi khi gửi dữ liệu chi tiết:", err));
+});
+    </script>
+  </body>
+</html>

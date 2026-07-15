@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manager H.H.U.O.N.G shop</title>
+    {% load static %}
+
+    <style>
+      /* ================= RESET ================= */
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f4f6f9;
+        color: #333;
+        padding-top: 70px;
+      }
+
+      /* ================= NAVBAR ================= */
+      .navbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #fff;
+        padding: 10px 30px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      }
+
+      /* LOGO FIX TO NHỎ LẠI */
+      .logo img {
+        height: 38px;
+        width: auto;
+        object-fit: contain;
+      }
+
+      /* RIGHT SECTION */
+      .manager-section {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      /* ICON */
+      .menu-icon {
+        width: 22px;
+        height: 22px;
+        cursor: pointer;
+      }
+
+      /* ACCOUNT BOX */
+      .manager-info {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 12px;
+        border-radius: 20px;
+        border: 1px solid #e5e5e5;
+        background: #fff;
+        cursor: pointer;
+        position: relative;
+      }
+
+      .account-icon {
+        width: 25px;
+        height: 25px;
+      }
+
+      .managername {
+        font-size: 14px;
+        font-weight: 600;
+        color: #444;
+      }
+
+      /* DROPDOWN */
+      .dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: #fff;
+        border: 1px solid #eee;
+        border-radius: 6px;
+        min-width: 160px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        z-index: 999;
+      }
+
+      .dropdown-menu a {
+        display: block;
+        padding: 10px 12px;
+        text-decoration: none;
+        color: #333;
+      }
+
+      .dropdown-menu a:hover {
+        background: #f2f2f2;
+      }
+
+      /* ================= PAGE TITLE ================= */
+      .page-title {
+        text-align: center;
+        font-size: 28px;
+        font-weight: 700;
+        margin: 10px 0 20px;
+        color: #1f2a44;
+        position: relative;
+      }
+
+      .page-title::after {
+        content: '';
+        display: block;
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(90deg, #1f2a44, #3b82f6);
+        border-radius: 2px;
+        margin: 10px auto 0 auto;
+      }
+
+      /* ================= BACK BUTTON ================= */
+      .back-container {
+        width: 88%;
+        margin: 10px auto 0;
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .close-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: none;
+        background: #eee;
+        cursor: pointer;
+        font-size: 16px;
+        transition: 0.2s;
+      }
+
+      .close-btn:hover {
+        background: #1f2a44;
+        color: #fff;
+      }
+
+      /* ================= FILTER BOX ================= */
+      .filter-box {
+        width: 88%;
+        margin: 20px auto;
+        background: #fff;
+        border: 1px solid #e5e5e5;
+        border-radius: 10px;
+        padding: 15px 20px;
+      }
+
+      /* FILTER ROWS */
+      .status-filter,
+      .payment-filter,
+      .urgent-filter {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 12px;
+      }
+
+      .status-label,
+      .payment-label,
+      .urgent-label,
+      .date-label {
+        font-weight: 600;
+        font-size: 14px;
+        width: 150px;
+      }
+
+      /* FILTER ITEMS (UNIFIED STYLE) */
+      .status-item,
+      .payment-item,
+      .urgent-item {
+        padding: 6px 14px;
+        border-radius: 20px;
+        background: #f4f6f9;
+        border: 1px solid #1f2a44;
+        font-size: 13px;
+        cursor: pointer;
+        transition: 0.2s;
+        color: #fff;
+      }
+
+      .status-item:hover,
+      .payment-item:hover,
+      .urgent-item:hover {
+        background: #1f2a44;
+        color: #fff;
+        border-color: #1f2a44;
+      }
+
+      .status-item.active,
+      .payment-item.active,
+      .urgent-item.active {
+        background: #1f2a44;
+        color: #fff;
+        border-color: #1f2a44;
+      }
+
+      /* cancel highlight */
+      .status-item.cancel {
+        border-color: red;
+        color: red;
+      }
+
+      .status-item.cancel:hover {
+        background: red;
+        color: #fff;
+      }
+
+      /* ================= DATE FILTER ================= */
+      .date-filter {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      .date-input {
+        padding: 6px 10px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        font-size: 13px;
+      }
+
+      .date-input:focus {
+        outline: none;
+        border-color: #000;
+      }
+
+      /* ================= SEARCH ================= */
+      .search-container {
+        width: 88%;
+        margin: 15px auto;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .search-box {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 8px 12px;
+        background: #fff;
+      }
+
+      .search-input {
+        border: none;
+        outline: none;
+        width: 100%;
+        font-size: 14px;
+      }
+
+      .search-btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 6px;
+        background: #1f2a44;
+        color: #fff;
+        cursor: pointer;
+      }
+
+      .search-btn:hover {
+        background: #1f2a44;
+        color: #fff;
+      }
+
+      /* ================= TABLE ================= */
+      .order-table-container {
+        width: 88%;
+        margin: 20px auto;
+        overflow-x: auto;
+      }
+
+      .order-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+      }
+
+      .order-table th,
+      .order-table td {
+        border: 1px solid #eee;
+        padding: 10px;
+        text-align: center;
+        font-size: 13px;
+      }
+
+      .order-table th {
+        background: #1f2a44;
+        color: #fff;
+      }
+
+      /* hover */
+      .order-table tr:hover {
+        background: #f5f7fa;
+      }
+
+      /* urgent row */
+      .urgent-row {
+        background: #ffe5e5 !important;
+      }
+
+      .urgent-row:hover {
+        background: #ffcccc !important;
+      }
+
+      /* link */
+      .order-link {
+        color: #007bff;
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .order-link:hover {
+        text-decoration: underline;
+      }
+
+      /* ================= PAGINATION ================= */
+      .pagination {
+        width: 88%;
+        margin: 15px auto;
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      .page-btn {
+        padding: 6px 12px;
+        border: 1px solid #ddd;
+        background: #fff;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .page-btn.active {
+        background: #1f2a44;
+        color: #fff;
+      }
+
+      .page-btn:hover {
+        background: #1f2a44;
+        color: #fff;
+      }
+
+      /* ================= THEME COLOR OVERRIDES ================= */
+      body {
+        color: #1f2a44;
+      }
+
+      /* tất cả chữ mặc định */
+      * {
+        color: inherit;
+      }
+
+      /* page title */
+      .page-title {
+        color: #1f2a44;
+      }
+
+      /* label */
+      .status-label,
+      .payment-label,
+      .urgent-label,
+      .date-label {
+        color: #1f2a44;
+      }
+
+      /* table text */
+      .order-table td {
+        color: #1f2a44;
+      }
+
+      /* filter item text */
+      .status-item,
+      .payment-item,
+      .urgent-item {
+        color: #1f2a44;
+      }
+
+      /* input text */
+      .search-input,
+      .date-input {
+        color: #1f2a44;
+      }
+
+      /* manager name */
+      .managername {
+        color: #1f2a44;
+      }
+
+      /* link vẫn giữ accent xanh */
+      .order-link {
+        color: #1f2a44;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <nav class="navbar">
+        <div class="logo">
+          <img src="{% static 'images/logo.png' %}" alt="Logo" />
+        </div>
+
+        <div class="manager-section">
+          <img
+            src="{% static 'images/notify-icon.png' %}"
+            alt="Notify"
+            class="menu-icon"
+          />
+
+          <div class="manager-info" id="manager-dropdown">
+            <img
+              src="{% static 'images/account-icon.png' %}"
+              alt="Account"
+              class="account-icon"
+            />
+            <span class="managername">{{ manager_name }}</span>
+
+            <div class="dropdown-menu" id="dropdown-menu">
+              <a href="http://127.0.0.1:8000/manager/login/">Logout</a>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <div class="back-container">
+  <button class="close-btn" onclick="goBack()">✕</button>
+</div>
+    <h2 class="page-title">All Orders</h2>
+
+<div class="filter-box">
+
+  <div class="status-filter">
+    <span class="status-label">Status Order:</span>
+    <span class="status-item active">All</span>
+    <span class="status-item">Confirmed</span>
+    <span class="status-item">Waiting for Product</span>
+    <span class="status-item">Picking Up</span>
+    <span class="status-item">On Delivery</span>
+    <span class="status-item">Done</span>
+    <span class="status-item cancel">Cancelled</span>
+  </div>
+
+  <div class="urgent-filter">
+  <span class="urgent-label">Urgency:</span>
+  <span class="urgent-item active">All</span>
+<span class="urgent-item">Urgent</span>
+<span class="urgent-item">Not Urgent</span>
+</div>
+
+  <div class="payment-filter">
+    <span class="payment-label">Payment Method:</span>
+    <span class="payment-item active">All</span>
+    <span class="payment-item">Cash on Delivery</span>
+    <span class="payment-item">QR Code</span>
+  </div>
+
+  <div class="date-filter">
+    <span class="date-label">Order Date:</span>
+    <input type="date" id="date-from" class="date-input">
+    <span class="date-separator">→</span>
+    <input type="date" id="date-to" class="date-input">
+  </div>
+
+  <div class="date-filter">
+    <span class="date-label">Delivery Date:</span>
+    <input type="date" id="delivery-from" class="date-input">
+    <span class="date-separator">→</span>
+    <input type="date" id="delivery-to" class="date-input">
+  </div>
+
+</div>
+<div class="search-container">
+  <div class="search-box">
+    <input type="text" id="search-input" placeholder="Search orders..." class="search-input" />
+  </div>
+
+  <button class="search-btn" id="search-btn">Search</button>
+</div>
+
+<div class="order-table-container">
+  <table class="order-table">
+    <thead>
+      <tr>
+        <th>Order Code</th>
+        <th>User ID</th>
+        <th>User Name</th>
+        <th>Order Date</th>
+        <th>Estimate Delivery</th>
+        <th>Note</th>
+        <th>Payment Method</th>
+        <th>Total Price</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+   <tbody id="order-table-body">
+{% for order in orders %}
+<tr class="{% if order.is_urgent %}urgent-row{% endif %}"
+data-urgent="{% if order.is_urgent %}Urgent{% else %}Not Urgent{% endif %}">
+  
+   <td>
+    <a href="/manager/orderdetail/{{ order.order_id }}/"
+   class="order-link">
+    {{ order.order_id }}
+</a>
+</td>
+    <td>{{ order.user.user_id }}</td>
+    <td>{{ order.user_name }}</td>
+    <td>{{ order.order_date|date:"Y-m-d" }}</td>
+    <td>{{ order.estimated_delivery_date|date:"Y-m-d" }}</td>
+    <td>{{ order.note }}</td>
+    <td>{{ order.payment_method.method_name }}</td>
+    <td>{{ order.total_price_order }}</td>
+    <td>
+        {{ order.status_display }}
+    </td>
+</tr>
+{% endfor %}
+</tbody>
+  </table>
+  <div class="pagination" id="pagination"></div>
+</div>
+
+    <script>
+      const managerInfo = document.getElementById("manager-dropdown");
+      const dropdownMenu = document.getElementById("dropdown-menu");
+
+      managerInfo.addEventListener("click", function (event) {
+        dropdownMenu.style.display =
+          dropdownMenu.style.display === "block" ? "none" : "block";
+        event.stopPropagation();
+      });
+
+       const statusItems = document.querySelectorAll(".status-item");
+// status----------------------------------------------------------------------
+  document.addEventListener("DOMContentLoaded", function () {
+  const statusItems = document.querySelectorAll(".status-item");
+
+  statusItems.forEach(item => {
+    item.addEventListener("click", () => {
+      const isAll = item.textContent.trim() === "All";
+
+      if (isAll) {
+        // Click ALL → reset hết
+        statusItems.forEach(i => i.classList.remove("active"));
+        item.classList.add("active");
+      } else {
+        // Bỏ active của All
+        statusItems.forEach(i => {
+          if (i.textContent.trim() === "All") {
+            i.classList.remove("active");
+          }
+        });
+
+        // Toggle cái vừa click
+        item.classList.toggle("active");
+
+        // Check sau khi toggle
+        const activeItems = document.querySelectorAll(".status-item.active");
+
+        if (activeItems.length === 0) {
+          statusItems.forEach(i => {
+            if (i.textContent.trim() === "All") {
+              i.classList.add("active");
+            }
+          });
+        }
+      }
+    });
+  });
+});
+// Payment Method----------------------------------------------------------------------
+document.addEventListener("DOMContentLoaded", function () {
+  const paymentItems = document.querySelectorAll(".payment-item");
+
+  paymentItems.forEach(item => {
+    item.addEventListener("click", () => {
+      const isAll = item.textContent.trim() === "All";
+
+      if (isAll) {
+        paymentItems.forEach(i => i.classList.remove("active"));
+        item.classList.add("active");
+      } else {
+        paymentItems.forEach(i => {
+          if (i.textContent.trim() === "All") {
+            i.classList.remove("active");
+          }
+        });
+
+        item.classList.toggle("active");
+
+        const activeItems = document.querySelectorAll(".payment-item.active");
+
+        if (activeItems.length === 0) {
+          paymentItems.forEach(i => {
+            if (i.textContent.trim() === "All") {
+              i.classList.add("active");
+            }
+          });
+        }
+      }
+    });
+  });
+});
+// order date----------------------------------------------------------------------
+document.addEventListener("DOMContentLoaded", function () {
+  const fromInput = document.getElementById("date-from");
+  const toInput = document.getElementById("date-to");
+
+  function validateDate() {
+    if (fromInput.value && toInput.value) {
+      if (toInput.value < fromInput.value) {
+        // ❌ lỗi → set tooltip
+        toInput.setCustomValidity("End date must be greater than or equal to start date");
+        toInput.reportValidity(); // show tooltip
+      } else {
+        // ✅ hợp lệ → clear lỗi
+        toInput.setCustomValidity("");
+      }
+    }
+  }
+
+  fromInput.addEventListener("change", validateDate);
+  toInput.addEventListener("change", validateDate);
+});
+// delivery date----------------------------------------------------------------------
+document.addEventListener("DOMContentLoaded", function () {
+  const fromInput = document.getElementById("delivery-from");
+  const toInput = document.getElementById("delivery-to");
+
+  function validateDeliveryDate() {
+    if (fromInput.value && toInput.value) {
+      if (toInput.value < fromInput.value) {
+        toInput.setCustomValidity("Delivery end date must be greater than or equal to start date");
+        toInput.reportValidity();
+      } else {
+        toInput.setCustomValidity("");
+      }
+    }
+  }
+
+  fromInput.addEventListener("change", validateDeliveryDate);
+  toInput.addEventListener("change", validateDeliveryDate);
+});
+// urgent filter --------------------------------------------------------------
+document.addEventListener("DOMContentLoaded", function () {
+  const urgentItems = document.querySelectorAll(".urgent-item");
+
+  urgentItems.forEach(item => {
+    item.addEventListener("click", () => {
+      const isAll = item.textContent.trim() === "All";
+
+      if (isAll) {
+        urgentItems.forEach(i => i.classList.remove("active"));
+        item.classList.add("active");
+      } else {
+        urgentItems.forEach(i => {
+          if (i.textContent.trim() === "All") {
+            i.classList.remove("active");
+          }
+        });
+
+        item.classList.toggle("active");
+
+        const activeItems = document.querySelectorAll(".urgent-item.active");
+
+        if (activeItems.length === 0) {
+          urgentItems.forEach(i => {
+            if (i.textContent.trim() === "All") {
+              i.classList.add("active");
+            }
+          });
+        }
+      }
+    });
+  });
+});
+document.addEventListener("DOMContentLoaded", function () {
+  const rows = document.querySelectorAll("#order-table-body tr");
+  const pagination = document.getElementById("pagination");
+
+  const rowsPerPage = 10;
+  const totalRows = rows.length;
+  const totalPages = Math.ceil(totalRows / rowsPerPage);
+
+  // ❌ nếu <=10 thì không cần pagination
+  if (totalRows <= rowsPerPage) {
+    pagination.style.display = "none";
+    return;
+  }
+
+  let currentPage = 1;
+
+  function showPage(page) {
+    currentPage = page;
+
+    rows.forEach((row, index) => {
+      row.style.display =
+        index >= (page - 1) * rowsPerPage &&
+        index < page * rowsPerPage
+          ? ""
+          : "none";
+    });
+
+    updateButtons();
+  }
+
+  function updateButtons() {
+    const buttons = document.querySelectorAll(".page-btn");
+
+    buttons.forEach((btn, index) => {
+      btn.classList.toggle("active", index + 1 === currentPage);
+    });
+  }
+
+  // tạo nút page
+  for (let i = 1; i <= totalPages; i++) {
+    const btn = document.createElement("span");
+    btn.textContent = i;
+    btn.classList.add("page-btn");
+
+    btn.addEventListener("click", () => showPage(i));
+
+    pagination.appendChild(btn);
+  }
+
+  // load page đầu tiên
+  showPage(1);
+});
+// back-----------------------------------------------------------------------------------------------------
+function goBack() {
+    window.location.href = "http://127.0.0.1:8000/manager/homemorder/";
+}
+// SEARCH ORDERS
+document.getElementById("search-btn").addEventListener("click", function () {
+
+    const keyword = document
+        .getElementById("search-input")
+        .value
+        .toLowerCase()
+        .trim();
+
+    // STATUS
+    const statusSelected = [...document.querySelectorAll(".status-item.active")]
+        .map(item => item.textContent.trim())
+        .filter(item => item !== "All");
+
+    // PAYMENT
+    const paymentSelected = [...document.querySelectorAll(".payment-item.active")]
+        .map(item => item.textContent.trim())
+        .filter(item => item !== "All");
+
+    // URGENT
+    const urgentSelected = [...document.querySelectorAll(".urgent-item.active")]
+        .map(item => item.textContent.trim())
+        .filter(item => item !== "All");
+
+    // ORDER DATE
+    const orderFrom = document.getElementById("date-from").value;
+    const orderTo = document.getElementById("date-to").value;
+
+    // DELIVERY DATE
+    const deliveryFrom = document.getElementById("delivery-from").value;
+    const deliveryTo = document.getElementById("delivery-to").value;
+
+    const rows = document.querySelectorAll("#order-table-body tr");
+
+    rows.forEach(row => {
+
+        const cells = row.querySelectorAll("td");
+
+        if (cells.length < 9) return;
+
+        const orderCode = cells[0].textContent.trim();
+        const userId = cells[1].textContent.trim();
+        const userName = cells[2].textContent.trim();
+        const orderDate = cells[3].textContent.trim();
+        const deliveryDate = cells[4].textContent.trim();
+        const note = cells[5].textContent.trim();
+        const paymentMethod = cells[6].textContent.trim();
+        const totalPrice = cells[7].textContent.trim();
+        const status = cells[8].textContent.trim();
+
+        const urgent = row.dataset.urgent;
+
+        let visible = true;
+
+        // STATUS
+       if (
+    statusSelected.length > 0 &&
+    !statusSelected.some(
+        s => s.trim().toLowerCase() === status.trim().toLowerCase()
+    )
+) {
+    visible = false;
+}
+
+        // PAYMENT
+       if (
+    paymentSelected.length > 0 &&
+    !paymentSelected.some(
+        p => p.trim().toLowerCase() === paymentMethod.trim().toLowerCase()
+    )
+) {
+    visible = false;
+}
+        // URGENT
+        if (
+            urgentSelected.length > 0 &&
+            !urgentSelected.includes(urgent)
+        ) {
+            visible = false;
+        }
+
+        // ORDER DATE
+        if (orderFrom && orderDate < orderFrom) {
+            visible = false;
+        }
+
+        if (orderTo && orderDate > orderTo) {
+            visible = false;
+        }
+
+        // DELIVERY DATE
+        if (deliveryFrom && deliveryDate < deliveryFrom) {
+            visible = false;
+        }
+
+        if (deliveryTo && deliveryDate > deliveryTo) {
+            visible = false;
+        }
+
+        // KEYWORD SEARCH
+        const searchText = (
+            orderCode +
+            " " +
+            userId +
+            " " +
+            userName +
+            " " +
+            note +
+            " " +
+            paymentMethod +
+            " " +
+            status
+        ).toLowerCase();
+
+        if (
+            keyword &&
+            !searchText.includes(keyword)
+        ) {
+            visible = false;
+        }
+
+        row.style.display = visible ? "" : "none";
+    });
+
+});
+// FORMAT TOTAL PRICE
+document.addEventListener("DOMContentLoaded", function () {
+
+    const rows = document.querySelectorAll("#order-table-body tr");
+
+    rows.forEach(row => {
+
+        const cells = row.querySelectorAll("td");
+
+        // Bỏ qua dòng không đủ cột
+        if (cells.length < 9) return;
+
+        // Cột Total Price
+        const priceCell = cells[7];
+
+        // Chuyển thành số
+        const price = Number(priceCell.textContent);
+
+        // Format kiểu Việt Nam
+        priceCell.textContent =
+            price.toLocaleString("vi-VN", {
+                maximumFractionDigits: 0
+            }) + " đ";
+    });
+
+});
+    </script>
+  </body>
+</html>

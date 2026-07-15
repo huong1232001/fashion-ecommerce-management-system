@@ -1,0 +1,1496 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager H.H.U.O.N.G shop</title>
+    
+    {% load static %}
+
+    <style>
+        /* ================= RESET & GENERAL ================= */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: #f8fafc;
+    color: #1e293b;
+    padding-top: 80px;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ================= NAVBAR ================= */
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #ffffff;
+    padding: 12px 40px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+}
+
+.logo {
+    margin-left: 0;
+}
+
+.logo img {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+}
+
+.manager-section {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.manager-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 14px;
+    border-radius: 9999px;
+    border: 1px solid #e2e8f0;
+    background: #ffffff;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s;
+}
+
+.manager-info:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+.managername {
+    font-size: 14px;
+    font-weight: 500;
+    color: #334155;
+}
+
+/* ================= SPECIAL PAGE TITLE ================= */
+.page-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 35px 0 25px 0;
+    position: relative;
+    letter-spacing: -0.5px;
+}
+
+/* Tạo đường gạch dưới gradient tinh tế cho tiêu đề */
+.page-title::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, #1f2a44, #3b82f6);
+    border-radius: 2px;
+    margin: 10px auto 0 auto;
+}
+
+/* ================= CLOSE BUTTON ================= */
+.close-icon {
+    position: fixed;
+    top: 95px;
+    right: 40px;
+    font-size: 28px;
+    line-height: 1;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #e2e8f0;
+    border-radius: 50%;
+    background: #ffffff;
+    cursor: pointer;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    transition: all 0.2s;
+    z-index: 99;
+}
+
+.close-icon:hover {
+    color: #0f172a;
+    background: #f1f5f9;
+    transform: scale(1.05);
+}
+
+/* ================= ORDER INFO (CARD STYLE) ================= */
+.order-info {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px 25px;
+}
+
+.order-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.order-field label {
+    font-weight: 600;
+    font-size: 13px;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.order-field input,
+.order-field textarea {
+    padding: 10px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background: #f8fafc;
+    font-size: 14px;
+    color: #334155;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.order-field input[readonly],
+.order-field textarea[readonly] {
+    border-color: #e2e8f0;
+    cursor: default;
+}
+
+/* note */
+.note-field textarea {
+    min-height: 75px;
+    resize: none;
+}
+
+/* ================= STATUS ================= */
+.status-field {
+    grid-column: span 3;
+    margin-top: 5px;
+}
+
+.status-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 4px;
+}
+
+.status-item input {
+    display: none;
+}
+
+.status-item span {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid #e2e8f0;
+    background: #ffffff;
+    font-size: 13px;
+    font-weight: 500;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.status-item span:hover {
+    background: #f1f5f9;
+    color: #334155;
+}
+
+/* Màu sắc thông minh cho từng trạng thái khi được chọn (Checked) */
+.status-item input[value="confirmed"]:checked + span {
+    background: #e0f2fe; color: #0369a1; border-color: #bae6fd; font-weight: 600;
+}
+.status-item input[value="waiting"]:checked + span {
+    background: #fef3c7; color: #b45309; border-color: #fde68a; font-weight: 600;
+}
+.status-item input[value="picking"]:checked + span {
+    background: #fae8ff; color: #a21caf; border-color: #f5d0fe; font-weight: 600;
+}
+.status-item input[value="delivery"]:checked + span {
+    background: #ffedd5; color: #c2410c; border-color: #fed7aa; font-weight: 600;
+}
+.status-item input[value="done"]:checked + span {
+    background: #dcfce7; color: #15803d; border-color: #bbf7d0; font-weight: 600;
+}
+.status-item input[value="cancelled"]:checked + span {
+    background: #fee2e2; color: #b91c1c; border-color: #fecaca; font-weight: 600;
+}
+
+/* ================= TABLE ================= */
+.order-products {
+    width: 90%;
+    max-width: 1200px;
+    margin: 24px auto;
+    background: #ffffff;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+}
+
+.product-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 14px;
+}
+
+.product-table thead {
+    background: #f8fafc;
+}
+
+.product-table th {
+    padding: 14px;
+    text-align: center;
+    font-weight: 600;
+    color: #475569;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.product-table td {
+    padding: 14px;
+    text-align: center;
+    color: #334155;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.product-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.product-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+/* ================= BUTTONS ================= */
+.order-actions {
+    width: 90%;
+    max-width: 1200px;
+    margin: 30px auto 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn {
+    padding: 10px 28px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-back {
+    background: #64748b;
+    color: #ffffff;
+}
+
+.btn-back:hover {
+    background: #475569;
+}
+
+.btn-confirm {
+    background: #1f2a44;
+    color: #ffffff;
+}
+
+.btn-confirm:hover {
+    background: #2e3f66;
+    box-shadow: 0 4px 12px rgba(31, 42, 68, 0.2);
+}
+
+.btn-delete {
+    background: #ffffff;
+    border: 1px solid #ef4444;
+    color: #ef4444;
+}
+
+.btn-delete:hover {
+    background: #ef4444;
+    color: #ffffff;
+}
+
+.btn-delete.disabled {
+    opacity: 0.35;
+    pointer-events: none;
+    border-color: #cbd5e1;
+    color: #94a3b8;
+}
+
+/* ================= DROPDOWN ================= */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 110%;
+    right: 0;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    min-width: 150px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 10px 16px;
+    color: #334155;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.dropdown-menu a:hover {
+    background: #f1f5f9;
+}
+
+/* ================= ICON SIZE FIX ================= */
+.menu-icon {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    cursor: pointer;
+}
+
+.account-icon {
+    width: 26px;
+    height: 26px;
+    object-fit: contain;
+    border-radius: 50%;
+}
+
+/* Hỗ trợ hiển thị mượt trên giao diện điện thoại */
+@media (max-width: 768px) {
+    .order-info {
+        grid-template-columns: 1fr;
+    }
+    .status-field {
+        grid-column: span 1;
+    }
+    .close-icon {
+        position: absolute;
+        top: 95px;
+        right: 15px;
+    }
+}
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.4);
+    z-index:9999;
+}
+
+.modal-content{
+    width:450px;
+    background:#fff;
+    margin:150px auto;
+    padding:20px;
+    border-radius:10px;
+}
+
+.modal-content textarea{
+    width:100%;
+    height:120px;
+    margin-top:10px;
+    padding:10px;
+}
+
+.modal-buttons{
+    margin-top:15px;
+    text-align:right;
+}
+
+.modal-buttons button{
+    padding:8px 16px;
+}
+.edited-field{
+    color:red !important;
+    font-weight:bold;
+    border:2px solid red !important;
+}
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+
+<body>
+
+   <button
+  class="close-icon"
+  onclick="history.back();"
+>
+  ×
+</button>
+
+    <!-- HEADER -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <img src="{% static 'images/logo.png' %}" alt="Logo">
+            </div>
+
+            <div class="manager-section">
+                <img
+                    src="{% static 'images/notify-icon.png' %}"
+                    alt="Notify"
+                    class="menu-icon"
+                >
+
+                <div class="manager-info" id="manager-dropdown">
+                    <img
+                        src="{% static 'images/account-icon.png' %}"
+                        alt="Account"
+                        class="account-icon"
+                    >
+
+                    <span class="managername">
+    {{ manager_name }}
+</span>
+
+                    <div class="dropdown-menu" id="dropdown-menu">
+                        <a href="#">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="page-title">
+    Order Detail
+</div>
+<form method="POST">
+{% csrf_token %}
+    <!-- ORDER INFO -->
+    <section class="order-info">
+
+        <div class="order-field">
+            <label>Order ID:</label>
+           <!-- Order ID -->
+<input type="text"
+       value="{{ order_header.order_id }}"
+       readonly>
+        </div>
+
+        <div class="order-field">
+            <label>User ID:</label>
+            <input type="text"
+       value="{{ order_header.user.user_id }}"
+       readonly>
+        </div>
+
+        <div class="order-field">
+            <label>User Name:</label>
+           <input type="text"
+       value="{{ order_header.user_name }}"
+       readonly>
+        </div>
+        <div class="order-field">
+    <label>Phone Number:</label>
+    <input
+        type="text"
+        value="{{ order_header.user.phone }}"
+        readonly
+    >
+</div>
+        <div class="order-field">
+            <label>Order Date:</label>
+            <input type="text"
+       value="{{ order_header.order_date }}"
+       readonly>
+
+        </div>
+
+        <div class="order-field">
+            <label>Estimated Delivery Date:</label>
+          <input
+    type="date"
+    id="estimated_delivery_date"
+    name="estimated_delivery_date"
+    value="{{ order_header.estimated_delivery_date|date:'Y-m-d' }}"
+    readonly
+    {% if edited_estimate %}
+    style="color:red;font-weight:bold;"
+    {% endif %}
+>
+        </div>
+
+        <div class="order-field">
+            <label>Total Price:</label>
+           <input
+    type="text"
+    id="totalPrice"
+    class="money"
+    value="{{ order_header.total_price_order }}"
+    readonly
+>
+
+        </div>
+
+        <div class="order-field">
+            <label>Method Payment:</label>
+           <input type="text"
+       value="{{ order_header.payment_method.method_name }}"
+       readonly>
+        </div>
+
+       <div class="order-field note-field">
+    <label>Note:</label>
+    <textarea readonly>{{ order_header.note }}</textarea>
+</div>
+<div class="order-field status-field">
+    <label>Status Order:</label>
+
+    <div class="status-options">
+        <label class="status-item">
+    <input
+        type="radio"
+        name="order_status"
+        value="confirmed"
+        {% if order_header.status.status_id == '01' %}checked{% endif %}
+    >
+    <span>Confirmed</span>
+</label>
+
+<label class="status-item">
+    <input
+        type="radio"
+        name="order_status"
+        value="waiting"
+        {% if order_header.status.status_id == '02' %}checked{% endif %}
+    >
+    <span>Waiting for Product</span>
+</label>
+
+<label class="status-item">
+    <input
+        type="radio"
+        name="order_status"
+        value="picking"
+        {% if order_header.status.status_id == '03' %}checked{% endif %}
+    >
+    <span>Picking Up</span>
+</label>
+
+<label class="status-item">
+    <input
+        type="radio"
+        name="order_status"
+        value="delivery"
+        {% if order_header.status.status_id == '04' %}checked{% endif %}
+    >
+    <span>On Delivery</span>
+</label>
+
+<label class="status-item">
+    <input
+        type="radio"
+        name="order_status"
+        value="done"
+        {% if order_header.status.status_id == '05' %}checked{% endif %}
+    >
+    <span>Done</span>
+</label>
+
+<label class="status-item">
+    <input
+        type="radio"
+        name="order_status"
+        value="cancelled"
+        {% if order_header.status.status_id == '06' %}checked{% endif %}
+    >
+    <span>Cancelled</span>
+</label>
+    </div>
+</div>
+    </section>
+
+    <!-- PRODUCT TABLE -->
+    <section class="order-products">
+        <table class="product-table">
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>Product Code</th>
+                    <th>Product Name</th>
+                    <th>Type</th>
+                    <th>Product Size</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+
+           <tbody>
+
+{% for item in order_details %}
+
+<tr>
+
+    <td>{{ forloop.counter }}</td>
+
+    <td>{{ item.product.product_code }}</td>
+
+    <td>{{ item.product.product_name }}</td>
+
+    <td>{{ item.type.type_name }}</td>
+
+    <td>
+    <select
+    class="edit-field {% if item.product.product_id in edited_products %}edited-field{% endif %}"
+    name="product_size_{{ forloop.counter }}"
+    disabled
+>
+    <option
+    value="S"
+    {% if item.product_size == "S" %}selected{% endif %}
+    {% if item.product.quality_inventory_of_size_S <= 0 %}disabled{% endif %}
+>
+    S
+    {% if item.product.quality_inventory_of_size_S > 0 %}
+        (còn {{ item.product.quality_inventory_of_size_S|floatformat:0 }})
+    {% else %}
+        (Hết hàng)
+    {% endif %}
+</option>
+
+<option
+    value="M"
+    {% if item.product_size == "M" %}selected{% endif %}
+    {% if item.product.quality_inventory_of_size_M <= 0 %}disabled{% endif %}
+>
+    M
+    {% if item.product.quality_inventory_of_size_M > 0 %}
+        (còn {{ item.product.quality_inventory_of_size_M|floatformat:0 }})
+    {% else %}
+        (Hết hàng)
+    {% endif %}
+</option>
+
+<option
+    value="L"
+    {% if item.product_size == "L" %}selected{% endif %}
+    {% if item.product.quality_inventory_of_size_L <= 0 %}disabled{% endif %}
+>
+    L
+    {% if item.product.quality_inventory_of_size_L > 0 %}
+        (còn {{ item.product.quality_inventory_of_size_L|floatformat:0 }})
+    {% else %}
+        (Hết hàng)
+    {% endif %}
+</option>
+{% if item.product.is_freesize %}
+<option
+    value="FREESIZE"
+    {% if item.product_size == "FREESIZE" %}selected{% endif %}
+    {% if item.product.quality_inventory_of_freesize <= 0 %}disabled{% endif %}
+>
+    Free Size
+    {% if item.product.quality_inventory_of_freesize > 0 %}
+        (còn {{ item.product.quality_inventory_of_freesize|floatformat:0 }})
+    {% else %}
+        (Hết hàng)
+    {% endif %}
+</option>
+{% endif %}
+</select>
+</td>
+
+    <td>
+    <input
+    type="number"
+    min="1"
+    class="edit-field {% if item.product.product_id in edited_products %}edited-field{% endif %}"
+    name="quantity_{{ forloop.counter }}"
+    value="{{ item.quality }}"
+    readonly
+>
+</td>
+<td
+    class="money product-price"
+    data-price="{{ item.price_product }}"
+>
+    {{ item.price_product }}
+</td>
+
+</tr>
+
+{% empty %}
+
+<tr>
+    <td colspan="7">
+        No Product Found
+    </td>
+</tr>
+
+{% endfor %}
+
+</tbody>
+        </table>
+    </section>
+
+    <!-- BUTTONS -->
+    <div class="order-actions">
+        
+    <div class="left-buttons">
+        <button
+    type="button"
+    class="btn"
+    id="printQRBtn"
+    style="
+        background:#16a34a;
+        color:white;
+        margin-left:10px;
+    "
+>
+    Print QR
+</button>
+    <button
+        type="button"
+        class="btn btn-back"
+        id="historyBtn"
+    >
+        History
+    </button>
+
+</div>
+
+    <div class="right-buttons">
+
+    <button
+        type="button"
+        class="btn"
+        id="editBtn"
+        style="
+            background:#0ea5e9;
+            color:white;
+            margin-right:10px;
+        "
+    >
+        Edit
+    </button>
+
+    <button class="btn btn-delete disabled">
+        Delete
+    </button>
+
+    <button
+        type="button"
+        class="btn btn-confirm"
+    >
+        Confirm
+    </button>
+
+</div>
+
+</div>
+<input
+    type="hidden"
+    id="reasonInput"
+    name="change_reason"
+>
+
+</form>
+<div id="reasonModal" class="modal">
+    <div class="modal-content">
+        <h3>Reason Required</h3>
+
+        <textarea
+            id="changeReason"
+            placeholder="Enter reason..."
+        ></textarea>
+
+        <div class="modal-buttons">
+            <button type="button" id="cancelReason">
+                Cancel
+            </button>
+
+            <button type="button" id="confirmReason">
+                OK
+            </button>
+        </div>
+    </div>
+</div>
+<div id="qrModal" class="modal">
+
+    <div class="modal-content">
+
+        <h3>Customer QR Code</h3>
+
+        <div
+            id="qrcode"
+            style="
+                display:flex;
+                justify-content:center;
+                margin:20px 0;
+            "
+        ></div>
+
+        <div class="modal-buttons">
+
+            <button
+                type="button"
+                id="printQrNow"
+            >
+                Print
+            </button>
+
+            <button
+                type="button"
+                id="closeQrModal"
+            >
+                Close
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+    <script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    // ==========================
+    // DROPDOWN
+    // ==========================
+
+    const managerInfo =
+        document.getElementById(
+            "manager-dropdown"
+        );
+
+    const dropdownMenu =
+        document.getElementById(
+            "dropdown-menu"
+        );
+
+    managerInfo.addEventListener(
+        "click",
+        function (e) {
+
+            e.stopPropagation();
+
+            dropdownMenu.style.display =
+                dropdownMenu.style.display === "block"
+                ? "none"
+                : "block";
+        }
+    );
+
+    document.addEventListener(
+        "click",
+        function () {
+
+            dropdownMenu.style.display =
+                "none";
+        }
+    );
+
+    // ==========================
+    // FORMAT MONEY
+    function formatMoney(number){
+    return Number(number).toLocaleString(
+        "vi-VN",
+        {
+            maximumFractionDigits:0
+        }
+    ) + " đ";
+}
+
+function recalculateTotal(){
+
+    let total = 0;
+
+    document
+        .querySelectorAll(".product-table tbody tr")
+        .forEach(function(row){
+
+            const qty =
+                parseInt(
+                    row.querySelector(
+                        'input[name^="quantity_"]'
+                    ).value
+                ) || 0;
+
+            const price =
+                parseFloat(
+                    row.querySelector(
+                        ".product-price"
+                    ).dataset.price
+                ) || 0;
+
+            total += qty * price;
+
+        });
+
+    document.getElementById(
+        "totalPrice"
+    ).value = formatMoney(total);
+}
+    // ==========================
+
+    document
+        .querySelectorAll(".money")
+        .forEach(function (element) {
+
+            let value =
+                element.tagName === "INPUT"
+                ? element.value
+                : element.textContent;
+
+            const number =
+                parseFloat(value);
+
+            if (!isNaN(number)) {
+
+                const formatted =
+                    number.toLocaleString(
+                        "vi-VN",
+                        {
+                            maximumFractionDigits: 0
+                        }
+                    ) + " đ";
+
+                if (
+                    element.tagName ===
+                    "INPUT"
+                ) {
+                    element.value =
+                        formatted;
+                }
+                else {
+                    element.textContent =
+                        formatted;
+                }
+            }
+
+        });
+
+    // ==========================
+    // STATUS
+    // ==========================
+
+    const statusOrder = {
+        confirmed: 1,
+        waiting: 2,
+        picking: 3,
+        delivery: 4,
+        done: 5,
+        cancelled: 6
+    };
+
+    const form =
+        document.querySelector(
+            "form"
+        );
+
+    const radios =
+        document.querySelectorAll(
+            'input[name="order_status"]'
+        );
+
+    const confirmBtn =
+        document.querySelector(
+            ".btn-confirm"
+        );
+    const editBtn =
+    document.getElementById(
+        "editBtn"
+    );
+
+let editMode = false;
+
+editBtn.addEventListener(
+    "click",
+    function(){
+
+        editMode = !editMode;
+
+        // Estimated Delivery Date
+
+        document
+            .getElementById(
+                "estimated_delivery_date"
+            )
+            .readOnly = !editMode;
+
+        // Quantity
+
+        document
+            .querySelectorAll(
+                'input[name^="quantity_"]'
+            )
+            .forEach(function(input){
+
+                input.readOnly =
+                    !editMode;
+
+            });
+            document
+    .querySelectorAll(
+        'input[name^="quantity_"]'
+    )
+    .forEach(function(input){
+
+        input.addEventListener(
+            "input",
+            recalculateTotal
+        );
+
+    });
+        // Product Size
+
+        document
+            .querySelectorAll(
+                'select[name^="product_size_"]'
+            )
+            .forEach(function(select){
+
+                select.disabled =
+                    !editMode;
+
+            });
+
+        
+
+    }
+);
+    const modal =
+        document.getElementById(
+            "reasonModal"
+        );
+
+    const reasonBox =
+        document.getElementById(
+            "changeReason"
+        );
+
+    const hiddenReason =
+        document.getElementById(
+            "reasonInput"
+        );
+
+    const cancelBtn =
+        document.getElementById(
+            "cancelReason"
+        );
+
+    const okBtn =
+        document.getElementById(
+            "confirmReason"
+        );
+
+    const currentStatus =
+        document.querySelector(
+            'input[name="order_status"]:checked'
+        ).value;
+
+    let selectedStatus =
+        currentStatus;
+
+    // ==========================
+    // DONE hoặc CANCEL
+    // ==========================
+
+    if (
+        currentStatus === "done" ||
+        currentStatus === "cancelled"
+    ) {
+
+        radios.forEach(function (r) {
+            r.disabled = true;
+        });
+
+        confirmBtn.disabled = true;
+
+        confirmBtn.style.opacity =
+            "0.5";
+
+        confirmBtn.style.cursor =
+            "not-allowed";
+    }
+
+    // ==========================
+    // CHANGE STATUS
+    // ==========================
+
+    radios.forEach(function (radio) {
+
+        radio.addEventListener(
+            "change",
+            function () {
+
+                selectedStatus =
+                    this.value;
+            }
+        );
+
+    });
+
+    // ==========================
+// CONFIRM BUTTON
+// ==========================
+
+confirmBtn.addEventListener(
+    "click",
+    function (e) {
+
+        e.preventDefault();
+
+        // Nếu đang edit dữ liệu
+        if (editMode) {
+
+            if (
+                confirm(
+                    "Save all changes?"
+                )
+            ) {
+
+                // enable để gửi lên server
+                document
+                    .getElementById(
+                        "estimated_delivery_date"
+                    )
+                    .disabled = false;
+
+                document
+                    .querySelectorAll(
+                        'select[name^="product_size_"]'
+                    )
+                    .forEach(function (s) {
+                        s.disabled = false;
+                    });
+
+                form.submit();
+            }
+
+            return;
+        }
+
+        const currentLevel =
+            statusOrder[
+                currentStatus
+            ];
+
+        const selectedLevel =
+            statusOrder[
+                selectedStatus
+            ];
+
+        // Không thay đổi status
+
+        if (
+            currentStatus ===
+            selectedStatus
+        ) {
+
+            alert(
+                "Please select another status."
+            );
+
+            return;
+        }
+
+        // Cancel
+
+        if (
+            selectedStatus ===
+            "cancelled"
+        ) {
+
+            modal.style.display =
+                "block";
+
+            return;
+        }
+
+        // Update ngược
+
+        if (
+            selectedLevel <
+            currentLevel
+        ) {
+
+            modal.style.display =
+                "block";
+
+            return;
+        }
+
+        // Không cho nhảy cóc
+
+        if (
+            selectedLevel -
+            currentLevel > 1
+        ) {
+
+            alert(
+                "Status can only be changed one step at a time."
+            );
+
+            document.querySelector(
+                `input[value="${currentStatus}"]`
+            ).checked = true;
+
+            selectedStatus =
+                currentStatus;
+
+            return;
+        }
+
+        // Update status
+
+        if (
+            confirm(
+                "Are you sure you want to update status?"
+            )
+        ) {
+
+            document
+                .getElementById(
+                    "estimated_delivery_date"
+                )
+                .disabled = false;
+
+            document
+                .querySelectorAll(
+                    'select[name^="product_size_"]'
+                )
+                .forEach(function (s) {
+                    s.disabled = false;
+                });
+
+            form.submit();
+        }
+
+    }
+);
+    // ==========================
+    // CANCEL MODAL
+    // ==========================
+
+    cancelBtn.addEventListener(
+        "click",
+        function () {
+
+            modal.style.display =
+                "none";
+
+            reasonBox.value = "";
+
+            document.querySelector(
+                `input[value="${currentStatus}"]`
+            ).checked = true;
+
+            selectedStatus =
+                currentStatus;
+
+        }
+    );
+
+    // ==========================
+    // OK MODAL
+    // ==========================
+
+    okBtn.addEventListener(
+        "click",
+        function () {
+
+            const reason =
+                reasonBox.value.trim();
+
+            if (
+                reason === ""
+            ) {
+
+                alert(
+                    "Please enter reason."
+                );
+
+                return;
+            }
+
+            hiddenReason.value =
+                reason;
+
+            form.submit();
+
+        }
+    );
+
+    // ==========================
+    // CLOSE MODAL CLICK OUTSIDE
+    // ==========================
+
+    window.addEventListener(
+        "click",
+        function (e) {
+
+            if (
+                e.target === modal
+            ) {
+
+                modal.style.display =
+                    "none";
+
+                reasonBox.value = "";
+
+                document.querySelector(
+                    `input[value="${currentStatus}"]`
+                ).checked = true;
+
+                selectedStatus =
+                    currentStatus;
+            }
+
+        }
+    );
+
+});
+// ==========================
+// PRINT QR CUSTOMER
+// ==========================
+
+const printQRBtn =
+    document.getElementById(
+        "printQRBtn"
+    );
+
+const qrModal =
+    document.getElementById(
+        "qrModal"
+    );
+
+const closeQrModal =
+    document.getElementById(
+        "closeQrModal"
+    );
+
+const printQrNow =
+    document.getElementById(
+        "printQrNow"
+    );
+
+printQRBtn.addEventListener(
+    "click",
+    function(){
+
+        const qrContainer =
+            document.getElementById(
+                "qrcode"
+            );
+
+        qrContainer.innerHTML = "";
+
+        const customerInfo = `
+Order ID: {{ order_header.order_id }}
+Customer: {{ order_header.user_name }}
+Phone: {{ order_header.user.phone }}
+Address: {{ order_header.user.address }}
+`;
+
+        new QRCode(
+            qrContainer,
+            {
+                text: customerInfo,
+                width: 250,
+                height: 250
+            }
+        );
+
+        qrModal.style.display =
+            "block";
+    }
+);
+
+closeQrModal.addEventListener(
+    "click",
+    function(){
+
+        qrModal.style.display =
+            "none";
+    }
+);
+printQrNow.addEventListener(
+    "click",
+    function(){
+
+        const qrImage =
+            document
+            .querySelector(
+                "#qrcode img"
+            );
+
+        const printWindow =
+            window.open(
+                "",
+                "",
+                "width=800,height=600"
+            );
+
+        printWindow.document.write(`
+            <html>
+            <head>
+                <title>Customer QR</title>
+            </head>
+            <body style="
+                text-align:center;
+                font-family:Arial;
+                margin-top:50px;
+            ">
+                <h2>Customer Information</h2>
+
+                <p>
+                    <strong>Name:</strong>
+                    {{ order_header.user_name }}
+                </p>
+
+                <p>
+                    <strong>Phone:</strong>
+                    {{ order_header.user.phone }}
+                </p>
+
+                <p>
+                    <strong>Address:</strong>
+                    {{ order_header.user.address }}
+                </p>
+
+                <img src="${qrImage.src}" />
+
+            </body>
+            </html>
+        `);
+
+        printWindow.document.close();
+
+        printWindow.print();
+    }
+);
+
+</script>
+
+</body>
+</html>

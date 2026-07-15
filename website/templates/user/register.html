@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>H.H.U.O.N.G shop</title>
+    {% load static %}
+    <!-- Link đến tệp CSS -->
+    <link rel="stylesheet" href="{% static 'css/user/login.css' %}" />
+
+    <!-- CSS nội tuyến -->
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        position: relative;
+        font-family: Arial, sans-serif;
+      }
+
+      .background-image {
+        width: 35%;
+        height: auto;
+        display: block;
+      }
+
+      .logo {
+        position: absolute;
+        top: 13%;
+        right: 25%;
+        transform: translateY(-50%);
+        width: 13%;
+        height: auto;
+      }
+
+      .welcome-container {
+        position: absolute;
+        top: 25%;
+        right: 17%;
+        transform: translateY(-50%);
+        text-align: center;
+      }
+
+      .welcome-text {
+        font-size: 20px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 5px;
+      }
+
+      .signin-text {
+        font-size: 14px;
+        color: #a6a6a6;
+        margin-bottom: 15px;
+      }
+
+      .register-form-container {
+        position: absolute;
+        top: 65%;
+        right: 17%;
+        transform: translateY(-50%);
+        text-align: left;
+      }
+
+      .register-form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .register-form input {
+        width: 343px;
+        height: 25px;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+      }
+
+      .register-form input.invalid {
+        border-color: red;
+        background-color: #ffe6e6;
+      }
+
+      .register-button {
+        width: 363px;
+        height: 40px;
+        margin-top: 10px;
+        background-color: rgb(184, 184, 184);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      .register-button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
+
+      .register-button:hover:enabled {
+        background-color: rgb(84, 84, 84);
+      }
+
+      .close-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: none;
+        border: none;
+        font-size: 35px;
+        cursor: pointer;
+        color: #333;
+      }
+
+      .close-button:hover {
+        color: red;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Nút đóng -->
+    <button class="close-button" onclick="window.location.href='http://127.0.0.1:8000/user/login/'">&times;</button>
+
+    <!-- Phần hình ảnh -->
+    <img id="slideshow" src="{% static 'images/background01.jpg' %}" alt="Background Test" class="background-image" />
+
+    <!-- Thêm logo bên phải -->
+    <img src="{% static 'images/logo.png' %}" alt="Logo" class="logo" />
+
+    <!-- Dòng chữ dưới logo -->
+    <div class="welcome-container">
+      <div class="welcome-text">Welcome to H.H.U.O.N.G!</div>
+      <div class="signin-text">Sign in now to have a great shopping experience with us.</div>
+    </div>
+
+    <!-- Form đăng ký -->
+    <div class="register-form-container">
+      <form class="register-form" action="/user/register/" method="POST">
+        {% csrf_token %}
+
+        <input type="text" id="username" name="username" placeholder="Username" required />
+        <input type="text" id="address" name="address" placeholder="Address" required />
+        <input type="text" id="phone" name="phone" placeholder="Phone" required />
+        <input type="email" id="email" name="email" placeholder="Email" required />
+        <input type="password" id="password" name="password" placeholder="Password" required />
+        <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm Password" required />
+
+        <button type="submit" class="register-button" disabled>Register</button>
+      </form>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const image = document.getElementById("slideshow");
+
+        // Danh sách ảnh
+        const images = [
+          "{% static 'images/background01.jpg' %}",
+          "{% static 'images/background02.jpg' %}",
+          "{% static 'images/background03.jpg' %}",
+          "{% static 'images/background04.jpg' %}",
+          "{% static 'images/background05.jpg' %}",
+        ];
+
+        let index = 0;
+
+        function changeImage() {
+          index = (index + 1) % images.length;
+          image.src = images[index];
+        }
+
+        setInterval(changeImage, 3000);
+
+        // Kiểm tra input
+        const inputs = document.querySelectorAll(".register-form input[required]");
+        const registerButton = document.querySelector(".register-button");
+
+        function validateForm() {
+          let isValid = true;
+
+          inputs.forEach((input) => {
+            if (!input.value.trim() || input.classList.contains("invalid")) {
+              isValid = false;
+            }
+          });
+
+          registerButton.disabled = !isValid;
+        }
+
+        inputs.forEach((input) => {
+          input.addEventListener("input", validateForm);
+        });
+
+        // Kiểm tra ô trống (trừ confirm-password)
+        inputs.forEach((input) => {
+          input.addEventListener("blur", function () {
+            if (input.id !== "confirm-password" && !input.value.trim()) {
+              input.setCustomValidity("This field cannot be empty");
+              input.reportValidity();
+            } else {
+              input.setCustomValidity("");
+            }
+          });
+        });
+
+        // Kiểm tra số điện thoại
+        const phoneInput = document.getElementById("phone");
+        phoneInput.addEventListener("blur", function () {
+          const phoneRegex = /^[0-9]{10,11}$/;
+          if (!phoneRegex.test(phoneInput.value)) {
+            phoneInput.classList.add("invalid");
+            phoneInput.setCustomValidity("Phone number must be 10-11 digits.");
+            phoneInput.reportValidity();
+          } else {
+            phoneInput.classList.remove("invalid");
+            phoneInput.setCustomValidity("");
+          }
+        });
+
+        // Kiểm tra password
+        const passwordInput = document.getElementById("password");
+        passwordInput.addEventListener("blur", function () {
+          const password = passwordInput.value;
+          const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
+
+          if (!passwordRegex.test(password)) {
+            passwordInput.classList.add("invalid");
+            passwordInput.setCustomValidity(
+              "Password must be at least 8 characters long, include uppercase, lowercase, number, and special character."
+            );
+            passwordInput.reportValidity();
+          } else {
+            passwordInput.classList.remove("invalid");
+            passwordInput.setCustomValidity("");
+          }
+        });
+
+        // Kiểm tra confirm password
+        const confirmPasswordInput = document.getElementById("confirm-password");
+        confirmPasswordInput.addEventListener("blur", function () {
+          if (confirmPasswordInput.value !== passwordInput.value) {
+            confirmPasswordInput.classList.add("invalid");
+            confirmPasswordInput.setCustomValidity("Passwords do not match");
+            confirmPasswordInput.reportValidity();
+          } else {
+            confirmPasswordInput.classList.remove("invalid");
+            confirmPasswordInput.setCustomValidity("");
+          }
+        });
+
+        // Hiển thị thông báo khi submit
+        const form = document.querySelector(".register-form");
+
+form.addEventListener("submit", function (e) {
+  e.preventDefault(); // Ngăn reload trang
+
+  const formData = new FormData(form);
+
+  fetch("/user/register/", {
+    method: "POST",
+    headers: {
+      "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value, // Lấy CSRF token
+    },
+    body: formData, // Gửi trực tiếp FormData, không cần JSON.stringify
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.error) {
+      alert(data.error);
+    } else {
+      alert("Đăng ký thành công!");
+      window.location.href = "/user/login/"; // Chuyển hướng sau khi đăng ký
+    }
+  })
+  .catch(error => console.error("Lỗi:", error)); 
+})});
+    </script>
+  </body>
+</html>

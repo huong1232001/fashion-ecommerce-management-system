@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manager H.H.U.O.N.G shop</title>
+    {% load static %}
+    <style>
+      /* ================= RESET & GENERAL ================= */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background: #f5f8fc;
+        color: #1e293b;
+        padding-top: 80px;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* ================= NAVBAR ================= */
+      .navbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #ffffff;
+        padding: 12px 40px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+      }
+
+      .logo {
+        margin-left: 0;
+      }
+
+      .logo img {
+        height: 40px;
+        width: auto;
+        object-fit: contain;
+        display: block;
+      }
+
+      .manager-section {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-left: auto;
+        margin-right: 0;
+      }
+
+      .manager-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 14px;
+        border-radius: 9999px;
+        border: 1px solid #e2e8f0;
+        background: #ffffff;
+        cursor: pointer;
+        position: relative;
+        transition: all 0.2s;
+      }
+
+      .manager-info:hover {
+        background: #f1f5f9;
+        border-color: #cbd5e1;
+      }
+
+      .managername {
+        font-size: 14px;
+        font-weight: 500;
+        color: #334155;
+      }
+
+      /* ================= SPECIAL PAGE TITLE ================= */
+      .page-title {
+        text-align: center;
+        font-size: 28px;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 35px 0 25px 0;
+        position: relative;
+        letter-spacing: -0.5px;
+      }
+
+      /* Tạo đường gạch dưới gradient tinh tế cho tiêu đề */
+      .page-title::after {
+        content: '';
+        display: block;
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(90deg, #1f2a44, #3b82f6);
+        border-radius: 2px;
+        margin: 10px auto 0 auto;
+      }
+
+      /* ================= BACK BUTTON ================= */
+      #back-button {
+        position: fixed;
+        top: 95px;
+        left: 40px;
+        font-size: 20px;
+        line-height: 1;
+        width: 40px;
+        height: 40px;
+        border: 1px solid #e2e8f0;
+        border-radius: 50%;
+        background: #ffffff;
+        cursor: pointer;
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        transition: all 0.2s;
+        z-index: 99;
+      }
+
+      #back-button:hover {
+        color: #0f172a;
+        background: #f1f5f9;
+        transform: scale(1.05);
+      }
+
+      /* ================= TOP ACTIONS (SEARCH & ADD) ================= */
+      .search-box {
+        display: flex;
+        align-items: center;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        padding: 5px 14px;
+        background-color: #ffffff;
+        margin: 0 auto 20px 5%;
+        max-width: 450px;
+        width: 90%;
+        justify-content: space-between;
+        box-sizing: border-box;
+        transition: border-color 0.2s;
+      }
+
+      .search-box:focus-within {
+        border-color: #3b82f6;
+      }
+
+      .search-box input {
+        border: none;
+        outline: none;
+        padding: 6px 5px;
+        font-size: 14px;
+        width: 100%;
+        background: transparent;
+        color: #334155;
+      }
+
+      .search-box button {
+        border: none;
+        background: none;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+
+      .search-icon {
+        width: 20px;
+        height: 20px;
+        object-fit: contain;
+      }
+
+      .add-button-container {
+        text-align: right;
+        margin: 20px 5% 10px auto;
+        width: 90%;
+        max-width: 1200px;
+      }
+
+      .add-button {
+        background-color: #1f2a44;
+        color: white;
+        padding: 10px 20px;
+        font-size: 14px;
+        font-weight: 600;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .add-button:hover {
+        background-color: #2e3f66;
+        box-shadow: 0 4px 12px rgba(31, 42, 68, 0.2);
+      }
+
+      .plus-icon {
+        font-size: 20px;
+        font-weight: 400;
+        line-height: 1;
+      }
+
+      /* ================= TABLE CONTAINER & TABLE ================= */
+      .table-container {
+        width: 90%;
+        max-width: 1200px;
+        margin: 20px auto;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+        overflow-y: auto;
+        max-height: 350px;
+      }
+
+      .table-container::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .table-container::-webkit-scrollbar-thumb {
+        background-color: #cbd5e1;
+        border-radius: 3px;
+      }
+
+      .table-container::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+      }
+
+      .product-category-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        font-size: 14px;
+        table-layout: fixed;
+      }
+
+      .product-category-table thead {
+        position: sticky;
+        top: 0;
+        background-color: #f8fafc;
+        z-index: 2;
+      }
+
+      .product-category-table th {
+        padding: 14px;
+        text-align: left;
+        font-weight: 600;
+        color: #475569;
+        border-bottom: 2px solid #e2e8f0;
+      }
+
+      .product-category-table td {
+        padding: 14px;
+        text-align: left;
+        color: #334155;
+        border-bottom: 1px solid #f1f5f9;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .product-category-table tbody tr:last-child td {
+        border-bottom: none;
+      }
+
+      .product-category-table tbody tr:hover {
+        background-color: #f8fafc;
+      }
+
+      /* Checkbox Column Styling */
+      .product-category-table th:first-child,
+      .product-category-table td:first-child {
+        width: 60px;
+        text-align: center;
+      }
+
+      /* Custom Checkboxes */
+      .product-category-table input[type="checkbox"] {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 18px;
+        height: 18px;
+        border: 2px solid #cbd5e1;
+        border-radius: 4px;
+        cursor: pointer;
+        position: relative;
+        background: #ffffff;
+        transition: all 0.2s;
+        margin: 0 auto;
+        display: block;
+      }
+
+      .product-category-table input[type="checkbox"]:checked {
+        background-color: #1f2a44;
+        border-color: #1f2a44;
+      }
+
+      .product-category-table input[type="checkbox"]:checked::after {
+        content: '';
+        position: absolute;
+        top: 1px;
+        left: 4px;
+        width: 4px;
+        height: 8px;
+        border: solid #ffffff;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+      }
+
+      /* Inputfields inside table row when editing */
+      .product-category-table td input[type="text"] {
+        width: 100%;
+        padding: 6px 10px;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        font-size: 13px;
+        color: #334155;
+        outline: none;
+      }
+      .product-category-table td input[type="text"]:focus {
+        border-color: #3b82f6;
+      }
+
+      /* ================= TABLE BOTTOM ACTIONS ================= */
+      .table-actions {
+        width: 90%;
+        max-width: 1200px;
+        margin: 20px auto 80px;
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+      }
+
+      .action-button {
+        flex: 1;
+        padding: 10px 24px;
+        font-size: 14px;
+        font-weight: 600;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-align: center;
+      }
+
+      .delete-button {
+        background-color: #ffffff;
+        border: 1px solid #ef4444;
+        color: #ef4444;
+      }
+
+      .delete-button:hover {
+        background-color: #ef4444;
+        color: #ffffff;
+      }
+
+      .edit-button {
+        background-color: #64748b;
+        color: #ffffff;
+      }
+
+      .edit-button:hover {
+        background-color: #475569;
+      }
+
+      .confirm-button {
+        background-color: #1f2a44;
+        color: #ffffff;
+      }
+
+      .confirm-button:hover {
+        background-color: #2e3f66;
+        box-shadow: 0 4px 12px rgba(31, 42, 68, 0.2);
+      }
+
+      /* ================= MODAL STYLE (CARD FORM FORMAT) ================= */
+      .modal {
+        display: none; 
+        position: fixed; 
+        z-index: 2000; 
+        left: 0;
+        top: 0;
+        width: 100%; 
+        height: 100%; 
+        overflow: auto;
+        background-color: rgba(15, 23, 42, 0.3);
+        backdrop-filter: blur(4px);
+      }
+
+      .modal-content {
+        background-color: #ffffff;
+        position: relative;
+        margin: 10% auto;
+        padding: 35px 40px;
+        width: 90%;
+        max-width: 650px;
+        border-radius: 12px;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        animation: modalFadeIn 0.3s ease;
+      }
+
+      @keyframes modalFadeIn {
+        from { transform: translateY(-20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+
+      .close {
+        position: absolute;
+        top: 25px;
+        right: 30px;
+        font-size: 28px;
+        font-weight: 500;
+        color: #64748b;
+        cursor: pointer;
+        transition: color 0.2s;
+        line-height: 1;
+      }
+
+      .close:hover {
+        color: #0f172a;
+      }
+
+      .modal-content h2 {
+        text-transform: none;
+        font-size: 22px;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 25px;
+        border-bottom: 1px solid #e2e8f0;
+        padding-bottom: 12px;
+      }
+
+      .modal-form {
+        margin-top: 0;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-bottom: 18px;
+      }
+
+      .form-group label {
+        font-weight: 600;
+        font-size: 13px;
+        color: #475569;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 10px 14px;
+        font-size: 14px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        background: #f8fafc;
+        color: #334155;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+
+      .form-group input:focus {
+        border-color: #3b82f6;
+        background: #ffffff;
+      }
+
+      .form-group.buttons {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-top: 30px;
+        margin-left: 0;
+        gap: 15px;
+      }
+
+      .btn-cancel,
+      .btn-confirm {
+        width: 50%;
+        height: 42px;
+        padding: 0;
+        font-size: 14px;
+        font-weight: 600;
+        border-radius: 8px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+      }
+
+      .btn-cancel {
+        background-color: #64748b;
+        color: white;
+        border: none;
+      }
+
+      .btn-cancel:hover {
+        background-color: #475569;
+      }
+
+      .btn-confirm {
+        background-color: #1f2a44;
+        border: none;
+        color: #ffffff;
+      }
+
+      .btn-confirm:hover {
+        background-color: #2e3f66;
+        box-shadow: 0 4px 12px rgba(31, 42, 68, 0.2);
+      }
+
+      /* ================= DROPDOWN MENU ================= */
+      .dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 110%;
+        right: 0;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        min-width: 150px;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        z-index: 1000;
+      }
+
+      .dropdown-menu a {
+        display: block;
+        padding: 10px 16px;
+        color: #334155;
+        text-decoration: none;
+        font-size: 14px;
+        transition: background 0.2s;
+      }
+
+      .dropdown-menu a:hover {
+        background: #f1f5f9;
+      }
+
+      /* ================= GENERAL ICONS FIX ================= */
+      .menu-icon {
+        width: 22px;
+        height: 22px;
+        object-fit: contain;
+        cursor: pointer;
+      }
+
+      .account-icon {
+        width: 26px;
+        height: 26px;
+        object-fit: contain;
+        border-radius: 50%;
+        margin-right: 0;
+      }
+
+      body.modal-open {
+        overflow: hidden;
+      }
+
+      /* Responsive dành cho di động */
+      @media (max-width: 768px) {
+        .search-box {
+          margin-left: auto;
+          margin-right: auto;
+        }
+        .table-actions {
+          flex-direction: column;
+          gap: 10px;
+          margin-bottom: 50px;
+        }
+        #back-button {
+          position: absolute;
+          top: 95px;
+          left: 15px;
+        }
+        .modal-content {
+          padding: 25px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <nav class="navbar">
+        <div class="logo">
+          <img src="{% static 'images/logo.png' %}" alt="Logo" />
+        </div>
+
+        <div class="manager-section">
+          <img
+            src="{% static 'images/notify-icon.png' %}"
+            alt="Notify"
+            class="menu-icon"
+          />
+
+          <div class="manager-info" id="manager-dropdown">
+            <img
+              src="{% static 'images/account-icon.png' %}"
+              alt="Account"
+              class="account-icon"
+            />
+            <span class="managername" id="manager-name">{{ manager_name }}</span>
+
+            <div class="dropdown-menu" id="dropdown-menu">
+              <a href="http://127.0.0.1:8000/manager/login/">Logout</a>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div class="page-title">
+        Manage Product Categories
+      </div>
+      <div class="add-button-container">
+        <button class="add-button">
+          <span class="plus-icon">+</span> Add Product Category
+        </button>
+      </div>
+      
+      <form method="get" action="" class="search-box">
+        <input type="text" name="search" placeholder="Search Product Category Code, Name..." value="{{ request.GET.search }}">
+        <button type="submit">
+          <img src="{% static 'images/search-icon.png' %}" alt="Search" class="search-icon" />
+        </button>
+      </form>
+      
+      <div class="table-container">
+        <table class="product-category-table">
+          <thead>
+            <tr>
+              <th><input type="checkbox" id="select-all"></th>
+              <th>Product Category Code</th>
+              <th>Product Category Name</th>
+              <th>Notes</th>
+              <th>Created At</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for product in product_types %}
+            <tr>
+                <td><input type="checkbox" class="row-checkbox"></td>
+                <td>{{ product.type_code }}</td>
+                <td>{{ product.type_name }}</td>
+                <td>{{ product.note }}</td>
+                <td>{{ product.create_at }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+      </div>
+      <div class="table-actions">
+        <button class="action-button delete-button">Delete</button>
+        <button class="action-button edit-button">Edit</button>
+        <button class="action-button confirm-button">Confirm</button>
+      </div>
+     <div id="addModal" class="modal">
+  <div class="modal-content">
+    <span class="close" id="closeModal">&times;</span>
+    <h2>Add Product Category</h2>
+
+    <form class="modal-form">
+      <div class="form-group">
+        <label for="categoryId">Product Category Code</label>
+        <input type="text" id="categoryId" name="categoryId" placeholder="Enter Category ID" maxlength="5">
+      </div>
+
+      <div class="form-group">
+        <label for="categoryName">Product Category Name</label>
+        <input type="text" id="categoryName" name="categoryName" placeholder="Enter Category Name" maxlength="255">
+      </div>
+
+      <div class="form-group">
+        <label for="notes">Notes</label>
+        <input type="text" id="notes" name="notes" placeholder="Enter Notes" maxlength="255">
+      </div>
+
+      <div class="form-group buttons">
+        <button type="button" class="btn-cancel">Cancel</button>
+        <button type="button" class="btn-confirm">Confirm</button>
+      </div>
+    </form>
+  </div>
+</div>
+<button id="back-button" onclick="window.location.href='http://127.0.0.1:8000/manager/homemproduct/'">←</button>
+
+
+      
+    </header>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const managerInfo = document.getElementById("manager-dropdown");
+        const dropdownMenu = document.getElementById("dropdown-menu");
+
+        managerInfo.addEventListener("click", function (event) {
+          dropdownMenu.style.display =
+            dropdownMenu.style.display === "block" ? "none" : "block";
+          event.stopPropagation();
+        });
+
+        document.addEventListener("click", function (event) {
+          if (
+            !managerInfo.contains(event.target) &&
+            !dropdownMenu.contains(event.target)
+          ) {
+            dropdownMenu.style.display = "none";
+          }
+        });
+      });
+      document.addEventListener('DOMContentLoaded', function() {
+        const allCells = document.querySelectorAll('.product-category-table td');
+      
+        allCells.forEach(cell => {
+          if (cell.textContent.length > 20) {
+            cell.textContent = cell.textContent.substring(0, 20) + '...';
+          }
+        });
+      });
+      // Lắng nghe sự kiện khi checkbox "select-all" được thay đổi
+document.getElementById('select-all').addEventListener('change', function() {
+  // Lấy tất cả các checkbox trong tbody
+  const checkboxes = document.querySelectorAll('.row-checkbox');
+  
+  // Đặt trạng thái của tất cả các checkbox theo trạng thái của checkbox "select-all"
+  checkboxes.forEach(function(checkbox) {
+    checkbox.checked = document.getElementById('select-all').checked;
+  });
+});
+document.addEventListener("DOMContentLoaded", function () {
+  const tableBody = document.querySelector(".product-category-table tbody");
+  const rows = tableBody.querySelectorAll("tr");
+
+  if (rows.length > 100) {
+    for (let i = 100; i < rows.length; i++) {
+      rows[i].style.display = "none";  // Ẩn các hàng vượt quá 300
+    }
+  }
+});
+document.addEventListener("DOMContentLoaded", function () {
+  const addButton = document.querySelector(".add-button");  // Nút "Add Product Category"
+  const modal = document.getElementById("addModal");        // Modal
+  const closeButton = document.getElementById("closeModal"); // Nút đóng (X)
+
+  // Khi nhấn nút "Add Product Category"
+  addButton.addEventListener("click", function () {
+    modal.style.display = "block";
+    document.body.classList.add('modal-open');
+  });
+
+  // Khi nhấn vào nút (X)
+  closeButton.addEventListener("click", function () {
+    modal.style.display = "none";
+    document.body.classList.remove('modal-open');
+  });
+
+  // Khi nhấn ra ngoài modal
+  window.addEventListener("click", function (event) {
+    if (event.target === modal) {
+      modal.style.display = "none";
+      document.body.classList.remove('modal-open');
+    }
+  });
+});
+document.addEventListener('DOMContentLoaded', function () {
+  const btnConfirm = document.querySelector('.btn-confirm');
+  const btnCancel = document.querySelector('.btn-cancel');
+
+  btnConfirm.addEventListener('click', async function () {
+    const typeCode = document.getElementById('categoryId').value.trim();
+    const typeName = document.getElementById('categoryName').value.trim();
+    const note = document.getElementById('notes').value.trim();
+
+    if (!typeCode || !typeName) {
+      alert('Please enter both Category Code and Category Name.');
+      return;
+    }
+
+    // Check if type_code already exists
+    const checkResponse = await fetch(`/manager/check-product-type-code/?type_code=${typeCode}`);
+    const checkData = await checkResponse.json();
+
+    if (checkData.exists) {
+      alert('Product Category Code already exists. Please enter a different one.');
+      return;
+    }
+
+    // If not exists, send POST request to add
+    const addResponse = await fetch('/manager/add-product-type/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken')  // Lấy token CSRF
+      },
+      body: JSON.stringify({
+        type_code: typeCode,
+        type_name: typeName,
+        note: note
+      })
+    });
+
+    const addData = await addResponse.json();
+    if (addData.success) {
+      alert('Product Type added successfully!');
+      window.location.reload(); // Reload lại trang để thấy dữ liệu mới
+    } else {
+      alert(addData.message || 'Failed to add Product Type.');
+    }
+  });
+
+  btnCancel.addEventListener('click', function () {
+    document.getElementById('addModal').style.display = 'none';
+  });
+
+  // Hàm lấy CSRF Token từ cookie
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+});
+document.querySelector('.delete-button').addEventListener('click', function() {
+  const checkedRows = document.querySelectorAll('.row-checkbox:checked');
+  const typeCodes = [];
+
+  checkedRows.forEach(row => {
+      const typeCode = row.closest('tr').children[1].textContent.trim(); // Cột thứ 2 là type_code
+      typeCodes.push(typeCode);
+  });
+
+  if (typeCodes.length === 0) {
+      alert('Please select at least one product category to delete.');
+      return;
+  }
+
+  if (!confirm('Are you sure you want to delete selected product categories?')) {
+      return;
+  }
+
+  fetch('/manager/delete-product-types/', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken')  // Lấy CSRF token cho Django
+      },
+      body: JSON.stringify({ type_codes: typeCodes })
+  })
+  .then(response => response.json())
+  .then(data => {
+      if (data.success) {
+          // Xóa luôn dòng đã check ở giao diện
+          checkedRows.forEach(row => {
+              row.closest('tr').remove();
+          });
+          alert('Delete successfully.');
+      } else {
+          alert('Delete failed: ' + data.message);
+      }
+  })
+  .catch(error => {
+      console.error('Error:', error);
+      alert('An error occurred.');
+  });
+});
+
+// Hàm lấy csrf token từ cookie (Django yêu cầu)
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          // Kiểm tra cookie có đúng tên cần tìm không
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+          }
+      }
+  }
+  return cookieValue;
+}
+let editing = false; // Biến trạng thái đang edit hay chưa
+
+document.querySelector('.edit-button').addEventListener('click', function() {
+    const checkedRows = document.querySelectorAll('.row-checkbox:checked');
+
+    if (checkedRows.length === 0) {
+        alert('Please select at least one product category to edit.');
+        return;
+    }
+
+    checkedRows.forEach(row => {
+      const tr = row.closest('tr');
+      const tds = tr.querySelectorAll('td');
+  
+      const typeCode = tds[1].textContent.trim();
+      const typeName = tds[2].textContent.trim();
+      const note = tds[3].textContent.trim();
+  
+      // GHI LẠI DỮ LIỆU GỐC vào thẻ td
+      tds[1].setAttribute('data-original', typeCode);
+      tds[2].setAttribute('data-original', typeName);
+      tds[3].setAttribute('data-original', note);
+  
+      // Cho phép edit
+      tds[1].innerHTML = `<input type="text" class="edit-type-code" value="${typeCode}" maxlength="5">`;
+      tds[2].innerHTML = `<input type="text" class="edit-type-name" value="${typeName}" maxlength="255">`;
+      tds[3].innerHTML = `<input type="text" class="edit-note" value="${note}" maxlength="255">`;
+  });
+  
+    editing = true;
+});
+
+document.querySelector('.confirm-button').addEventListener('click', function() {
+    if (!editing) {
+        alert('No editing in progress.');
+        return;
+    }
+
+    const checkedRows = document.querySelectorAll('.row-checkbox:checked');
+    const updates = [];
+    const typeCodesSet = new Set();
+    let hasDuplicate = false;
+
+    checkedRows.forEach(row => {
+        const tr = row.closest('tr');
+        const tds = tr.querySelectorAll('td');
+
+        const originalTypeCode = tds[1].getAttribute('data-original') || tds[1].textContent.trim(); // Ghi nhớ type_code gốc
+        const newTypeCode = tr.querySelector('.edit-type-code').value.trim();
+        const newTypeName = tr.querySelector('.edit-type-name').value.trim();
+        const newNote = tr.querySelector('.edit-note').value.trim();
+
+        if (typeCodesSet.has(newTypeCode)) {
+            hasDuplicate = true;
+        }
+        typeCodesSet.add(newTypeCode);
+
+        updates.push({
+            original_type_code: originalTypeCode,
+            type_code: newTypeCode,
+            type_name: newTypeName,
+            note: newNote
+        });
+    });
+
+    if (hasDuplicate) {
+        alert('Duplicate Product Category Code detected among selected rows.');
+        return;
+    }
+
+    // Check từng type_code có bị trùng trong database không
+    Promise.all(updates.map(update => 
+        fetch(`/manager/check-product-type-code/?type_code=${encodeURIComponent(update.type_code)}`)
+            .then(response => response.json())
+    )).then(results => {
+        for (let i = 0; i < results.length; i++) {
+            const isChanged = updates[i].original_type_code !== updates[i].type_code;
+            if (results[i].exists && isChanged) {
+                alert(`Product Category Code "${updates[i].type_code}" already exists in the database.`);
+                return;
+            }
+        }
+
+        // Nếu không bị trùng thì gửi dữ liệu lên server
+        fetch('/manager/update-product-types/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({ updates: updates })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Update successful.');
+                // Reload lại trang hoặc cập nhật trực tiếp HTML
+                location.reload();
+            } else {
+                alert('Update failed: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred.');
+        });
+    });
+});
+
+// Hàm lấy csrf token (nếu chưa có)
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+    </script>
+  </body>
+</html>

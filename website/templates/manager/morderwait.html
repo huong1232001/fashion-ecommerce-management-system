@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manager H.H.U.O.N.G shop</title>
+    {% load static %}
+    <style>
+     /* === Navbar === */
+.navbar {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  padding: 10px 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  box-shadow: 0px 4px 20px rgba(15, 23, 42, 0.05);
+}
+
+.logo {
+  margin-left: 10%;
+}
+
+.logo img {
+  height: 40px;
+}
+
+.manager-section {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  gap: 15px;
+  margin-right: 12%;
+}
+
+.menu-icon {
+  width: 27px;
+  height: 27px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.manager-section img[alt="Notify"] {
+  width: 22px;
+  height: 22px;
+}
+
+.menu-icon:hover {
+  transform: scale(1.1);
+}
+
+.manager-info {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid rgb(150, 150, 150);
+  position: relative;
+  cursor: pointer;
+}
+
+.account-icon {
+  width: 25px;
+  height: 25px;
+  margin-right: 8px;
+}
+
+.managername {
+  font-size: 15px;
+  color: rgb(59, 59, 59);
+  font-weight: bold;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  overflow: hidden;
+  min-width: 180px;
+  z-index: 1000;
+}
+
+.dropdown-menu a {
+  display: block;
+  padding: 10px 15px;
+  text-decoration: none;
+  color: #333;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.dropdown-menu a:hover {
+  background-color: #f1f1f1;
+}
+
+body {
+  padding-top: 80px;
+  color: #000;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: radial-gradient(circle at top right, #f8fafc, #f1f5f9); 
+  min-height: 100vh;
+}
+
+/* === Sort Section === */
+.sort-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: fixed; 
+  top: 95px; 
+  left: 40px; 
+  z-index: 900;
+}
+
+.sort-icon {
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.sort-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sort-dropdown {
+  padding: 8px 12px;
+  font-size: 15px;
+  border: 1px solid #aaa;
+  border-radius: 6px;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  width: calc(100% + 2px); 
+}
+
+.sort-dropdown:hover {
+  border-color: #000;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.custom-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-btn {
+  padding: 8px 16px;
+  font-size: 13px;
+  border: 1px solid #e2e8f0;
+  border-radius: 30px; 
+  background-color: #fff;
+  color: #334155;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  transition: all 0.2s ease;
+}
+
+.dropdown-btn:hover {
+  background-color: #0f172a;
+  color: #fff;
+  border-color: #0f172a;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #fff;
+  min-width: 260px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px; 
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05); 
+  z-index: 1000;
+  overflow: hidden; 
+  margin-top: 6px;
+}
+
+.dropdown-content div {
+  padding: 10px 16px;
+  font-size: 13.5px;
+  color: #475569;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.dropdown-content div:hover {
+  background-color: #f8fafc; 
+  color: #2563eb;
+  padding-left: 20px;
+}
+
+.custom-dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* === Order Grid Section & Chèn Title tự động === */
+.order-grid {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding: 95px 40px 40px; /* ✅ Đẩy hẳn cụm tiêu đề sát lên trên */
+}
+
+.order-grid .order-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); 
+  gap: 36px; 
+  padding: 0;
+  width: 100%;
+}
+
+/* TỰ ĐỘNG CHÈN TITLE QUA CSS */
+.order-grid::before {
+  content: "Order Waiting Confirm";
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-size: 28px; 
+  font-weight: 700; 
+  color: #0f172a;
+  letter-spacing: -0.5px;
+  margin-bottom: 12px;
+}
+
+/* ✅ Đường gạch ngang dài phân cách rõ ràng và tạo khoảng trống lớn với grid đơn hàng bên dưới */
+.order-grid::after {
+  content: "";
+  display: block;
+  width: 100%; /* Giúp đường gạch chạy dài hết cỡ khung chứa */
+  height: 1px;
+  background-color: #e2e8f0; /* Màu xám nhạt tinh tế, không bị thô */
+  margin: 0 auto 55px auto; /* Tăng thông số 55px giúp tạo khoảng cách rộng rãi thoải mái với grid đơn hàng bên dưới */
+}
+
+/* === Định dạng thẻ đơn hàng === */
+.order-card {
+  background: #ffffff; 
+  border: 1px solid #e2e8f0; 
+  border-radius: 16px; 
+  padding: 20px; 
+  box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.02);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Badge trạng thái */
+.order-card::before {
+  content: "WAITING";
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: #fffbeb;
+  color: #d97706;
+  font-size: 9px;
+  font-weight: 600; 
+  padding: 3px 8px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+}
+
+.order-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(37, 99, 235, 0.2);
+  box-shadow: 0 15px 25px -5px rgba(37, 99, 235, 0.08);
+}
+
+/* Mã ID */
+.order-card h3 {
+  font-size: 15px;
+  color: #1e3a8a; 
+  margin-bottom: 16px;
+  font-weight: 600; 
+  max-width: 65%;
+}
+
+/* Dòng thông tin phụ */
+.order-card p {
+  font-size: 13px;
+  color: #64748b;
+  margin: 6px 0;      
+  line-height: 1.4;    
+  font-weight: 400; 
+  display: flex;
+  justify-content: space-between;
+}
+
+.order-card p strong {
+  color: #94a3b8; 
+  font-weight: 500; 
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+}
+
+/* Khối tổng tiền */
+.order-card p:nth-child(3) {
+  margin: 12px 0 8px 0;
+  padding: 10px 14px; 
+  background: #f8fafc;
+  border-radius: 12px;
+  color: #334155;
+  font-size: 14.5px;
+  font-weight: 600; 
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #f1f5f9;
+}
+
+.order-card p:nth-child(3) strong {
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+/* Đơn vị tiền tệ */
+.currency {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #2563eb; 
+  margin-left: 2px;
+}
+
+/* === Back Button === */
+.back-container {
+  position: fixed;
+  top: 95px; 
+  right: 40px;
+  z-index: 900;
+}
+
+.close-btn {
+  width: 36px;
+  height: 36px;
+  border: 1px solid #e2e8f0;
+  border-radius: 50%;
+  background-color: #fff;
+  color: #64748b;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  transition: all 0.2s;
+}
+
+.close-btn:hover {
+  background-color: #f1f5f9;
+  color: #0f172a;
+  transform: scale(1.05);
+}
+    </style>
+  </head>
+
+  <body>
+    <!-- Back Button -->
+<div class="back-container">
+  <button class="close-btn" onclick="goBack()">✕</button>
+</div>
+    <header>
+      <nav class="navbar">
+        <div class="logo">
+          <img src="{% static 'images/logo.png' %}" alt="Logo" />
+        </div>
+
+        <div class="manager-section">
+          <img
+            src="{% static 'images/notify-icon.png' %}"
+            alt="Notify"
+            class="menu-icon"
+          />
+
+          <div class="manager-info" id="manager-dropdown">
+            <img
+              src="{% static 'images/account-icon.png' %}"
+              alt="Account"
+              class="account-icon"
+            />
+            <span class="managername" id="manager-name">{{ manager_name }}</span>
+
+            <div class="dropdown-menu" id="dropdown-menu">
+              <a href="http://127.0.0.1:8000/manager/login/">Logout</a>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <!-- === Sort icon + text === -->
+<div class="sort-section">
+  <img
+    src="{% static 'images/sort-icon.png' %}"
+    alt="Sort"
+    class="sort-icon"
+    title="Sort"
+  />
+  <span class="sort-text">Sort:</span>
+
+  <!-- ✅ Dropdown Sort Options -->
+  <div class="custom-dropdown">
+  <button class="dropdown-btn">Order code decrement ↓</button>
+  <div class="dropdown-content">
+    <div>Order code decrement ↓</div>
+    <div>Order code increment ↑</div>
+    <div>Total price increment ↑</div>
+    <div>Total price decrement ↓</div>
+    <div>Order date increment ↑</div>
+    <div>Order date decrement ↓</div>
+    <div>Estimated delivery date increment</div>
+    <div>Estimated delivery date decrement</div>
+  </div>
+</div>
+
+</div>
+<!-- === Order Cards Section === -->
+<section class="order-grid">
+  <div class="order-grid">
+    {% if orders %}
+      {% for order in orders %}
+        <div class="order-card" onclick="window.location.href='/manager/orderwaitdetail/{{ order.order_id }}/'">
+          <h3>Order ID: {{ order.order_id }}</h3>
+          <p>User ID: {{ order.user.user_id }}</p>
+          <p>Total Price: {{ order.total_price_order|floatformat:0 }} VNĐ</p>
+          <p>Order Date: {{ order.order_date }}</p>
+          <p>Estimated Delivery: {{ order.estimated_delivery_date }}</p>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No orders found.</p>
+    {% endif %}
+  </div>
+</section>
+
+
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const managerInfo = document.getElementById("manager-dropdown");
+        const dropdownMenu = document.getElementById("dropdown-menu");
+
+        managerInfo.addEventListener("click", function (event) {
+          dropdownMenu.style.display =
+            dropdownMenu.style.display === "block" ? "none" : "block";
+          event.stopPropagation();
+        });
+
+        document.addEventListener("click", function (event) {
+          if (
+            !managerInfo.contains(event.target) &&
+            !dropdownMenu.contains(event.target)
+          ) {
+            dropdownMenu.style.display = "none";
+          }
+        });
+      });
+     /* === SORT SECTION === */
+const sortOptions = document.querySelectorAll(".dropdown-content div");
+const orderGrid = document.querySelector(".order-grid");
+const dropdownBtn = document.querySelector(".dropdown-btn");
+
+// --- Hàm xử lý sắp xếp ---
+function handleSort(sortType) {
+  const cards = Array.from(orderGrid.querySelectorAll(".order-card"));
+
+  switch (true) {
+    // === ORDER CODE ===
+    case sortType.includes("Order code decrement"):
+      cards.sort((a, b) => getOrderId(b) - getOrderId(a));
+      break;
+    case sortType.includes("Order code increment"):
+      cards.sort((a, b) => getOrderId(a) - getOrderId(b));
+      break;
+
+    // === TOTAL PRICE ===
+    case sortType.includes("Total price increment"):
+      cards.sort((a, b) => getTotalPrice(a) - getTotalPrice(b));
+      break;
+    case sortType.includes("Total price decrement"):
+      cards.sort((a, b) => getTotalPrice(b) - getTotalPrice(a));
+      break;
+
+    // === ORDER DATE ===
+    case sortType.includes("Order date increment"):
+      cards.sort((a, b) => getDate(a, "Order Date") - getDate(b, "Order Date"));
+      break;
+    case sortType.includes("Order date decrement"):
+      cards.sort((a, b) => getDate(b, "Order Date") - getDate(a, "Order Date"));
+      break;
+
+    // === ESTIMATED DELIVERY DATE ===
+    case sortType.includes("Estimated delivery date increment"):
+      cards.sort(
+        (a, b) =>
+          getDate(a, "Estimated Delivery") -
+          getDate(b, "Estimated Delivery")
+      );
+      break;
+    case sortType.includes("Estimated delivery date decrement"):
+      cards.sort(
+        (a, b) =>
+          getDate(b, "Estimated Delivery") -
+          getDate(a, "Estimated Delivery")
+      );
+      break;
+  }
+
+  // ✅ Format lại giá tiền sau khi sort
+  cards.forEach((card) => {
+    const priceElement = card.querySelector("p:nth-child(3)");
+    if (priceElement) {
+      const rawValue = getTotalPrice(card);
+      priceElement.innerHTML = `<strong>Total Price:</strong> ${rawValue.toLocaleString("vi-VN")} <span class="currency">₫</span>`;
+
+    }
+  });
+
+  // Cập nhật giao diện
+  orderGrid.innerHTML = "";
+  cards.forEach((card) => orderGrid.appendChild(card));
+
+  // Đổi text hiển thị trên nút chính
+  dropdownBtn.textContent = sortType;
+}
+
+// --- Gán sự kiện click cho các tùy chọn ---
+sortOptions.forEach((option) => {
+  option.addEventListener("click", () =>
+    handleSort(option.textContent.trim())
+  );
+});
+
+// === GỌI SORT MẶC ĐỊNH KHI LOAD TRANG ===
+const defaultOption = document.querySelector(".dropdown-content div:nth-child(1)");
+if (defaultOption) handleSort(defaultOption.textContent.trim());
+
+/* === HÀM HỖ TRỢ === */
+function getOrderId(card) {
+  const text = card.querySelector("h3").textContent;
+  return parseInt(text.replace(/\D/g, ""), 10);
+}
+
+function getTotalPrice(card) {
+  const priceText = card.querySelector("p:nth-child(3)").textContent;
+  return parseFloat(priceText.replace(/[^0-9]/g, ""));
+}
+
+function getDate(card, label) {
+  const pTags = card.querySelectorAll("p");
+  for (let p of pTags) {
+    if (p.textContent.includes(label)) {
+      const dateStr = p.textContent.replace(/[^0-9\-]/g, "");
+      return new Date(dateStr);
+    }
+  }
+  return new Date(0);
+}
+function goBack() {
+  window.location.href = "/manager/homemorder/";
+}
+    </script>
+  </body>
+</html>

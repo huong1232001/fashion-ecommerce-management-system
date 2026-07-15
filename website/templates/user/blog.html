@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>H.H.U.O.N.G shop</title>
+    {% load static %}
+    <!-- Link đến tệp CSS -->
+    <link rel="stylesheet" href="{% static 'css/user/login.css' %}" />
+    <style>
+      .navbar {
+        display: flex;
+        align-items: center;
+        background-color: #333; /* Màu nền */
+        padding: 10px 20px;
+        position: fixed; /* Giữ cố định trên cùng */
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        background-color: #fff; /* Nền trắng */
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+    }
+    
+    /* Dịch menu sang trái */
+    .nav-links {
+        list-style: none;
+        display: flex;
+        margin: 0;
+        padding: 0;
+        margin-right: auto; /* Đẩy menu sang trái */
+        margin-left: 8%; /* Dịch chữ sang phải */
+    }
+    
+    .nav-links li {
+        margin: 0 15px;
+    }
+    
+    .nav-links a {
+      text-decoration: none;
+      color: rgb(84, 84, 84);
+      font-size: 20px;
+      font-weight: bold; /* Đặt sẵn chữ đậm */
+      opacity: 0.8; /* Làm mờ nhẹ chữ để tạo hiệu ứng */
+      transition: color 0.3s ease, opacity 0.3s ease; 
+  }
+  
+  .nav-links a:hover {
+      color: rgb(59, 59, 59);
+      opacity: 1; /* Khi hover, làm chữ rõ hơn */
+  }
+  
+  /* Dịch logo qua phải */
+    .logo {
+        margin-left: 10%; /* Đẩy logo sang phải */
+    }
+    
+    .logo img {
+        height: 40px; /* Điều chỉnh kích thước */
+    }
+    .user-section {
+        display: flex;
+        align-items: center;
+        margin-left: auto; /* Đẩy sang phải */
+        gap: 15px; /* Khoảng cách giữa các icon */
+        margin-right: 12%;
+    }
+    
+    .menu-icon {
+        width: 27px; /* Kích thước icon */
+        height: 27px;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+    }
+    .user-section img[alt="Notify"] {
+        width: 22px; /* Giảm kích thước */
+        height: 22px;
+    }
+    .user-section img[alt="Cart"] {
+        width: 33px; /* Giảm kích thước */
+        height: 33px;
+    }
+    
+    .menu-icon:hover {
+        transform: scale(1.1); /* Phóng to nhẹ khi hover */
+    }
+    .user-info {
+        display: flex;
+        align-items: center;
+        background-color: #ffffff; /* Nền trắng */
+        padding: 5px 12px; /* Tạo padding để dễ nhìn */
+        border: 2px solid rgb(77, 76, 76); /* Viền màu đen */
+        border-radius: 20px; /* Bo góc */
+        border: 1px solid rgb(150, 150, 150);
+    }
+    
+    
+    .account-icon {
+        width: 25px; /* Điều chỉnh kích thước icon */
+        height: 25px;
+        margin-right: 8px; /* Khoảng cách giữa icon và chữ */
+    }
+    
+    .username {
+        font-size: 15px;
+        color: rgb(59, 59, 59); /* Chữ màu trắng */
+        font-weight: bold;
+    }
+    /* Dropdown menu mặc định ẩn */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    overflow: hidden;
+    min-width: 180px;
+    z-index: 1000;
+}
+
+/* Định dạng các mục trong menu */
+.dropdown-menu a {
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+/* Hiệu ứng hover */
+.dropdown-menu a:hover {
+    background-color: #f1f1f1;
+}
+
+/* Định vị dropdown trong user-info */
+.user-info {
+    position: relative;
+    cursor: pointer;
+}
+.blog-banner-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column; /* xếp dọc chữ và ảnh */
+    align-items: center;    /* căn giữa theo chiều ngang */
+    margin-top: 100px;
+}
+.blog-banner-container img {
+    display: block;
+    margin: 0 auto;
+    margin-left: 50px; /* đẩy hình qua phải 50px */
+    width: 90%;
+    max-width: 900px;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.blog-banner-title {
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 20px; /* Tạo khoảng cách giữa tiêu đề và ảnh */
+    margin-top: -50px;
+    color: #333;
+    text-align: center;
+}
+.blog-description {
+    width: 90%;
+    max-width: 900px;
+    margin: 20px auto 40px auto;
+    font-size: 16px;
+    color: #555;
+    line-height: 1.5;
+}
+.blog-subtitle {
+    font-size: 22px;
+    font-weight: 700;
+    color: #333;
+    margin: 10px auto 30px auto;
+    text-align: center;
+    max-width: 900px;
+}
+.blog-banner-container img[alt="Blog Banner"]:last-of-type {
+    width: 60%;       /* Bạn chỉnh % tuỳ ý nhỏ hơn 90% ban đầu */
+    max-width: 540px; /* Giới hạn tối đa */
+    margin: 20px auto; /* Căn giữa, có khoảng cách trên dưới */
+    display: block;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+
+
+
+    
+    /* Tạo khoảng trống cho nội dung bên dưới */
+    body {
+        padding-top: 60px;
+    }
+    
+  </style>
+  
+</head>
+
+<body>
+  <header>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="{% static 'images/logo.png' %}" alt="Logo" />
+        </div>
+        <ul class="nav-links">
+            <li><a href="http://127.0.0.1:8000/user/home/">Home</a></li>
+            <li><a href="http://127.0.0.1:8000/user/about/">About Us</a></li>
+            <li><a href="http://127.0.0.1:8000/user/product/">Product</a></li>
+            <li><a href="http://127.0.0.1:8000/user/blog/">Blog</a></li>
+        </ul>
+        <div class="user-section">
+            <a href="http://127.0.0.1:8000/user/favorite/">
+    <img src="{% static 'images/favorite-icon.png' %}"
+         alt="Favorite"
+         class="menu-icon" />
+</a>
+            <img src="{% static 'images/notify-icon.png' %}" alt="Notify" class="menu-icon" />
+            <!-- Thêm link vào giỏ hàng -->
+            <a href="http://127.0.0.1:8000/user/cart/">
+                <img src="{% static 'images/cart-icon.png' %}" alt="Cart" class="menu-icon" />
+            </a>
+            
+            <!-- Thêm icon tài khoản + username vào trong div có viền -->
+            <div class="user-info">
+                <img src="{% static 'images/account-icon.png' %}" alt="Account" class="account-icon" />
+                <span class="username" id="username-dropdown">
+                    {% if request.session.user_name %}
+                        {% with request.session.user_name as username %}
+                            {% if username|length > 12 %}
+                                {{ username|slice:":12" }}...
+                            {% else %}
+                                {{ username }}
+                            {% endif %}
+                        {% endwith %}
+                    {% else %}
+                        Guest
+                    {% endif %}
+                </span>
+                <div class="dropdown-menu" id="dropdown-menu">
+                    <a href="">Manage Orders</a>
+                    <a href="http://127.0.0.1:8000/user/profile/">Account Information</a>
+                    <a href="http://127.0.0.1:8000/user/login/">Logout</a>
+                </div>
+            </div>
+            
+        </div>
+        
+    </nav>
+     
+</header>
+<div class="blog-banner-container">
+    <div class="blog-banner-wrapper">
+        <h2 class="blog-banner-title">
+            Top 4 Elegant Women’s Blazer Collar Styles for the Perfect Office Look
+        </h2>
+        <img src="{% static 'images/blog01.png' %}" alt="Blog Banner">
+    </div>
+    <div class="blog-description">
+  <p>
+    The blazer collar is not just a simple design detail, but also a “signature” that creates an impression and defines each person’s style. Each women’s blazer collar style carries its own personality: some highlight elegance, while others break the mold with a modern twist. Choosing the right collar style not only helps you make a great impression but also accentuates the neck and collarbones — subtle yet incredibly captivating highlights.
+  </p>
+</div>
+<h3 class="blog-subtitle">
+  Round Collar Women’s Blazer – A Beautiful, Gentle, and Elegant Collar Style
+</h3>
+ <img src="{% static 'images/blog02.jpeg' %}" alt="Blog Banner">
+</div>
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const username = document.getElementById("username-dropdown");
+        const dropdownMenu = document.getElementById("dropdown-menu");
+
+        username.addEventListener("click", function (event) {
+            // Toggle hiển thị menu
+            dropdownMenu.style.display = dropdownMenu.style.display === "block" ? "none" : "block";
+            event.stopPropagation(); // Ngăn chặn sự kiện click lan ra ngoài
+        });
+
+        // Ẩn dropdown khi click ra ngoài
+        document.addEventListener("click", function (event) {
+            if (!username.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                dropdownMenu.style.display = "none";
+            }
+        });
+    });
+</script>
+  
+</body>
+</html>

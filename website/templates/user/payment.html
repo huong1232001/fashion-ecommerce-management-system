@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="csrf-token" content="{{ csrf_token }}">
+
+    <title>H.H.U.O.N.G shop</title>
+    {% load static %}
+    <!-- Link đến tệp CSS -->
+    <link rel="stylesheet" href="{% static 'css/user/login.css' %}" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+      .navbar {
+        display: flex;
+        align-items: center;
+        background-color: #333; /* Màu nền */
+        padding: 10px 20px;
+        position: fixed; /* Giữ cố định trên cùng */
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        background-color: #fff; /* Nền trắng */
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+    }
+    
+    /* Dịch menu sang trái */
+    .nav-links {
+        list-style: none;
+        display: flex;
+        margin: 0;
+        padding: 0;
+        margin-right: auto; /* Đẩy menu sang trái */
+        margin-left: 8%; /* Dịch chữ sang phải */
+    }
+    
+    .nav-links li {
+        margin: 0 15px;
+    }
+    
+    .nav-links a {
+      text-decoration: none;
+      color: rgb(84, 84, 84);
+      font-size: 20px;
+      font-weight: bold; /* Đặt sẵn chữ đậm */
+      opacity: 0.8; /* Làm mờ nhẹ chữ để tạo hiệu ứng */
+      transition: color 0.3s ease, opacity 0.3s ease; 
+  }
+  
+  .nav-links a:hover {
+      color: rgb(59, 59, 59);
+      opacity: 1; /* Khi hover, làm chữ rõ hơn */
+  }
+  
+  /* Dịch logo qua phải */
+    .logo {
+        margin-left: 10%; /* Đẩy logo sang phải */
+    }
+    
+    .logo img {
+        height: 40px; /* Điều chỉnh kích thước */
+    }
+    .user-section {
+        display: flex;
+        align-items: center;
+        margin-left: auto; /* Đẩy sang phải */
+        gap: 15px; /* Khoảng cách giữa các icon */
+        margin-right: 12%;
+    }
+    
+    .menu-icon {
+        width: 27px; /* Kích thước icon */
+        height: 27px;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+    }
+    .user-section img[alt="Notify"] {
+        width: 22px; /* Giảm kích thước */
+        height: 22px;
+    }
+    .user-section img[alt="Cart"] {
+        width: 33px; /* Giảm kích thước */
+        height: 33px;
+    }
+    
+    .menu-icon:hover {
+        transform: scale(1.1); /* Phóng to nhẹ khi hover */
+    }
+    .user-info {
+        display: flex;
+        align-items: center;
+        background-color: #ffffff; /* Nền trắng */
+        padding: 5px 12px; /* Tạo padding để dễ nhìn */
+        border: 2px solid rgb(77, 76, 76); /* Viền màu đen */
+        border-radius: 20px; /* Bo góc */
+        border: 1px solid rgb(150, 150, 150);
+    }
+    
+    
+    .account-icon {
+        width: 25px; /* Điều chỉnh kích thước icon */
+        height: 25px;
+        margin-right: 8px; /* Khoảng cách giữa icon và chữ */
+    }
+    
+    .username {
+        font-size: 15px;
+        color: rgb(59, 59, 59); /* Chữ màu trắng */
+        font-weight: bold;
+    }
+    /* Dropdown menu mặc định ẩn */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    overflow: hidden;
+    min-width: 180px;
+    z-index: 1000;
+}
+
+/* Định dạng các mục trong menu */
+.dropdown-menu a {
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+/* Hiệu ứng hover */
+.dropdown-menu a:hover {
+    background-color: #f1f1f1;
+}
+
+/* Định vị dropdown trong user-info */
+.user-info {
+    position: relative;
+    cursor: pointer;
+}
+.back-to-cart {
+    margin-top: 80px; /* Khoảng cách dưới navbar */
+    padding-left: 3%;   /* Đồng bộ padding với cart-payment-wrapper */
+    text-align: left;   /* Căn trái */
+}
+
+.back-to-cart a {
+    display: inline-flex;
+    align-items: center;
+    margin-top: 2%;          /* bỏ margin-top -20% không cần thiết */
+    margin-left: 0;         /* bỏ margin trái */
+    background-color: transparent;
+    color: rgb(129, 127, 127);
+    padding: 10px 25px;
+    font-size: 13px;
+    border-radius: 15px;
+    border: 1px solid rgb(150, 150, 150);
+    text-decoration: none;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    min-width: 110px;
+    justify-content: center;
+}
+
+.back-to-cart a:hover {
+    background-color: #f0f0f0;
+    color: rgb(150, 150, 150);
+}
+
+/*--Payment+cart-----------------------------------------------------------------------------------*/
+.cart-payment-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 0%;
+    padding: 3%;      /* Loại bỏ padding */
+    gap: 15px;
+    width: 100vw;    /* Chiều rộng bằng viewport width */
+    box-sizing: border-box;
+    margin-left: 0;  /* Loại bỏ margin nếu có */
+    margin-right: 0;
+    position: relative; /* Để không bị ảnh hưởng bởi parent */
+    height:100vw;
+}
+
+/*--CART-----------------------------------------------------------------------------------*/
+/* CART chiếm 70% */
+.cart-container {
+    flex: 6.5;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    //box-shadow: 0 1px 5px rgba(137, 135, 135, 0.1);
+    min-height: 50%;
+}
+/*--PAYMENT-----------------------------------------------------------------------------------*/
+/* PAYMENT chiếm 30% */
+.payment-container {
+    flex: 3.5;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    //box-shadow: 0 1px 5px rgba(137, 135, 135, 0.1);
+    height: 85%;
+}
+
+/* Label styling */
+.cart-label,
+.payment-label {
+    font-size: 27px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    padding-bottom: 8px;
+    /* Bỏ width: fit-content để nó mặc định chiếm 100% chiều ngang cha */
+    border-bottom: 1px solid rgb(150, 150, 150);
+}
+
+/*--CART GRID-----------------------------------------------------------------------------------*/
+.cart-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+}
+
+.cart-grid-header > div {
+  padding: 10px 5px;
+}
+
+.cart-grid-row {
+  display: grid;
+  grid-template-columns: 1.5fr 4fr 1.5fr;
+  gap: 15px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 12px;
+  background-color: #fdfdfd;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* đổ bóng nhẹ */
+}
+
+
+.cart-grid-row > div {
+  padding: 10px 5px;
+  user-select: none;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column; /* ⬅️ để nội dung xếp theo chiều dọc */
+  align-items: flex-start; /* ⬅️ rất quan trọng để căn top */
+}
+
+
+.product-image img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
+  pointer-events: auto; /* ảnh vẫn có thể tương tác nếu cần */
+}
+.product-description {
+  white-space: nowrap;            /* Không cho xuống dòng */
+  overflow: hidden;               /* Ẩn phần vượt quá khung */
+  text-overflow: ellipsis;        /* Thêm dấu “…” nếu vượt quá */
+  max-width: 80%;                /* Giới hạn chiều rộng */
+  display: block;
+  font-weight: bold; /* In đậm */
+}
+.product-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* ⬅️ quan trọng */
+  align-items: flex-start;
+}
+.product-info-row {
+  display: flex;
+  gap: 20px; /* Khoảng cách giữa size và quantity */
+  margin-top: 4px; /* Cách trên một chút */
+  align-items: center;
+}
+
+.product-size, .product-quantity {
+  font-size: 14px;
+  color: #777;
+  user-select: none;
+  pointer-events: none;
+}
+
+
+.product-size, .product-quantity {
+  font-size: 14px;
+  color: #777;
+  user-select: none;
+  pointer-events: none;
+}
+.product-price {
+  font-weight: bold;
+  color: #222;
+  margin-top: 2px; /* nhỏ thôi, tránh bị dính sát top */
+  pointer-events: none;
+  user-select: none;
+}
+.payment-icons {
+  margin-top: 10px;
+  display: flex;
+  gap: 40px;
+  justify-content: center; /* đẩy icon sang phải */
+}
+
+.icon-wrapper {
+   border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 6px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Tùy chỉnh kích thước khung */
+  width: 60px;
+  height: 60px;
+}
+
+.icon-wrapper img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.payment-icons img.pay-cash {
+  width: 40px;
+  height: auto;
+}
+
+.payment-icons img.pay-code {
+  width: 30px;
+  height: auto;
+}
+.payment-icons {
+  margin-top: 10px;
+  display: flex;
+  gap: 40px;
+  justify-content: center;
+  border-bottom: 1px solid rgb(222, 217, 217);
+  padding-bottom: 20px; /* tăng khoảng cách xuống dưới */
+}
+
+.icon-checkbox-wrapper {
+  display: flex;
+  flex-direction: column; /* xếp icon và checkbox theo cột */
+  align-items: center;    /* căn giữa ngang */
+  gap: 6px;
+}
+
+.icon-wrapper {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 6px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+}
+
+.icon-wrapper img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+label {
+  font-size: 14px;
+  user-select: none;
+  display: flex;
+  flex-direction: column; /* checkbox trên, chữ dưới */
+  align-items: center;
+  gap: 4px;
+}
+/* Ẩn radio mặc định */
+input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 1px solid rgba(137, 135, 135, 0.3);
+  border-radius: 50%; /* hình tròn */
+  background-color: white;
+  cursor: pointer;
+  position: relative;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+/* Khi hover radio */
+input[type="radio"]:hover {
+  border-color: #555;
+}
+
+/* Khi radio được chọn */
+input[type="radio"]:checked {
+  border-color: black;
+  background-color: white;
+}
+
+/* Tạo dấu tick custom */
+input[type="radio"]:checked::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 6px;
+  height: 10px;
+  border: solid black;
+  border-width: 0 2px 2px 0;
+  transform: translate(-50%, -50%) rotate(45deg);
+  box-sizing: content-box;
+}
+.shipping-address-header {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+ 
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.shipping-address-label {
+  font-weight: bold;
+  font-size: 15px;
+  color: #333;
+}
+
+.shipping-address-change {
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: bold;
+}
+
+.shipping-address-change .arrow {
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 1;
+}
+.address-icon {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+.address-detail {
+  display: flex;
+  align-items: center;
+  font-weight: normal;
+  font-size: 13px;
+  color: #666;
+  margin-top: 4px;
+}
+.address-bottom-line {
+  margin-top: 10px;
+  border-bottom: 1px solid rgb(222, 217, 217);
+  width: 100%;
+}
+.note-container {
+  margin-top: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.note-label {
+  font-weight: bold;
+  font-size: 15px;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.note-textbox {
+  width: 100%;
+  height: 100px;
+  padding: 10px;
+  font-size: 14px;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-sizing: border-box;
+  resize: vertical;
+}
+.total-price-container {
+  margin-top: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.total-price-row {
+  display: flex;              /* Đặt các phần tử con theo hàng ngang */
+  justify-content: space-between; /* Căn 2 đầu */
+  align-items: center;        /* Căn giữa theo chiều dọc */
+}
+
+.total-price-label {
+  font-weight: bold;
+  font-size: 15px;
+  color: #333;
+}
+
+.total-price-value {
+  font-size: 15px;
+  font-weight: bold;
+  color: #333;
+}
+.total-price-container {
+  margin-top: 20px;
+  width: 100%;
+  box-sizing: border-box;
+  border-bottom: 1px solid #ccc;  /* thêm đường gạch dưới */
+  padding-bottom: 15px; 
+}
+
+.total-price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.total-price-label,
+.total-price-value {
+  font-weight: bold;
+  font-size: 15px;
+  color: #333;
+}
+
+.price-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.price-item-label,
+.price-item-value {
+  font-size: 14px;
+  color: #333;
+}
+
+.price-item-value {
+  font-weight: bold;
+}
+.discount-code-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.discount-code-input {
+  width: 70%; /* giảm chiều dài textbox */
+  height: 35px;
+  padding: 8px;
+  font-size: 14px;
+  border: none;
+  border-radius: 4px;
+  background-color: #f2f2f2; /* nền xám nhạt */
+}
+
+.apply-discount-button {
+  width: 30%; /* tăng chiều rộng button */
+  height: 50px;
+  padding: 8px;
+  background-color: rgb(59, 59, 59); /* Chữ màu trắng */
+  color: white;
+  border: none;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.apply-discount-button:hover {
+  background-color: rgb(59, 59, 59); /* Chữ màu trắng */
+}
+.total-payment-amount {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  font-size: 16px;
+  color: #222;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 30px;
+}
+.total-payment-label {
+  /* căn trái mặc định */
+}
+.total-payment-value {
+  font-size: 24px;  /* Tăng cỡ chữ số lên to */
+  font-weight: bold;
+  color: #222;  /* Màu đỏ nổi bật hơn, bạn có thể đổi màu nếu thích */
+}
+#estimated-delivery-container {
+  margin-top: 12px;
+  font-size: 14px;
+  color: #444;
+  font-style: italic;
+   border-bottom: 1px solid #ccc;
+  padding-bottom: 30px;
+}
+
+.estimated-label {
+  font-weight: 500;
+}
+
+.estimated-date {
+  margin-left: 77%;
+  color: #000;
+}
+.payment-button {
+  width: 100%;
+  padding: 10px 20px;
+  margin-top: 30%;
+  background-color: rgb(59, 59, 59); /* Chữ màu trắng */
+  color: white;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.payment-button:hover {
+  background-color: rgb(59, 59, 59); /* Chữ màu trắng */
+  color: white;
+}
+
+    /* Tạo khoảng trống cho nội dung bên dưới */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+    font-family: 'Poppins', sans-serif;
+    overflow-x: hidden;
+}
+
+    
+  </style>
+  
+</head>
+
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="logo">
+        <img src="{% static 'images/logo.png' %}" alt="Logo" />
+      </div>
+
+      <ul class="nav-links">
+        <li><a href="http://127.0.0.1:8000/user/home/">Home</a></li>
+        <li><a href="http://127.0.0.1:8000/user/about/">About Us</a></li>
+        <li><a href="http://127.0.0.1:8000/user/product/">Product</a></li>
+        <li><a href="http://127.0.0.1:8000/user/blog/">Blog</a></li>
+      </ul>
+
+      <div class="user-section">
+        <a href="http://127.0.0.1:8000/user/favorite/">
+    <img src="{% static 'images/favorite-icon.png' %}"
+         alt="Favorite"
+         class="menu-icon" />
+</a>
+        <img src="{% static 'images/notify-icon.png' %}" alt="Notify" class="menu-icon" />
+
+        <!-- Giỏ hàng -->
+        <a href="http://127.0.0.1:8000/user/cart/">
+          <img src="{% static 'images/cart-icon.png' %}" alt="Cart" class="menu-icon" />
+        </a>
+
+        <!-- Tài khoản -->
+        <div class="user-info">
+          <img src="{% static 'images/account-icon.png' %}" alt="Account" class="account-icon" />
+          <span class="username" id="username-dropdown">
+            {% if request.session.user_name %}
+              {% with request.session.user_name as username %}
+                {% if username|length > 12 %}
+                  {{ username|slice:":12" }}...
+                {% else %}
+                  {{ username }}
+                {% endif %}
+              {% endwith %}
+            {% else %}
+              Guest
+            {% endif %}
+          </span>
+          <div class="dropdown-menu" id="dropdown-menu">
+            <a href="">Manage Orders</a>
+            <a href="http://127.0.0.1:8000/user/profile/">Account Information</a>
+            <a href="http://127.0.0.1:8000/user/login/">Logout</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="back-to-cart" data-id="{{ item.order_payment_id }}">
+      <a href="http://127.0.0.1:8000/user/cart/" id="back-to-cart-btn">← Back to Cart</a>
+    </div>
+
+    <div class="cart-payment-wrapper">
+      <div class="cart-container">
+        <div class="cart-label">Cart</div>
+        <div class="cart-grid">
+          {% for order in orders %}
+          <div class="cart-grid-row" data-product-id="{{ order.product_id }}">
+            <div class="product-image">
+              <img src="{{ MEDIA_URL }}{{ order.product_image }}" alt="Product Image" />
+            </div>
+            <div class="product-details">
+              <div class="product-description">{{ order.product_name }}</div>
+              <div class="product-info-row">
+                <div class="product-size">Size: {{ order.product_size }}</div>
+                <div class="product-quantity">Quantity: {{ order.product_quality_payment }}</div>
+              </div>
+            </div>
+            <div class="product-price" data-price="{{ order.product_price }}">
+              <!-- Giá sẽ được JS format -->
+            </div>
+          </div>
+          {% empty %}
+          <p>No purchase history available.</p>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="payment-container">
+        <div class="payment-label">Payment</div>
+        <div class="payment-icons">
+          <div class="icon-checkbox-wrapper">
+            <div class="icon-wrapper">
+              <img src="{% static 'images/pay-cash.png' %}" alt="Pay Cash" class="pay-cash" />
+            </div>
+            <label>
+              <input type="radio" name="payment" checked /> Cash on delivery
+            </label>
+          </div>
+          <div class="icon-checkbox-wrapper">
+            <div class="icon-wrapper">
+              <img src="{% static 'images/pay-code.png' %}" alt="Pay Code" class="pay-code" />
+            </div>
+            <label>
+              <input type="radio" name="payment" /> QR Code
+            </label>
+          </div>
+        </div>
+
+        <div class="shipping-address-header">
+          <div class="shipping-address-label">Shipping Address</div>
+          <div class="shipping-address-change">Change <span class="arrow">→</span></div>
+        </div>
+
+        <div class="address-detail">
+          <svg xmlns="http://www.w3.org/2000/svg" class="address-icon" width="16" height="24"
+            viewBox="0 0 24 24" fill="none" stroke="#e74c3c" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 21s-6-7-6-11a6 6 0 1 1 12 0c0 4-6 11-6 11z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+          <span class="address-text">{{ user_address }}</span>
+        </div>
+
+        <div class="address-bottom-line"></div>
+
+        <div class="note-container">
+          <div class="note-label">Note</div>
+          <textarea class="note-textbox"></textarea>
+        </div>
+
+        <div class="total-price-container">
+          <div class="total-price-row">
+            <div class="total-price-label">Total Price</div>
+            <div id="total-price-value" class="total-price-value"></div>
+          </div>
+
+          <div class="price-item-row">
+            <div class="price-item-label">Shipping Fee</div>
+            <div id="shipping-fee" class="price-item-value">0đ</div>
+          </div>
+
+          <div class="price-item-row">
+            <div class="price-item-label">Combo Discount</div>
+            <div id="combo-discount" class="price-item-value">0đ</div>
+          </div>
+
+          <div class="price-item-row">
+            <div class="price-item-label">Loyalty Discount</div>
+            <div id="loyalty-discount" class="price-item-value">0đ</div>
+          </div>
+
+          <div class="discount-code-row">
+            <input id="discount-code-input" type="text" class="discount-code-input" placeholder="Enter discount code" />
+            <button id="apply-discount-btn" class="apply-discount-button">Apply</button>
+          </div>
+        </div>
+
+        <div class="total-payment-amount">
+          <div class="total-payment-label">Total price</div>
+          <div class="total-payment-value">0</div>
+        </div>
+
+        <div id="estimated-delivery-container">
+          <span class="estimated-label">Estimated delivery time:</span>
+          <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+          <span class="estimated-date" id="estimated-delivery-date"></span>
+        </div>
+
+        <div class="payment-button-container">
+          <button id="payment-btn" class="payment-button">Payment</button>
+        </div>
+      </div>
+    </div>
+  </header>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const username = document.getElementById("username-dropdown");
+        const dropdownMenu = document.getElementById("dropdown-menu");
+
+        username.addEventListener("click", function (event) {
+            // Toggle hiển thị menu
+            dropdownMenu.style.display = dropdownMenu.style.display === "block" ? "none" : "block";
+            event.stopPropagation(); // Ngăn chặn sự kiện click lan ra ngoài
+        });
+
+        // Ẩn dropdown khi click ra ngoài
+        document.addEventListener("click", function (event) {
+            if (!username.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                dropdownMenu.style.display = "none";
+            }
+        });
+    });
+    const descriptions = document.querySelectorAll('.product-description');
+descriptions.forEach(desc => {
+  if (desc.textContent.length > 50) {
+    desc.textContent = desc.textContent.slice(0, 50) + '…';
+  }
+});
+const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+checkboxes.forEach(chk => {
+  chk.addEventListener('change', () => {
+    if (chk.checked) {
+      checkboxes.forEach(other => {
+        if (other !== chk) other.checked = false;
+      });
+    }
+  });
+});
+document.addEventListener("DOMContentLoaded", function () {
+  const prices = document.querySelectorAll('.product-price');
+  prices.forEach(priceDiv => {
+    const rawPrice = priceDiv.getAttribute('data-price');
+    if (rawPrice) {
+      const formatted = Number(rawPrice).toLocaleString('vi-VN');
+      priceDiv.textContent = formatted + "₫";
+    }
+  });
+});
+function formatCurrency(amount) {
+  return new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND'
+  }).format(amount);
+}
+
+function calculateTotalPrice() {
+  const priceElements = document.querySelectorAll('.product-price');
+  let total = 0;
+
+  priceElements.forEach(el => {
+    const rawPrice = el.getAttribute('data-price');
+    const price = parseFloat(rawPrice);
+    if (!isNaN(price)) {
+      total += price;
+      el.textContent = formatCurrency(price); // hiển thị giá cho từng sản phẩm
+    }
+  });
+
+  // Cập nhật tổng tiền vào total-price-value
+  const totalPriceValue = document.querySelector('.total-price-value');
+  if (totalPriceValue) {
+    totalPriceValue.textContent = formatCurrency(total);
+  }
+}
+
+// Gọi hàm khi DOM đã sẵn sàng
+document.addEventListener('DOMContentLoaded', calculateTotalPrice);
+/*Total Amount To Pay--------------------------------------------------------------------------------*/
+function parsePrice(text) {
+  // Loại bỏ ký tự không phải số và dấu âm
+  const num = text.replace(/[^0-9\-]/g, '');
+  return Number(num) || 0;
+}
+
+function calculateTotal() {
+  const totalPrice = parsePrice(document.getElementById('total-price-value').textContent);
+  const shippingFee = parsePrice(document.getElementById('shipping-fee').textContent);
+  const comboDiscount = parsePrice(document.getElementById('combo-discount').textContent);
+  const loyaltyDiscount = parsePrice(document.getElementById('loyalty-discount').textContent);
+
+  const discountCodeRaw = document.getElementById('discount-code-input').value.trim();
+  // discountCodeValue chỉ lấy số nguyên dương, nếu không đúng định dạng thì 0
+  const discountCodeValue = /^\d+$/.test(discountCodeRaw) ? Number(discountCodeRaw) : 0;
+
+  const total = totalPrice + shippingFee + comboDiscount + loyaltyDiscount - discountCodeValue;
+
+  console.log({
+    totalPrice,
+    shippingFee,
+    comboDiscount,
+    loyaltyDiscount,
+    discountCodeValue,
+    total
+  });
+
+  const totalPaymentElement = document.querySelector('.total-payment-value');
+  if (totalPaymentElement) {
+    totalPaymentElement.textContent = total >= 0 ? total.toLocaleString('vi-VN') + '₫' : '0₫';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  calculateTotal();
+  document.getElementById('discount-code-input').addEventListener('input', calculateTotal);
+});
+/*----------------------------------------------------------------------------------------------*/
+function formatDate(date) {
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+}
+
+function setEstimatedDelivery(daysToAdd = 5) {
+  const today = new Date();
+  const deliveryDate = new Date(today);
+  deliveryDate.setDate(today.getDate() + daysToAdd);
+
+  const formattedDate = formatDate(deliveryDate);
+  const deliveryDateElement = document.getElementById('estimated-delivery-date');
+  if (deliveryDateElement) {
+    deliveryDateElement.textContent = formattedDate;
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  setEstimatedDelivery(5); // ví dụ: giao sau 5 ngày
+});
+ /* Payment process ------------------------------------------------------- */
+    document.addEventListener("DOMContentLoaded", function () {
+      const paymentBtn = document.getElementById("payment-btn");
+
+      paymentBtn.addEventListener("click", function () {
+        // ✅ Lấy tất cả sản phẩm trong giỏ
+        const allProducts = [];
+        document.querySelectorAll(".cart-grid-row").forEach(row => {
+          const productId = row.dataset.productId;
+          const productSize = row.querySelector(".product-size")?.textContent.trim();
+          const quantity = row.querySelector(".product-quantity")?.textContent.trim();
+          // 🧩 Lấy giá tiền dạng số (loại bỏ ký tự không phải số hoặc dấu chấm, ₫, khoảng trắng,...)
+const priceText = row.querySelector(".product-price")?.textContent.trim() || "0";
+const price = priceText.replace(/[^\d]/g, ""); // chỉ giữ lại số
+
+
+          allProducts.push({
+  product_id: productId,
+  product_size: productSize,
+  quantity: quantity,
+  price_product: price  // giờ là giá dạng số, ví dụ "396000"
+});
+
+        });
+
+        // ✅ Lấy tổng tiền, phương thức thanh toán, ghi chú
+        const totalPrice = document.querySelector(".total-payment-value").textContent.replace(/[^\d]/g, "");
+        const paymentMethod = document.querySelector('input[name="payment"]:checked');
+        let paymentMethodId = 1;
+
+        if (paymentMethod && paymentMethod.nextElementSibling?.textContent.trim() === "QR Code") {
+          paymentMethodId = 2;
+        }
+
+        const note = document.querySelector(".note-textbox").value;
+        const csrfToken = document.querySelector("[name=csrfmiddlewaretoken]")?.value;
+
+        // ✅ Gửi request đến backend
+        const formData = new FormData();
+        formData.append("total_price_order", totalPrice);
+        formData.append("payment_method_id", paymentMethodId);
+        formData.append("note", note);
+        formData.append("products", JSON.stringify(allProducts));
+
+        fetch("/api/create-order/", {
+          method: "POST",
+          headers: { "X-CSRFToken": csrfToken },
+          body: formData,
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.success) {
+              alert("Đơn hàng đã được tạo thành công! Mã đơn hàng: " + data.order_id);
+              window.location.href = "/user/cart/";
+            } else {
+              alert("Tạo đơn hàng thất bại: " + data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("Lỗi gửi yêu cầu:", error);
+            alert("Đã xảy ra lỗi khi tạo đơn hàng.");
+          });
+      });
+    });
+</script>
+  
+</body>
+</html>

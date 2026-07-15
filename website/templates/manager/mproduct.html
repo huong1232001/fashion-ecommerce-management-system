@@ -1,0 +1,1610 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manager H.H.U.O.N.G shop</title>
+    {% load static %}
+    <!-- Link đến tệp CSS -->
+    <!--link rel="stylesheet" href="{% static 'css/manager/login.css' %}" /-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+      .navbar {
+        display: flex;
+        align-items: center;
+        background-color: #fff;
+        padding: 10px 20px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .logo {
+        margin-left: 10%;
+      }
+
+      .logo img {
+        height: 40px;
+      }
+
+      .manager-section {
+        display: flex;
+        align-items: center;
+        margin-left: auto;
+        gap: 15px;
+        margin-right: 12%;
+      }
+
+      .menu-icon {
+        width: 27px;
+        height: 27px;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+      }
+
+      .manager-section img[alt="Notify"] {
+        width: 22px;
+        height: 22px;
+      }
+
+      .menu-icon:hover {
+        transform: scale(1.1);
+      }
+
+      .manager-info {
+        display: flex;
+        align-items: center;
+        background-color: #ffffff;
+        padding: 5px 12px;
+        border-radius: 20px;
+        border: 1px solid rgb(150, 150, 150);
+        position: relative;
+        cursor: pointer;
+      }
+
+      .account-icon {
+        width: 25px;
+        height: 25px;
+        margin-right: 8px;
+      }
+
+      .managername {
+        font-size: 15px;
+        color: rgb(59, 59, 59);
+        font-weight: bold;
+      }
+
+      .dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background-color: #ffffff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+        overflow: hidden;
+        min-width: 180px;
+        z-index: 1000;
+      }
+
+      .dropdown-menu a {
+        display: block;
+        padding: 10px 15px;
+        text-decoration: none;
+        color: #333;
+        font-size: 14px;
+        transition: background 0.2s;
+      }
+
+      .dropdown-menu a:hover {
+        background-color: #f1f1f1;
+      }
+      .product-title h2 {
+        margin-top: 20px; /* xích lên */
+        text-align: center;
+        font-size: 28px;
+        font-weight: bold;
+        color: #333;
+      }
+      #back-button {
+        position: fixed;
+        top: 12%;
+        right: 95%;
+        padding: 10px;
+        font-size: 25px;
+        background-color: rgb(255, 255, 255);
+        color: black;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        z-index: 1000;
+      }
+      .add-button-container {
+        text-align: right;   /* Đẩy nút qua phải */
+        margin-top: 20px;
+        margin-right: 10%;   /* Đẩy nhẹ vô trong */
+      }
+      
+      .add-button {
+        background-color: rgb(84, 84, 84);
+        color: white;
+        padding: 5px 14px;
+        font-size: 16px;
+        border: none;
+        border-radius: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        
+        display: inline-flex;        /* NEW: để icon + text nằm cùng hàng */
+        align-items: center;         /* NEW: căn giữa theo chiều dọc */
+        gap: 8px;                    /* NEW: khoảng cách giữa dấu cộng và chữ */
+      }
+      
+      .plus-icon {
+        font-size: 26px;             /* To vừa */
+        font-weight: 300;            /* Mỏng nét hơn */
+        line-height: 1;
+      }
+      
+      .add-button:hover {
+        background-color: rgb(6, 6, 6);
+      }
+      /* Class chung để căn chỉnh các nút */
+.buttons-container {
+  display: flex;
+  justify-content: flex-end; /* Căn các nút sang phải */
+  gap: 10px; /* Khoảng cách giữa các nút */
+  margin-top: 20px;
+  margin-right: 10%; /* Điều chỉnh vị trí cho phù hợp */
+}
+
+/* Class chung cho cả hai nút */
+.button {
+  background-color: rgb(84, 84, 84);
+  color: white;
+  padding: 5px 14px;
+  font-size: 16px;
+  border: none;
+  border-radius: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  
+  display: inline-flex;        /* Để icon + text nằm cùng hàng */
+  align-items: center;         /* Căn giữa theo chiều dọc */
+  gap: 8px;                    /* Khoảng cách giữa biểu tượng và chữ */
+}
+
+.upload-icon {
+  font-size: 20px;             /* Kích thước icon Upload */
+  line-height: 1;
+}
+
+.add-button {
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1;
+  color: rgb(84, 84, 84);
+  background-color: rgb(255, 255, 255);
+  border: 1px solid rgb(84, 84, 84);
+  border-radius: 4px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.plus-icon {
+  font-size: 26px;
+  font-weight: 300;
+  line-height: 1;
+  
+}
+.add-button:hover {
+  background-color: rgb(84, 84, 84);
+  color: white;
+}
+
+.add-button:hover .plus-icon {
+  color: white;
+  background-color: rgb(0, 0, 0);
+}
+
+.button:hover {
+  background-color: rgb(6, 6, 6); /* Màu nền khi hover */
+}
+.search-box {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 0px;
+    padding: 5px 14px;      /* đổi thành 5px cho padding trên/dưới */
+    background-color: #fff;
+    margin-left: 10%;
+    max-width: 450px;
+    justify-content: space-between;
+    margin-top: 20px;
+    height: auto;           /* bỏ height cụ thể để tự theo padding */
+    box-sizing: border-box; /* đảm bảo tính padding + border */
+  }
+  
+  
+  .search-box input {
+    border: none;
+    outline: none;
+    padding: 5px;
+    font-size: 14px;
+    width: 100%;
+    min-width: 180px; /* Kéo dài input thêm nữa */
+    flex: 1;
+    background: transparent;
+  }
+  
+  .search-box button {
+    border: none;
+    background: none;
+    padding: 0;
+    display: flex;
+    align-items: center; /* Căn giữa icon */
+    justify-content: center;
+    cursor: pointer;  /* Cho phép click vào nút */
+  }
+  
+  .search-icon {
+    width: 40px;  /* Điều chỉnh icon */
+    height: 20px;
+  }
+  /* Cấu trúc giống với bảng bạn đã tạo */
+.table-container {
+  margin: 20px 10%;
+  border: 1px solid #ddd;
+  overflow-y: auto;
+  max-height: calc(100px * 5 + 1px); /* Chiều cao 5 dòng + border */
+  padding-top: 0;
+}
+
+.product-table tbody tr {
+  height: 40px;
+}
+
+.product-table::-webkit-scrollbar {
+  width: 6px;
+}
+
+.product-table::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 3px;
+}
+
+.product-table::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+/* Cố định phần header */
+.product-table thead {
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  z-index: 2;
+  border-bottom: 1px solid #ddd;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.product-table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.product-table th,
+.product-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  font-size: 16px;
+  color: #333;
+}
+
+.product-table th {
+  background-color: #f5f5f5;
+  font-weight: bold;
+}
+
+.product-table tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+#select-all, .row-checkbox, .display-on-shelf {
+  cursor: pointer;
+}
+
+/* Cố định chiều rộng cho cột checkbox */
+.product-table th:first-child,
+.product-table td:first-child {
+  width: 50px;
+  text-align: center;
+}
+
+/* Cải thiện kích thước checkbox */
+.product-table .row-checkbox,
+.product-table .display-on-shelf {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+}
+
+/* Cải thiện kích thước ảnh */
+.product-image {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+/* Cải thiện giao diện checkbox */
+.product-table input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #333;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+}
+
+.product-table input[type="checkbox"]:checked {
+  background-color: rgb(84, 84, 84);
+  border-color: rgb(84, 84, 84);
+}
+
+.product-table input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 5px;
+  width: 4px;
+  height: 8px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.product-table td {
+  text-align: center;
+}
+
+.product-table td input[type="checkbox"] {
+  text-align: center;
+}
+/* Cập nhật độ rộng cho các cột */
+.product-table th:nth-child(1),
+.product-table td:nth-child(1) {
+  width: 60px;  /* Giảm độ rộng cho cột checkbox */
+}
+
+.product-table th:nth-child(2),
+.product-table td:nth-child(2) {
+  width: 120px; /* Giảm độ rộng cho cột mã sản phẩm */
+}
+
+.product-table th:nth-child(3),
+.product-table td:nth-child(3) {
+  width: 180px; /* Giảm độ rộng cho cột tên sản phẩm */
+}
+
+.product-table th:nth-child(4),
+.product-table td:nth-child(4) {
+  width: 220px; /* Giảm độ rộng cho cột mô tả */
+}
+
+.product-table th:nth-child(5),
+.product-table td:nth-child(5) {
+  width: 100px; /* Giảm độ rộng cho cột ảnh */
+}
+
+.product-table th:nth-child(6),
+.product-table td:nth-child(6) {
+  width: 80px; /* Giảm độ rộng cho cột giá */
+}
+
+.product-table th:nth-child(7),
+.product-table td:nth-child(7) {
+  width: 80px; /* Cột Type Code */
+}
+
+.product-table th:nth-child(8),
+.product-table td:nth-child(8) {
+  width: 300px; /* Cột Size S */
+}
+
+.product-table th:nth-child(9),
+.product-table td:nth-child(9) {
+  width: 300px; /* Cột Size M */
+}
+
+.product-table th:nth-child(10),
+.product-table td:nth-child(10) {
+  width: 300px; /* Cột Size L */
+}
+
+.product-table th:nth-child(11),
+.product-table td:nth-child(11) {
+  width: 300px; /* Cột Freesize */
+}
+
+.product-table th:nth-child(12),
+.product-table td:nth-child(12) {
+  width: 50px; /* Cột Color */
+}
+
+.product-table th:nth-child(13),
+.product-table td:nth-child(13) {
+  width: 90px; /* Cột Inventory */
+}
+
+.product-table th:nth-child(14),
+.product-table td:nth-child(14) {
+  width: 80px; /* Cột Status */
+}
+
+.product-table th:nth-child(15),
+.product-table td:nth-child(15) {
+  width: 100px; /* Cột Display on Shelf */
+}
+/* Cố định kiểu cho cột Size */
+* Cố định kiểu cho cột Size */
+.product-table th {
+  background-color: #f5f5f5;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Cập nhật kiểu cho các ô size */
+.size-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 45px;
+  padding-top: 8px;
+}
+
+.size-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.divider {
+  width: 100%;
+  border: none;
+  margin: 4px 0;
+}
+
+.size-options {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  width: 100%; /* Tăng chiều dài cho ô size */
+}
+
+.size-options span {
+  text-align: center;
+  font-size: 25px;
+  color: #333;
+  padding: 2px 0;
+  border-left: 1px solid rgb(219, 219, 219); /* Giữ đường kẻ dọc */
+}
+
+/* Bỏ đường kẻ ngang chia ô trong cột Size, trừ header */
+.product-table td:nth-child(8),
+.product-table td:nth-child(9),
+.product-table td:nth-child(10),
+.product-table td:nth-child(11) {
+  border-bottom: none; /* Loại bỏ đường kẻ ngang giữa các ô Size */
+}
+
+/* Các cột khác */
+.product-table th,
+.product-table td {
+  padding: 12px 16px;
+  border: 1px solid rgb(219, 219, 219);
+  text-align: center;
+}
+
+/* Cập nhật lại cho các ô size S, M, L, Freesize */
+.size-options {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  width: 100%;
+}
+
+.size-options span {
+  text-align: center;
+  font-size: 15px;
+  color: #333;
+  border-left: 1px solid rgb(219, 219, 219); /* Thêm gạch dọc bên trái của mỗi ô */
+  padding: 2px 0;
+}
+
+.size-options span:first-child {
+  border-left: none; /* Xóa gạch dọc bên trái cho phần tử đầu tiên */
+}
+
+/* Cập nhật cho phần tiêu đề "Size" */
+.size-title {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 4px;
+  padding-bottom: 4px; /* Tăng khoảng cách dưới chữ "Size" */
+}
+
+/* Các cột khác */
+.product-table th,
+.product-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #ddd;
+}
+.table-actions {
+  margin: 0 10%;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  gap: 70px; /* khoảng cách giữa các nút */
+}
+
+.action-button {
+  flex: 1;
+  padding: 10px 0;
+  font-size: 16px;
+  border: none;
+  border-radius: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-align: center;
+}
+
+.delete-button {
+  background-color:rgb(84, 84, 84);
+  color: white;
+  border: 2px solid rgb(84, 84, 84);
+}
+
+.edit-button {
+  background-color: rgb(255, 255, 255);
+  color: rgb(84, 84, 84);
+  border: 2px solid rgb(84, 84, 84);
+}
+
+.action-button:hover {
+  opacity: 0.8;
+}
+/*-Modal------------------------------------------------------------------------*/
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 9999; /* tăng cao hơn header */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.5);
+}
+
+
+.modal-content {
+  background-color: #fff;
+  margin: 2% auto;             
+  padding: 30px;               
+  border-radius: none;
+  width: 70%;                 
+  height: 80%;                 
+  position: relative;
+  overflow-y: auto;           
+}
+
+
+.close {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  font-size: 24px;
+  cursor: pointer;
+}
+/*-------------------------------------------------------------------------*/
+/* Đảm bảo các trường nhập liệu nằm theo một cột */
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+textarea {
+  resize: vertical;
+  height: 100px;
+}
+
+
+.form-group-checkbox {
+  display: flex;
+  flex-direction: column; /* Đảm bảo các checkbox sẽ xếp thành cột */
+}
+
+/* Cấu hình label */
+.checkbox-label {
+  display: inline-flex; /* Đặt label và checkbox ngang nhau */
+  align-items: center;  /* Căn giữa checkbox với text */
+  gap: 10px; /* Khoảng cách giữa checkbox và text */
+  font-weight: normal;
+  margin-bottom: 10px;
+}
+
+/* Cấu hình checkbox */
+.checkbox-label input[type="checkbox"] {
+  transform: scale(1.5); /* Làm cho checkbox lớn hơn */
+  margin-left: 0;
+  margin-right: 0;
+  vertical-align: middle;
+  cursor: pointer; /* Hiển thị con trỏ tay khi hover vào checkbox */
+  appearance: none; /* Tắt kiểu mặc định của checkbox */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border: 1px solid rgb(84, 84, 84); /* Viền checkbox */
+  width: 15px; /* Kích thước rộng của checkbox */
+  height: 15px; /* Kích thước cao của checkbox */
+  border-radius: 2px; /* Bo góc cho checkbox */
+  background-color: white; /* Nền mặc định là trắng */
+  position: relative;
+}
+
+/* Khi checkbox được checked */
+.checkbox-label input[type="checkbox"]:checked {
+  background-color: rgb(84, 84, 84); /* Nền đen khi checked */
+  border-color: rgb(84, 84, 84); /* Viền đen khi checked */
+}
+
+/* Tạo dấu tick màu trắng */
+.checkbox-label input[type="checkbox"]:checked::before {
+  content: '\2713'; /* Dấu tick */
+  color: white; /* Màu trắng cho dấu tick */
+  font-size: 16px; /* Cỡ chữ cho dấu tick */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Căn giữa dấu tick */
+}
+
+/* Loại bỏ viền khi nhấn vào */
+.checkbox-label input[type="checkbox"]:not(:checked):active {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Đảm bảo chỉ có thể click vào checkbox, không phải label */
+.checkbox-label {
+  pointer-events: none; /* Tắt sự kiện pointer cho label */
+}
+
+.checkbox-label input[type="checkbox"] {
+  pointer-events: auto; /* Bật lại sự kiện pointer cho checkbox */
+}
+/* Áp dụng cho dropdown với class mới */
+.form-group-select select {
+  padding: 5px; /* Khoảng cách bên trong cho dropdown */
+  font-size: 14px; /* Cỡ chữ cho dropdown */
+  width: 200px; /* Chiều rộng của dropdown */
+  height: 35px;
+  border-radius: 4px; /* Bo góc cho dropdown */
+  border: 1px solid #ccc; /* Viền cho dropdown */
+  background-color: #fff; /* Màu nền trắng */
+}
+
+.form-group-select label {
+  margin-right: 10px; /* Khoảng cách giữa label và dropdown */
+  font-weight: bold; 
+}
+.button-group {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.button-group button {
+  flex: 1;
+  padding: 8px 0;
+  font-size: 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Cancel button: nền đen, chữ trắng */
+.button-group button[type="button"] {
+  background-color: rgb(84, 84, 84);
+  color: white;
+}
+
+/* Confirm button: nền trắng, chữ đen, viền đen */
+.button-group button[type="submit"] {
+  background-color: white;
+  color: rgb(84, 84, 84);
+  border: 2px solid rgb(84, 84, 84);
+}
+
+/* Hover effects (tuỳ chọn) */
+.button-group button[type="button"]:hover {
+  background-color: #333;
+}
+
+.button-group button[type="submit"]:hover {
+  background-color: #f0f0f0;
+}
+.close {
+  font-size: 34px; /* Điều chỉnh kích thước phù hợp với yêu cầu */
+  color: #000; /* Màu sắc của dấu X */
+  cursor: pointer; /* Hiển thị con trỏ tay khi hover */
+}
+select {
+  height: 35px; /* Chiều cao của select box */
+  width: 100%; /* Chiều rộng của select box */
+}
+
+/* Đặt chiều cao và thanh cuộn cho dropdown */
+select option {
+  max-height: 160px;  /* Giới hạn chiều cao tối đa của dropdown (8 item * chiều cao item) */
+  overflow-y: auto;   /* Thêm thanh cuộn dọc khi vượt quá số lượng */
+}
+.modal-edit {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content-edit {
+  background-color: #fff;
+  margin: 2% auto;
+  padding: 30px;
+  width: 70%;
+  height: 80%;
+  position: relative;
+  overflow-y: auto;
+}
+
+.close-edit {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  font-size: 34px;
+  color: #000;
+  cursor: pointer;
+}
+
+.form-group-edit {
+  margin-bottom: 15px;
+}
+
+.form-group-edit label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.form-group-edit input,
+.form-group-edit textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+textarea {
+  resize: vertical;
+  height: 100px;
+}
+
+.form-group-checkbox-edit {
+  display: flex;
+  flex-direction: column;
+}
+
+.checkbox-label-edit {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: normal;
+  margin-bottom: 10px;
+  pointer-events: none;
+}
+
+.checkbox-label-edit input[type="checkbox"] {
+  transform: scale(1.5);
+  margin: 0;
+  vertical-align: middle;
+  cursor: pointer;
+  appearance: none;
+  border: 1px solid rgb(84, 84, 84);
+  width: 15px;
+  height: 15px;
+  border-radius: 2px;
+  background-color: white;
+  position: relative;
+  pointer-events: auto;
+}
+
+.checkbox-label-edit input[type="checkbox"]:checked {
+  background-color: rgb(84, 84, 84);
+  border-color: rgb(84, 84, 84);
+}
+
+.checkbox-label-edit input[type="checkbox"]:checked::before {
+  content: '\2713';
+  color: white;
+  font-size: 16px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.form-group-select-edit select {
+  padding: 5px;
+  font-size: 14px;
+  width: 200px;
+  height: 35px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+}
+
+.form-group-select-edit label {
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.button-group-edit {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.button-group-edit button {
+  flex: 1;
+  padding: 8px 0;
+  font-size: 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.button-group-edit button[type="button"] {
+  background-color: rgb(84, 84, 84);
+  color: white;
+}
+
+.button-group-edit button[type="submit"] {
+  background-color: white;
+  color: rgb(84, 84, 84);
+  border: 2px solid rgb(84, 84, 84);
+}
+
+.button-group-edit button[type="button"]:hover {
+  background-color: #333;
+}
+
+.button-group-edit button[type="submit"]:hover {
+  background-color: #f0f0f0;
+}
+.search-box select{
+    border: none;
+    outline: none;
+    padding: 5px;
+    margin-left: 10px;
+    font-size: 14px;
+    background: transparent;
+    cursor: pointer;
+}
+body {
+  padding-top: 60px;
+}
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <nav class="navbar">
+        <div class="logo">
+          <img src="{% static 'images/logo.png' %}" alt="Logo" />
+        </div>
+
+        <div class="manager-section">
+          <img
+            src="{% static 'images/notify-icon.png' %}"
+            alt="Notify"
+            class="menu-icon"
+          />
+
+          <!-- Thay user-info thành manager-info -->
+          <div class="manager-info" id="manager-dropdown">
+            <img
+              src="{% static 'images/account-icon.png' %}"
+              alt="Account"
+              class="account-icon"
+            />
+            <span class="managername" id="manager-name">{{ manager_name }}</span>
+
+            <div class="dropdown-menu" id="dropdown-menu">
+              <a href="http://127.0.0.1:8000/manager/login/">Logout</a>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div class="product-title">
+        <h2>Manage Product List</h2>
+      </div>
+      <button id="back-button" onclick="window.location.href='http://127.0.0.1:8000/manager/homemproduct/'">←</button>
+      <!-- Cả hai nút đều nằm trong một container với class chung -->
+      <div class="buttons-container">
+        <!-- Button Download Excel -->
+  <button
+    class="button download-button"
+    onclick="window.location.href='/manager/export-products/'"
+>
+    <i class="fas fa-file-download"></i>
+    Download Excel
+</button>
+        <button class="button upload-button">
+          <i class="fas fa-cloud-upload-alt"></i> Upload Excel
+        </button>
+        <form
+    id="uploadForm"
+    action="/manager/import-products/"
+    method="post"
+    enctype="multipart/form-data"
+>
+    {% csrf_token %}
+
+    <input
+        type="file"
+        id="excelFile"
+        name="excel_file"
+        accept=".xlsx"
+        style="display:none;"
+    >
+</form>
+  
+    <button class="button add-button">
+      <span class="plus-icon">+</span> Add Product
+    </button>
+  </div>
+  <form method="get" action="" class="search-box">
+
+    <input
+        type="text"
+        name="search"
+        placeholder="Search Product Code, Name..."
+        value="{{ request.GET.search }}"
+    >
+
+    
+
+    <button type="submit">
+        <img src="{% static 'images/search-icon.png' %}"
+             alt="Search"
+             class="search-icon">
+    </button>
+    <select name="type_filter" onchange="this.form.submit()">
+        <option value="">All Types</option>
+
+        {% for product_type in product_types %}
+        <option
+            value="{{ product_type.type_code }}"
+            {% if request.GET.type_filter == product_type.type_code %}
+                selected
+            {% endif %}
+        >
+            {{ product_type.type_code }}
+        </option>
+        {% endfor %}
+    </select>
+
+</form>
+  <div class="table-container">
+    <table class="product-table">
+        <thead>
+            <tr>
+                <th><input type="checkbox" id="select-all"></th>
+
+                <th>Product Code</th>
+                <th>Product Name</th>
+                <th>Description</th>
+                <th>Image</th>
+                <th>Price (VND)</th>
+                <th>Type Code</th>
+                <th>
+                    <div class="size-column">
+                        <span class="size-title">Size</span>
+                        <hr class="divider">
+                        <div class="size-options">
+                            <span>S</span>
+                            <span>M</span>
+                            <span>L</span>
+                            <span>Freesize</span>
+                        </div>
+                    </div>
+                </th>
+                <th>Color</th>
+                <th>Inventory</th>
+                <th>Status</th>
+                <th>Display on Shelf</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td><input type="checkbox" class="row-checkbox" data-product-id="{{ product.product_id }}"></td>
+                <td>{{ product.product_code }}</td>
+                <td>{{ product.product_name }}</td>
+                <td>{{ product.description|slice:":50" }}{% if product.description|length > 50 %}...{% endif %}</td>
+
+                <td><img src="{{ product.image }}" alt="Product Image" class="product-image"></td>
+                <td class="price">{{ product.price }}</td>
+
+                <td>{{ product.type_code }}</td>
+                <td>
+                    <div class="size-column">
+                        <span class="size-title"></span>
+                        <hr class="divider">
+                        <div class="size-options">
+                          <span>{{ product.quality_inventory_of_size_S|floatformat:0 }}</span>
+                          <span>{{ product.quality_inventory_of_size_M|floatformat:0 }}</span>
+                          <span>{{ product.quality_inventory_of_size_L|floatformat:0 }}</span>
+                          <span>{{ product.quality_inventory_of_freesize|floatformat:0 }}</span>
+                      </div>
+                      
+                    </div>
+                </td>
+                <td>{{ product.color }}</td>
+                <td style="color: {% if product.quality_inventory_total == 0 %}red{% else %}inherit{% endif %};">
+                  {{ product.quality_inventory_total|floatformat:0 }}
+              </td>
+              
+              <td>
+                {% if product.quality_inventory_total == 0 %}
+                  <span style="color: red;">Out of Stock</span>
+                {% else %}
+                  <span style="color: green;">In Stock</span>
+                {% endif %}
+              </td>
+              
+                <td><input type="checkbox" class="display-on-shelf" {% if product.display_flag %}checked{% endif %} disabled></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+</div>
+<div class="table-actions">
+  <button class="action-button delete-button" id="deleteSelected">Delete</button>
+
+  <button class="action-button edit-button" id="editButton">Edit</button>
+
+</div>
+  <!-- Modal Add Product -->
+  <div id="addProductModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Add New Product</h2>
+      <form method="post" action="/manager/add-product/" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+          <label>Product Code:</label>
+          <input type="text" name="product_code" required>
+        </div>
+  
+        <div class="form-group">
+          <label>Product Name:</label>
+          <input type="text" name="product_name" required>
+        </div>
+        <div class="form-group-select">
+          <label for="type_code"><strong>Type Code:</strong></label>
+          <select name="type_code" id="type_code" required>
+            <option value="" disabled selected>Select Product Type</option>
+            {% for product_type in product_types %}
+              <option value="{{ product_type.type_code }}">{{ product_type.type_code }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        
+        
+        
+        <div class="form-group">
+          <label>Image:</label>
+          <input type="file" name="image">
+        </div>
+        <div class="form-group">
+          <label>Description:</label>
+          <textarea name="description" maxlength="255"></textarea>
+        </div>
+        
+  
+        <div class="form-group">
+          <label>Price:</label>
+          <input type="number" name="price" required>
+        </div>
+  
+        
+        <div class="form-group">
+          <label>Color:</label>
+          <input type="text" name="color" required>
+        </div>
+        <div class="form-group-checkbox">
+          <label class="checkbox-label" for="display_flag">
+            Display on Shelf:
+            <input type="checkbox" id="display_flag" name="display_flag">
+          </label>
+        
+          <label class="checkbox-label" for="freesize-toggle">
+            Freesize:
+            <input type="checkbox" id="freesize-toggle" name="is_freesize">
+          </label>
+        </div>
+        
+        
+        
+        
+  
+        <fieldset>
+          <legend>Inventory by Size:</legend>
+          <div class="form-group">
+            <label>Size S: <input type="number" name="size_s" id="size_s" disabled></label>
+          </div>
+          <div class="form-group">
+            <label>Size M: <input type="number" name="size_m" id="size_m" disabled></label>
+          </div>
+          <div class="form-group">
+            <label>Size L: <input type="number" name="size_l" id="size_l" disabled></label>
+          </div>
+          <div class="form-group">
+            <label>Freesize: <input type="number" name="size_freesize" id="size_freesize" disabled></label>
+          </div>
+        </fieldset>
+  
+        
+  
+        <div class="form-group">
+          <label>Inventory Total:</label>
+          <input type="number" name="inventory" required>
+        </div>
+
+        <div class="form-group button-group">
+          <button type="button" onclick="closeModal()">Cancel</button>
+          <button type="submit">Confirm</button>
+        </div>
+        
+      </form>
+    </div>
+  </div>
+  <!-- Modal Edit Product -->
+  <div id="editProductModal" class="modal-edit">
+    <div class="modal-content-edit">
+      <span class="close-edit">&times;</span>
+      <h2>Edit Product</h2>
+      <form method="post" action="/manager/edit-product/" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group-edit">
+          <label>Product Code:</label>
+          <input type="text" name="product_code" value="{{ product.product_code }}" readonly>
+        </div>
+  
+        <div class="form-group-edit">
+          <label>Product Name:</label>
+          <input type="text" name="product_name" value="{{ product.product_name }}" required>
+        </div>
+  
+        <div class="form-group-select-edit">
+          <label for="type_code"><strong>Type Code:</strong></label>
+          <select name="type_code" id="type_code" required>
+            <option value="" disabled>Select Product Type</option>
+            {% for product_type in product_types %}
+              <option value="{{ product_type.type_code }}" {% if product_type.type_code == product.type_code %}selected{% endif %}>
+                {{ product_type.type_code }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+  
+        <div class="form-group-edit">
+          <label>Image (Leave blank to keep current):</label>
+          <input type="file" name="image">
+        </div>
+  
+        <div class="form-group-edit">
+          <label>Description:</label>
+          <textarea name="description" maxlength="255">{{ product.description }}</textarea>
+        </div>
+  
+        <div class="form-group-edit">
+          <label>Price:</label>
+          <input type="number" name="price" value="{{ product.price }}" required>
+        </div>
+  
+        <div class="form-group-edit">
+          <label>Color:</label>
+          <input type="text" name="color" value="{{ product.color }}" required>
+        </div>
+  
+        <div class="form-group-checkbox-edit">
+          <label class="checkbox-label-edit" for="display_flag">
+            Display on Shelf:
+            <input type="checkbox" id="display_flag" name="display_flag" {% if product.display_flag %}checked{% endif %}>
+          </label>
+  
+          <label class="checkbox-label-edit" for="freesize-toggle">
+            Freesize:
+            <input type="checkbox" id="freesize-toggle" name="is_freesize" {% if product.is_freesize %}checked{% endif %}>
+          </label>
+        </div>
+  
+        <fieldset>
+          <legend>Inventory by Size:</legend>
+          <div class="form-group-edit">
+            <label>Size S: <input type="number" name="size_s" id="size_s" value="{{ product.size_s }}">
+          </div>
+          <div class="form-group-edit">
+            <label>Size M: <input type="number" name="size_m" id="size_m" value="{{ product.size_m }}">
+
+          </div>
+          <div class="form-group-edit">
+            <input type="number" name="size_l" id="size_l" value="{{ product.size_l }}">
+
+          </div>
+          <div class="form-group-edit">
+            <label>Freesize: <input type="number" name="size_freesize" id="size_freesize" value="{{ product.size_freesize }}">
+
+          </div>
+        </fieldset>
+  
+        <div class="form-group-edit">
+          <label>Inventory Total:</label>
+          <input type="number" name="inventory" value="{{ product.inventory }}" required>
+        </div>
+  
+        <div class="form-group-edit button-group-edit">
+          <button type="button" onclick="closeEditModal()">Cancel</button>
+          <button type="submit">Confirm</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+    </header>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const managerInfo = document.getElementById("manager-dropdown");
+        const dropdownMenu = document.getElementById("dropdown-menu");
+
+        managerInfo.addEventListener("click", function (event) {
+          dropdownMenu.style.display =
+            dropdownMenu.style.display === "block" ? "none" : "block";
+          event.stopPropagation();
+        });
+
+        document.addEventListener("click", function (event) {
+          if (
+            !managerInfo.contains(event.target) &&
+            !dropdownMenu.contains(event.target)
+          ) {
+            dropdownMenu.style.display = "none";
+          }
+        });
+      });
+      document.addEventListener("DOMContentLoaded", function () {
+        // Lắng nghe sự kiện thay đổi trên checkbox "select-all"
+        document.getElementById('select-all').addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('.row-checkbox'); // Lấy tất cả checkbox của từng sản phẩm
+            checkboxes.forEach(function(checkbox) {
+                checkbox.checked = document.getElementById('select-all').checked; // Đánh dấu tất cả checkbox dựa trên trạng thái của 'select-all'
+            });
+        });
+    });
+    document.addEventListener("DOMContentLoaded", function() {
+        const priceElements = document.querySelectorAll('.price'); // Lấy tất cả phần tử có class 'price'
+
+        priceElements.forEach(function(element) {
+            let price = parseFloat(element.innerText); // Lấy giá từ text của phần tử
+            if (!isNaN(price)) {
+                element.innerText = price.toLocaleString('vi-VN') + ' đ';  // Định dạng giá theo chuẩn Việt Nam
+            }
+        });
+    });
+    // Modal
+    document.addEventListener("DOMContentLoaded", function () {
+      const addBtn = document.querySelector(".add-button");
+      const modal = document.getElementById("addProductModal");
+      const closeBtn = modal.querySelector(".close");
+    
+      addBtn.addEventListener("click", function () {
+        modal.style.display = "block";
+      });
+    
+      closeBtn.addEventListener("click", function () {
+        modal.style.display = "none";
+      });
+    
+      window.addEventListener("click", function (e) {
+        if (e.target == modal) {
+          modal.style.display = "none";
+        }
+      });
+    });
+    //size
+    document.addEventListener("DOMContentLoaded", function () {
+      const freesizeToggle = document.getElementById("freesize-toggle");
+      const sizeInputs = {
+        sizeS: document.getElementById("size_s"),
+        sizeM: document.getElementById("size_m"),
+        sizeL: document.getElementById("size_l"),
+        sizeFreesize: document.getElementById("size_freesize")
+      };
+    
+      // Mặc định kích hoạt S, M, L, Freesize bị vô hiệu hóa
+      const toggleSizeInputs = () => {
+        const isFreesize = freesizeToggle.checked;
+    
+        if (isFreesize) {
+          // Freesize được check, disable S, M, L và clear giá trị
+          sizeInputs.sizeS.disabled = true;
+          sizeInputs.sizeM.disabled = true;
+          sizeInputs.sizeL.disabled = true;
+          sizeInputs.sizeFreesize.disabled = false;
+          
+          // Xóa dữ liệu khi chuyển sang Freesize
+          sizeInputs.sizeS.value = '';
+          sizeInputs.sizeM.value = '';
+          sizeInputs.sizeL.value = '';
+        } else {
+          // Freesize không được check, enable S, M, L và clear giá trị
+          sizeInputs.sizeS.disabled = false;
+          sizeInputs.sizeM.disabled = false;
+          sizeInputs.sizeL.disabled = false;
+          sizeInputs.sizeFreesize.disabled = true;
+          
+          // Xóa giá trị khi chuyển sang không Freesize
+          sizeInputs.sizeFreesize.value = '';
+        }
+      };
+    
+      // Lắng nghe sự kiện thay đổi của checkbox "Item is Freesize"
+      freesizeToggle.addEventListener("change", toggleSizeInputs);
+    
+      // Gọi hàm để áp dụng trạng thái ban đầu
+      toggleSizeInputs();
+    
+      // Cập nhật lại tổng số inventory khi các giá trị trong các ô nhập liệu thay đổi
+      const inputs = ['size_s', 'size_m', 'size_l', 'size_freesize'];
+      inputs.forEach(id => {
+        document.getElementById(id).addEventListener('input', updateInventory);
+      });
+    
+      function updateInventory() {
+        let total = 0;
+        inputs.forEach(id => {
+          const val = parseInt(document.getElementById(id).value) || 0;
+          total += val;
+        });
+        document.querySelector('input[name="inventory"]').value = total;
+      }
+    });
+    
+  // button edit----------------------------------------------------------------------------------------
+
+// Đóng modal khi nhấn vào dấu "X" trong modal Edit
+// Đảm bảo rằng phần tử với class 'edit-close' thực sự có mặt trong DOM trước khi gán sự kiện
+document.querySelector('.close-edit').addEventListener('click', function () {
+  document.getElementById('editProductModal').style.display = 'none';
+});
+
+// Đóng modal khi nhấn vào nút "Cancel" trong modal Edit
+function closeEditModal() {
+  document.getElementById('editProductModal').style.display = 'none';
+}
+
+// Đảm bảo modal sẽ đóng nếu nhấn ngoài vùng modal
+window.onclick = function (event) {
+  const modal = document.getElementById('editProductModal');
+  if (event.target == modal) {
+    modal.style.display = 'none';
+  }
+};
+document.addEventListener("DOMContentLoaded", function () {
+  const freesizeToggleEdit = document.querySelector("#editProductModal #freesize-toggle");
+  const sizeSEdit = document.querySelector("#editProductModal #size_s");
+  const sizeMEdit = document.querySelector("#editProductModal #size_m");
+  const sizeLEdit = document.querySelector("#editProductModal #size_l");
+  const freesizeInputEdit = document.querySelector("#editProductModal #size_freesize");
+
+  function updateSizeInputsForEditModal() {
+  const isFreesize = freesizeToggleEdit.checked;
+
+  sizeSEdit.disabled = isFreesize;
+  sizeMEdit.disabled = isFreesize;
+  sizeLEdit.disabled = isFreesize;
+
+  freesizeInputEdit.disabled = !isFreesize;
+}
+
+
+
+  freesizeToggleEdit.addEventListener("change", updateSizeInputsForEditModal);
+
+  // Gọi ngay khi modal mở (đặc biệt quan trọng với edit vì có thể có giá trị mặc định)
+  updateSizeInputsForEditModal();
+});
+const editSizeInputs = ['size_s', 'size_m', 'size_l', 'size_freesize'];
+const inventoryEditInput = document.querySelector('#editProductModal input[name="inventory"]');
+
+function updateInventoryEdit() {
+  let total = 0;
+  editSizeInputs.forEach(id => {
+    const input = document.querySelector(`#editProductModal #${id}`);
+    const val = parseInt(input.value) || 0;
+    total += val;
+  });
+  inventoryEditInput.value = total;
+}
+
+// Gắn sự kiện cho các input trong modal Edit
+editSizeInputs.forEach(id => {
+  const input = document.querySelector(`#editProductModal #${id}`);
+  input.addEventListener('input', updateInventoryEdit);
+});
+
+// Gọi hàm ngay khi modal mở để hiển thị đúng tổng hiện tại
+updateInventoryEdit();
+document.addEventListener("DOMContentLoaded", function () {
+  const editButton = document.getElementById('editButton');
+
+  editButton.addEventListener('click', function () {
+    const checkedBoxes = document.querySelectorAll('.row-checkbox:checked');
+
+    if (checkedBoxes.length === 0) {
+      alert('Please select a product to edit.');
+      return; // ❌ STOP, không mở modal
+    }
+
+    if (checkedBoxes.length > 1) {
+      alert('Only one product can be selected for editing.');
+      return; // ❌ STOP, không mở modal
+    }
+
+    // ✅ Nếu đúng 1 checkbox
+    const productId = checkedBoxes[0].dataset.productId;
+
+    fetch(`/api/product/${productId}/`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          const p = data.product;
+
+          // ✅ Hiển thị modal
+          document.getElementById('editProductModal').style.display = 'block';
+
+          // ✅ Đổ dữ liệu
+          document.querySelector('#editProductModal input[name="product_code"]').value = p.product_code;
+          document.querySelector('#editProductModal input[name="product_name"]').value = p.product_name;
+          document.querySelector('#editProductModal select[name="type_code"]').value = p.type_code;
+          document.querySelector('#editProductModal textarea[name="description"]').value = p.description;
+          document.querySelector('#editProductModal input[name="price"]').value = p.price;
+          document.querySelector('#editProductModal input[name="color"]').value = p.color;
+          document.querySelector('#editProductModal input[name="display_flag"]').checked = p.display_flag;
+          document.querySelector('#editProductModal input[name="is_freesize"]').checked = p.is_freesize;
+
+          document.querySelector('#editProductModal input[name="size_s"]').value = p.size_s;
+          document.querySelector('#editProductModal input[name="size_m"]').value = p.size_m;
+          document.querySelector('#editProductModal input[name="size_l"]').value = p.size_l;
+          document.querySelector('#editProductModal input[name="size_freesize"]').value = p.size_freesize;
+
+          document.querySelector('#editProductModal input[name="inventory"]').value = p.inventory_total;
+
+          updateSizeInputsForEditModal();
+        } else {
+          alert("Không tìm thấy sản phẩm.");
+        }
+      })
+      .catch(error => {
+        console.error("Lỗi khi gọi API:", error);
+      });
+  });
+});
+
+  // button delete----------------------------------------------------------------------------------------
+  document.getElementById('deleteSelected').addEventListener('click', function () {
+    const checkboxes = document.querySelectorAll('.row-checkbox:checked');
+    const selectedIds = Array.from(checkboxes).map(cb => cb.dataset.productId);
+
+    if (selectedIds.length === 0) {
+        alert('Please select at least one product to delete.');
+        return;
+    }
+
+    if (!confirm('Are you sure you want to delete selected products?')) return;
+
+    fetch('/manager/delete-products/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')  // Lấy token CSRF
+        },
+        body: JSON.stringify({ product_ids: selectedIds })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Deleted successfully!');
+            location.reload();  // Tải lại để cập nhật bảng
+        } else {
+            alert('Error deleting products.');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+});
+
+// Hàm lấy CSRF token
+function getCookie(name) {
+    const cookies = document.cookie.split(';');
+    for (const cookie of cookies) {
+        const [key, val] = cookie.trim().split('=');
+        if (key === name) return decodeURIComponent(val);
+    }
+}
+document.addEventListener("DOMContentLoaded", function () {
+
+    const uploadBtn = document.querySelector(".upload-button");
+    const fileInput = document.getElementById("excelFile");
+    const uploadForm = document.getElementById("uploadForm");
+
+    uploadBtn.addEventListener("click", function () {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener("change", function () {
+        if (this.files.length > 0) {
+            uploadForm.submit();
+        }
+    });
+
+});
+    </script>
+  </body>
+</html>

@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>H.H.U.O.N.G shop</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/user/login.css' %}" />
+    <style>
+      /* --- Reset & Base Styles --- */
+      * {
+          box-sizing: border-box;
+          margin: 0;
+          padding: 0;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+      
+      body {
+          padding-top: 80px; /* Tạo khoảng trống tránh bị Navbar che khuất */
+          background-color: #f8f9fa;
+          color: #333;
+      }
+
+      /* --- Navbar Styles --- */
+      .navbar {
+          display: flex;
+          align-items: center;
+          padding: 15px 4%;
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          z-index: 1000;
+          background-color: #ffffff;
+          box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
+      }
+      
+      .logo {
+          margin-right: 20px;
+      }
+      
+      .logo img {
+          height: 40px;
+          display: block;
+      }
+      
+      .nav-links {
+          list-style: none;
+          display: flex;
+          gap: 25px;
+          margin-left: 40px;
+      }
+      
+      .nav-links a {
+          text-decoration: none;
+          color: #555;
+          font-size: 16px;
+          font-weight: 600;
+          transition: color 0.3s ease; 
+      }
+    
+      .nav-links a:hover {
+          color: #000;
+      }
+      
+      /* --- User Section (Right Navbar) --- */
+      .user-section {
+          display: flex;
+          align-items: center;
+          margin-left: auto; /* Đẩy toàn bộ cụm này sang bên phải */
+          gap: 20px;
+      }
+      
+      .menu-icon {
+          width: 24px;
+          height: 24px;
+          cursor: pointer;
+          transition: transform 0.2s ease;
+      }
+      
+      .menu-icon:hover {
+          transform: scale(1.1);
+      }
+      
+      .user-info {
+          position: relative;
+          display: flex;
+          align-items: center;
+          background-color: #fff;
+          padding: 6px 14px;
+          border: 1px solid #ccc;
+          border-radius: 20px;
+          cursor: pointer;
+          transition: border-color 0.3s;
+      }
+
+      .user-info:hover {
+          border-color: #333;
+      }
+      
+      .account-icon {
+          width: 22px;
+          height: 22px;
+          margin-right: 8px;
+      }
+      
+      .username {
+          font-size: 14px;
+          color: #333;
+          font-weight: bold;
+      }
+      
+      /* --- Dropdown Menu --- */
+      .dropdown-menu {
+          display: none;
+          position: absolute;
+          top: 110%;
+          right: 0;
+          background-color: #ffffff;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+          border-radius: 8px;
+          overflow: hidden;
+          min-width: 180px;
+          z-index: 1000;
+      }
+
+      .dropdown-menu a {
+          display: block;
+          padding: 12px 16px;
+          text-decoration: none;
+          color: #444;
+          font-size: 14px;
+          transition: background 0.2s, color 0.2s;
+      }
+
+      .dropdown-menu a:hover {
+          background-color: #f1f1f1;
+          color: #000;
+      }
+
+      /* --- Main Content Layout --- */
+      .profile-wrapper {
+          display: flex;
+          max-width: 1200px;
+          margin: 40px auto;
+          padding: 0 20px;
+          gap: 40px;
+          align-items: flex-start;
+      }
+
+      /* --- Left Column: Profile Picture --- */
+      .profile-picture-container {
+          flex: 1;
+          max-width: 250px;
+          background: #fff;
+          padding: 30px 20px;
+          border-radius: 12px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+          text-align: center;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+      }
+
+      .profile-picture-container img {
+          width: 120px;
+          height: 120px;
+          border-radius: 50%;
+          border: 3px solid #eee;
+          object-fit: cover;
+          margin-bottom: 15px;
+      }
+
+      .profile-picture-container button {
+          width: 100%;
+          margin-top: 10px;
+          padding: 10px;
+          font-size: 14px;
+          font-weight: 600;
+          cursor: pointer;
+          border: none;
+          border-radius: 8px;
+          background-color: #333;
+          color: white;
+          transition: background 0.3s;
+      }
+
+      .profile-picture-container button:hover {
+          background-color: #555;
+      }
+
+      #delete-image {
+          background-color: #fff;
+          color: #333;
+          border: 1px solid #ccc;
+      }
+
+      #delete-image:hover {
+          background-color: #f5f5f5;
+          border-color: #333;
+      }
+
+      /* --- Right Column: Account Information Form --- */
+      .account-infor {
+          flex: 3;
+          background: #fff;
+          padding: 40px;
+          border-radius: 12px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      }
+
+      .account-infor h2 {
+          margin-bottom: 25px;
+          font-size: 22px;
+          font-weight: 700;
+          border-bottom: 2px solid #eee;
+          padding-bottom: 10px;
+      }
+
+      .form-container {
+          width: 100%;
+      }
+
+      .form-row {
+          display: flex;
+          gap: 30px;
+          margin-bottom: 20px;
+      }
+
+      .info-group {
+          display: flex;
+          flex-direction: column;
+          flex: 1;
+      }
+
+      .info-group label {
+          font-size: 14px;
+          font-weight: 600;
+          color: #555;
+          margin-bottom: 8px;
+      }
+
+      .info-group input {
+          width: 100%;
+          padding: 12px;
+          border: 1px solid #ddd;
+          border-radius: 8px;
+          font-size: 14px;
+          color: #333;
+          background-color: #fff;
+          transition: border-color 0.3s;
+      }
+
+      .info-group input:focus {
+          border-color: #333;
+          outline: none;
+      }
+
+      /* Style dành riêng cho ô không được phép sửa */
+      .info-group input[readonly] {
+          background-color: #f1f3f5 !important;
+          color: #777;
+          border-color: #ddd;
+          cursor: not-allowed;
+      }
+
+      /* Nút cập nhật tài khoản chính */
+      #update-account-btn {
+          margin-top: 15px;
+          padding: 12px 30px;
+          font-size: 15px;
+          font-weight: bold;
+          color: #fff;
+          background-color: #222;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: background-color 0.3s;
+      }
+
+      #update-account-btn:hover {
+          background-color: #444;
+      }
+
+      /* Responsive trên màn hình nhỏ */
+      @media (max-width: 768px) {
+          .profile-wrapper {
+              flex-direction: column;
+              align-items: center;
+          }
+          .profile-picture-container {
+              max-width: 100%;
+              width: 100%;
+          }
+          .form-row {
+              flex-direction: column;
+              gap: 15px;
+          }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <img src="{% static 'images/logo.png' %}" alt="Logo" />
+            </div>
+            <ul class="nav-links">
+                <li><a href="http://127.0.0.1:8000/user/home/">Home</a></li>
+                <li><a href="http://127.0.0.1:8000/user/about/">About Us</a></li>
+                <li><a href="http://127.0.0.1:8000/user/product/">Product</a></li>
+                <li><a href="http://127.0.0.1:8000/user/blog/">Blog</a></li>
+            </ul>
+            <div class="user-section">
+                <img src="{% static 'images/favorite-icon.png' %}" alt="Favorite" class="menu-icon" />
+                <img src="{% static 'images/notify-icon.png' %}" alt="Notify" class="menu-icon" />
+                <img src="{% static 'images/cart-icon.png' %}" alt="Cart" class="menu-icon" />
+                
+                <div class="user-info" id="user-info-toggle">
+                    <img src="{% static 'images/account-icon.png' %}" alt="Account" class="account-icon" />
+                    <span class="username">
+                        {% if request.session.user_name %}
+                            {% with request.session.user_name as username %}
+                                {% if username|length > 12 %}
+                                    {{ username|slice:":12" }}...
+                                {% else %}
+                                    {{ username }}
+                                {% endif %}
+                            {% endwith %}
+                        {% else %}
+                            Guest
+                        {% endif %}
+                    </span>
+                    <div class="dropdown-menu" id="dropdown-menu">
+                        <a href="">Manage Orders</a>
+                        <a href="http://127.0.0.1:8000/user/profile/">Account Information</a>
+                        <a href="http://127.0.0.1:8000/user/login/">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="profile-wrapper">
+        <div class="profile-picture-container">
+            <img id="profile-picture" src="{% static 'images/avata-profile-default.jpg' %}" alt="Profile Picture" />
+            <input type="file" id="image-upload" accept="image/*" style="display: none;" />
+            <button id="update-image">Update Image</button>
+            <button id="delete-image">Delete Image</button>
+        </div>
+
+        <div class="account-infor">
+            <h2>Account Information</h2>
+            <div class="form-container">
+                <div class="form-row">
+                    <div class="info-group">
+                        <label for="username-input">Username:</label>
+                        <input type="text" id="username-input" value="{{ user_name }}" />
+                    </div>
+                    <div class="info-group">
+                        <label for="address-input">Address:</label>
+                        <input type="text" id="address-input" value="{{ address }}" readonly />
+                    </div>
+                </div>
+        
+                <div class="form-row">
+                    <div class="info-group">
+                        <label for="phone-input">Phone:</label>
+                        <input type="text" id="phone-input" value="{{ phone }}" />
+                    </div>
+                    <div class="info-group">
+                        <label for="email-input">Email:</label>
+                        <input type="text" id="email-input" value="{{ email }}" />
+                    </div>
+                </div>
+        
+                <button id="update-account-btn">Update Account</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const userInfoToggle = document.getElementById("user-info-toggle");
+            const dropdownMenu = document.getElementById("dropdown-menu");
+    
+            userInfoToggle.addEventListener("click", function (event) {
+                dropdownMenu.style.display = dropdownMenu.style.display === "block" ? "none" : "block";
+                event.stopPropagation();
+            });
+    
+            document.addEventListener("click", function (event) {
+                if (!userInfoToggle.contains(event.target)) {
+                    dropdownMenu.style.display = "none";
+                }
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const profilePicture = document.getElementById("profile-picture");
+            const imageUpload = document.getElementById("image-upload");
+            const updateImageButton = document.getElementById("update-image");
+            const deleteImageButton = document.getElementById("delete-image");
+        
+            const savedAvatar = localStorage.getItem("avatar");
+            if (savedAvatar) {
+                profilePicture.src = savedAvatar;
+            }
+        
+            updateImageButton.addEventListener("click", function () {
+                imageUpload.click();
+            });
+        
+            imageUpload.addEventListener("change", function () {
+                const file = imageUpload.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const imageData = e.target.result;
+                        profilePicture.src = imageData;
+                        localStorage.setItem("avatar", imageData);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        
+            deleteImageButton.addEventListener("click", function () {
+                const defaultAvatar = "{% static 'images/avata-profile-default.jpg' %}";
+                profilePicture.src = defaultAvatar;
+                localStorage.removeItem("avatar");
+            });
+        });
+        document
+    .getElementById("update-account-btn")
+    .addEventListener("click", async function () {
+
+        const user_name =
+            document.getElementById("username-input").value.trim();
+
+        const phone =
+            document.getElementById("phone-input").value.trim();
+
+        const email =
+            document.getElementById("email-input").value.trim();
+
+        try {
+
+            const response = await fetch(
+                "/user/update-profile/",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": getCookie("csrftoken")
+                    },
+                    body: JSON.stringify({
+                        user_name,
+                        phone,
+                        email
+                    })
+                }
+            );
+
+            const result = await response.json();
+
+            if (result.success) {
+                alert(result.message);
+                location.reload();
+            } else {
+                alert(result.message);
+            }
+
+        } catch (error) {
+            console.error(error);
+            alert("Update failed.");
+        }
+    });
+
+
+function getCookie(name) {
+    let cookieValue = null;
+
+    if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(";");
+
+        for (let i = 0; i < cookies.length; i++) {
+
+            const cookie = cookies[i].trim();
+
+            if (
+                cookie.substring(0, name.length + 1)
+                === (name + "=")
+            ) {
+                cookieValue = decodeURIComponent(
+                    cookie.substring(name.length + 1)
+                );
+                break;
+            }
+        }
+    }
+
+    return cookieValue;
+}
+    </script>
+  </body>
+</html>
+

@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage Revenue</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    {% load static %}
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+      /* ================= RESET & GENERAL ================= */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Poppins", -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+        background: #f1f5f9; 
+        color: #1e293b;
+        padding-top: 100px;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* ================= NAVBAR ================= */
+      .navbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        padding: 12px 40px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+      }
+
+      .logo img {
+        height: 42px;
+        width: auto;
+        object-fit: contain;
+        display: block;
+      }
+
+      .manager-section {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .menu-icon {
+        width: 22px;
+        height: 22px;
+        object-fit: contain;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+      }
+
+      .menu-icon:hover {
+        transform: scale(1.1);
+      }
+
+      .manager-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 16px;
+        border-radius: 9999px;
+        border: 1px solid #e2e8f0;
+        background: #ffffff;
+        cursor: pointer;
+        position: relative;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        transition: all 0.2s ease;
+      }
+
+      .manager-info:hover {
+        background: #f8fafc;
+        border-color: #cbd5e1;
+        transform: translateY(-1px);
+      }
+
+      .account-icon {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+      }
+
+      .manager-info span {
+        font-size: 14px;
+        font-weight: 500;
+        color: #334155;
+      }
+
+      /* ================= DROPDOWN MENU ================= */
+      .dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 120%;
+        right: 0;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        min-width: 160px;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        z-index: 1000;
+      }
+
+      .dropdown-menu a {
+        display: block;
+        padding: 12px 16px;
+        color: #334155;
+        text-decoration: none;
+        font-size: 14px;
+        transition: background 0.2s;
+      }
+
+      .dropdown-menu a:hover {
+        background: #f1f5f9;
+        color: #1f2a44;
+      }
+
+      /* ================= CLOSE BUTTON BAR ================= */
+      .close-bar {
+        position: fixed;
+        top: 95px;
+        right: 40px;
+        z-index: 99;
+      }
+
+      .close-btn {
+        font-size: 24px;
+        width: 44px;
+        height: 44px;
+        border: 1px solid #e2e8f0;
+        border-radius: 50%;
+        background: #ffffff;
+        cursor: pointer;
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      /* ĐÃ SỬA: Map màu xanh đen đồng bộ với layout dưới khi hover nút X */
+      .close-btn:hover {
+        color: #1f2a44; 
+        background: #f1f5f9;
+        border-color: #cbd5e1;
+        transform: rotate(90deg);
+      }
+
+      /* ================= TITLE ================= */
+      .page-title {
+        text-align: center;
+        font-size: 30px;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 35px 0 25px 0;
+        position: relative;
+        letter-spacing: -0.5px;
+      }
+
+      .page-title::after {
+        content: '';
+        display: block;
+        width: 50px;
+        height: 5px;
+        background: linear-gradient(90deg, #1f2a44, #3b82f6);
+        border-radius: 99px;
+        margin: 12px auto 0 auto;
+      }
+
+      /* ================= BUTTON TABS ================= */
+      .revenue-tabs {
+        width: 90%;
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        background: rgba(226, 232, 240, 0.7);
+        padding: 6px;
+        border-radius: 99px; 
+        gap: 6px;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);
+      }
+
+      .revenue-btn {
+        flex: 1;
+        padding: 14px 20px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #475569;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        border-radius: 99px;
+        transition: all 0.25s ease;
+      }
+
+      .revenue-btn:hover {
+        color: #1f2a44;
+        background: rgba(255, 255, 255, 0.4);
+      }
+
+      .revenue-btn.active {
+        background: #1f2a44;
+        color: #ffffff;
+        box-shadow: 0 4px 12px rgba(31, 42, 68, 0.2);
+      }
+
+      /* ================= TAB CONTENT BASE ================= */
+      .tab-content {
+        width: 90%;
+        max-width: 1200px;
+        margin: 30px auto 80px auto;
+        display: none;
+        animation: fadeInUp 0.4s ease forwards;
+      }
+
+      @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      /* ================= REVENUE TAB LAYOUT ================= */
+      .revenue-layout {
+        display: flex;
+        align-items: stretch;
+        gap: 30px;
+        background: #ffffff;
+        padding: 35px;
+        border-radius: 20px; 
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+      }
+
+      /* LEFT: FILTER */
+      .filter-box {
+        width: 25%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        background: #f8fafc;
+        padding: 24px;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+      }
+
+      .filter-box h4 {
+        margin-bottom: 20px;
+        font-size: 16px;
+        font-weight: 600;
+        color: #0f172a;
+        position: relative;
+        padding-left: 10px;
+      }
+
+      .filter-box h4::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 3px;
+        width: 4px;
+        height: 16px;
+        background: #3b82f6;
+        border-radius: 2px;
+      }
+
+      .filter-field {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 18px;
+      }
+
+      .filter-field label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #475569;
+        margin-bottom: 8px;
+      }
+
+      .filter-field input {
+        padding: 11px 14px;
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+        font-size: 14px;
+        color: #1e293b;
+        outline: none;
+        background: #ffffff;
+        font-family: inherit;
+        transition: all 0.2s ease;
+      }
+
+      .filter-field input:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+      }
+
+      .filter-btn {
+        width: 100%;
+        padding: 12px;
+        background: #1f2a44;
+        color: #fff;
+        font-weight: 600;
+        font-size: 14px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 4px 6px -1px rgba(31, 42, 68, 0.2);
+      }
+
+      .filter-btn:hover {
+        background: #2e3f66;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 12px -1px rgba(31, 42, 68, 0.25);
+      }
+
+      /* CENTER: CHART */
+      .chart-box {
+        width: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+      }
+
+      .chart-box canvas {
+        width: 320px !important;
+        height: 320px !important;
+      }
+
+      /* RIGHT: AMOUNT CARDS */
+      .amount-box {
+        width: 25%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 18px;
+      }
+
+      .amount-card {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        padding: 22px 16px;
+        text-align: center;
+        border-radius: 16px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .amount-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+      }
+
+      .amount-card label {
+        font-size: 12px;
+        font-weight: 600;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: block;
+        margin-bottom: 6px;
+      }
+
+      .amount-card span {
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        display: block;
+      }
+
+      .amount-card.cart {
+        background: linear-gradient(180deg, #ffffff, #f0f4ff);
+        border-color: #dbeafe;
+      }
+      .amount-card.cart::before {
+        background: #1f2a44;
+      }
+      .amount-card.cart span {
+        color: #1f2a44;
+      }
+
+      .amount-card.cash {
+        background: linear-gradient(180deg, #ffffff, #f8fafc);
+        border-color: #e2e8f0;
+      }
+      .amount-card.cash::before {
+        background: #94a3b8;
+      }
+      .amount-card.cash span {
+        color: #475569;
+      }
+
+      .amount-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+      }
+
+      .view-detail-btn {
+        width: 100%;
+        padding: 13px;
+        background: linear-gradient(135deg, #1f2a44, #3b82f6); 
+        color: #fff;
+        font-weight: 600;
+        font-size: 14px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.25s;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+      }
+
+      .view-detail-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+        opacity: 0.95;
+      }
+
+      /* ================= FAVORITE & BEST SELLING CHARTS ================= */
+      .favorite-chart-box, .best-chart-box {
+        width: 100%;
+        background: #ffffff;
+        padding: 35px;
+        border-radius: 20px;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+      }
+
+      /* Responsive */
+      @media (max-width: 992px) {
+        .revenue-layout { flex-direction: column; padding: 20px; }
+        .filter-box, .chart-box, .amount-box { width: 100%; }
+        .navbar { padding: 12px 20px; }
+        .close-bar { top: 95px; right: 15px; }
+        .revenue-tabs, .tab-content { width: 95%; }
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <div class="logo">
+        <img src="{% static 'images/logo.png' %}" />
+      </div>
+
+      <div class="manager-section">
+        <img
+          src="{% static 'images/notify-icon.png' %}"
+          class="menu-icon"
+        />
+
+        <div class="manager-info" id="manager-dropdown">
+          <img
+            src="{% static 'images/account-icon.png' %}"
+            class="account-icon"
+          />
+          <span>{{ manager_name }}</span>
+
+          <div class="dropdown-menu" id="dropdown-menu">
+            <a href="#">Logout</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="close-bar">
+      <button class="close-btn" onclick="history.back()">✕</button>
+    </div>
+
+    <div class="page-title">Manage Revenue</div>
+
+    <div class="revenue-tabs">
+      <button class="revenue-btn active" data-tab="revenue">
+        Revenue
+      </button>
+      <button class="revenue-btn" data-tab="favorite">
+        Top 10 favorite products
+      </button>
+      <button class="revenue-btn" data-tab="best">
+        Top 10 best selling products
+      </button>
+    </div>
+
+    <div class="tab-content active" id="revenue">
+      <div class="revenue-layout">
+
+        <div class="filter-box">
+          <h4>Filter by Date</h4>
+
+          <div class="filter-field">
+            <label>From</label>
+            <input type="date" id="fromDate">
+          </div>
+
+          <div class="filter-field">
+            <label>To</label>
+            <input type="date" id="toDate">
+          </div>
+
+          <button class="filter-btn" id="applyFilter">
+    Apply
+</button>
+        </div>
+
+        <div class="chart-box">
+          <canvas id="revenuePieChart"></canvas>
+        </div>
+
+        <div class="amount-box">
+          <div class="amount-card cart">
+            <label>Cart Payment</label>
+            <span id="cartAmount">------ VND</span>
+          </div>
+
+          <div class="amount-card cash">
+            <label>Cash Payment</label>
+            <span id="cashAmount">------ VND</span>
+          </div>
+
+          <button class="view-detail-btn">
+            View Detail
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="tab-content" id="favorite">
+      <div class="favorite-chart-box">
+        <canvas id="favoriteBarChart"></canvas>
+      </div>
+    </div>
+
+    <div class="tab-content" id="best">
+      <div class="best-chart-box">
+        <canvas id="bestSellingBarChart"></canvas>
+      </div>
+    </div>
+
+
+    <script>
+      /* dropdown */
+      const managerInfo = document.getElementById("manager-dropdown");
+      const dropdownMenu = document.getElementById("dropdown-menu");
+
+      managerInfo.addEventListener("click", e => {
+        dropdownMenu.style.display =
+          dropdownMenu.style.display === "block" ? "none" : "block";
+        e.stopPropagation();
+      });
+
+      document.addEventListener("click", () => {
+        dropdownMenu.style.display = "none";
+      });
+
+      /* tab switch */
+      document.querySelectorAll(".revenue-btn").forEach(btn => {
+        btn.addEventListener("click", function () {
+          document.querySelectorAll(".revenue-btn")
+            .forEach(b => b.classList.remove("active"));
+          document.querySelectorAll(".tab-content")
+            .forEach(c => c.classList.remove("active"));
+
+          this.classList.add("active");
+          document
+            .getElementById(this.dataset.tab)
+            .classList.add("active");
+        });
+      });
+
+      /* PIE CHART */
+      const ctx = document
+        .getElementById("revenuePieChart")
+        .getContext("2d");
+
+      const revenueChart = new Chart(ctx, {
+        type: "pie",
+        data: {
+          labels: ["Cart Payment", "Cash Payment"],
+          datasets: [
+            {
+              data: [65, 35], 
+              backgroundColor: ["#1f2a44", "#94a3b8"],
+              borderWidth: 2,
+              borderColor: "#ffffff"
+            }
+          ]
+        },
+        options: {
+          plugins: {
+            legend: {
+              position: "bottom",
+              labels: {
+                font: { family: "Poppins", size: 12 }
+              }
+            }
+          }
+        }
+      });
+
+      /* ===== BAR CHART: TOP 10 FAVORITE PRODUCTS ===== */
+      const favoriteCtx = document
+        .getElementById("favoriteBarChart")
+        .getContext("2d");
+
+      let favoriteChart = new Chart(favoriteCtx, {
+        type: "bar",
+        data: {
+          labels: ["Product 1", "Product 2", "Product 3", "Product 4", "Product 5", "Product 6", "Product 7", "Product 8", "Product 9", "Product 10"],
+          datasets: [
+            {
+              label: "Favorite Count",
+              data: [120, 95, 88, 76, 70, 65, 60, 55, 50, 45],
+              backgroundColor: [
+                "#1f2a44", "#94a3b8",
+                "#1f2a44", "#94a3b8",
+                "#1f2a44", "#94a3b8",
+                "#1f2a44", "#94a3b8",
+                "#1f2a44", "#94a3b8"
+              ],
+              borderRadius: 6 
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              title: { display: true, text: "Product Code", font: { family: "Poppins", size: 13, weight: "600" } }
+            },
+            y: {
+              grid: { color: "#f1f5f9" },
+              beginAtZero: true,
+              title: { display: true, text: "Number favorite (people)", font: { family: "Poppins", size: 13, weight: "600" } }
+            }
+          }
+        }
+      });
+
+      /* ===== BAR CHART: TOP 10 BEST SELLING PRODUCTS ===== */
+      const bestCtx = document
+        .getElementById("bestSellingBarChart")
+        .getContext("2d");
+
+      let bestSellingChart = new Chart(bestCtx, {
+        type: "bar",
+        data: {
+          labels: ["Product A", "Product B", "Product C", "Product D", "Product E", "Product F", "Product G", "Product H", "Product I", "Product J"],
+          datasets: [
+            {
+              label: "Quantity Sold",
+              data: [320, 280, 260, 240, 220, 200, 190, 180, 160, 150],
+              backgroundColor: [
+                "#1f2a44", "#94a3b8",
+                "#1f2a44", "#94a3b8",
+                "#1f2a44", "#94a3b8",
+                "#1f2a44", "#94a3b8",
+                "#1f2a44", "#94a3b8"
+              ],
+              borderRadius: 6
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              title: { display: true, text: "Product Code", font: { family: "Poppins", size: 13, weight: "600" } },
+              ticks: { maxRotation: 0, minRotation: 0 }
+            },
+            y: {
+              grid: { color: "#f1f5f9" },
+              beginAtZero: true,
+              title: { display: true, text: "Quantity Sold (items)", font: { family: "Poppins", size: 13, weight: "600" } }
+            }
+          }
+        }
+      });
+      document
+  .getElementById("applyFilter")
+  .addEventListener("click", async () => {
+
+    const fromDate =
+      document.getElementById("fromDate").value;
+
+    const toDate =
+      document.getElementById("toDate").value;
+
+    if (!fromDate || !toDate) {
+      alert("Please select From and To date");
+      return;
+    }
+
+    const response = await fetch(
+      `/manager/revenue/api/?from=${fromDate}&to=${toDate}`
+    );
+
+    const data = await response.json();
+
+    document.getElementById("cartAmount").innerText =
+      Number(data.cart_total).toLocaleString() +
+      " VND";
+
+    document.getElementById("cashAmount").innerText =
+      Number(data.cash_total).toLocaleString() +
+      " VND";
+
+    revenueChart.data.datasets[0].data = [
+      data.cart_total,
+      data.cash_total
+    ];
+
+    revenueChart.update();
+});
+async function loadFavoriteChart() {
+
+    const response = await fetch(
+        "/manager/favorite-product-api/"
+    );
+
+    const result = await response.json();
+
+    favoriteChart.data.labels =
+        result.labels;
+
+    favoriteChart.data.datasets[0].data =
+        result.data;
+
+    favoriteChart.update();
+}
+
+loadFavoriteChart();
+async function loadBestSellingChart() {
+
+    const response = await fetch(
+        "/manager/best-selling-product-api/"
+    );
+
+    const result = await response.json();
+
+    bestSellingChart.data.labels =
+        result.labels;
+
+    bestSellingChart.data.datasets[0].data =
+        result.data;
+
+    bestSellingChart.update();
+}
+
+loadBestSellingChart();
+    </script>
+  </body>
+</html>

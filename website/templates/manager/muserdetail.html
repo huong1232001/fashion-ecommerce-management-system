@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Detail - Manager H.H.U.O.N.G shop</title>
+
+    {% load static %}
+
+    <style>
+        /* ================= RESET & GENERAL ================= */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+            padding-top: 80px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ================= NAVBAR ================= */
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            background: #ffffff;
+            padding: 12px 40px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .logo {
+            margin-left: 0;
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+            object-fit: contain;
+            display: block;
+        }
+
+        /* ================= SPECIAL PAGE TITLE ================= */
+        .page-title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 35px 0 25px 0;
+            position: relative;
+            letter-spacing: -0.5px;
+        }
+
+        /* Tạo đường gạch dưới gradient tinh tế cho tiêu đề */
+        .page-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #1f2a44, #3b82f6);
+            border-radius: 2px;
+            margin: 10px auto 0 auto;
+        }
+
+        /* ================= CLOSE BUTTON ================= */
+        .close-icon {
+            position: fixed;
+            top: 95px;
+            right: 40px;
+            font-size: 28px;
+            line-height: 1;
+            width: 40px;
+            height: 40px;
+            border: 1px solid #e2e8f0;
+            border-radius: 50%;
+            background: #ffffff;
+            cursor: pointer;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            transition: all 0.2s;
+            z-index: 99;
+        }
+
+        .close-icon:hover {
+            color: #0f172a;
+            background: #f1f5f9;
+            transform: scale(1.05);
+        }
+
+        /* ================= USER INFO (CARD STYLE) ================= */
+        .user-detail-container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto 80px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .info-card {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px 25px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            font-size: 13px;
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input {
+            padding: 10px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            background: #f8fafc;
+            font-size: 14px;
+            color: #334155;
+            outline: none;
+            transition: border-color 0.2s;
+            width: 100%;
+        }
+
+        .form-group input:focus {
+            border-color: #94a3b8;
+        }
+
+        .form-group input:disabled {
+            border-color: #e2e8f0;
+            background-color: #f1f5f9;
+            color: #94a3b8;
+            cursor: default;
+        }
+
+        /* ================= PURCHASE HISTORY ================= */
+        .purchase-section {
+            background: #ffffff;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .purchase-label {
+            font-weight: 600;
+            font-size: 16px;
+            color: #1e293b;
+            margin-bottom: 16px;
+        }
+
+        .purchase-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 14px;
+        }
+
+        .purchase-table thead {
+            background: #f8fafc;
+        }
+
+        .purchase-table th {
+            padding: 14px;
+            text-align: center;
+            font-weight: 600;
+            color: #475569;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .purchase-table td {
+            padding: 14px;
+            text-align: center;
+            color: #334155;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .purchase-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .purchase-table tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        /* ================= BUTTON DETAIL ================= */
+        .detail-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #1f2a44;
+            color: #ffffff;
+        }
+
+        .detail-btn:hover {
+            background: #2e3f66;
+            box-shadow: 0 4px 12px rgba(31, 42, 68, 0.2);
+        }
+
+        /* ================= RESPONSIVE ================= */
+        @media (max-width: 768px) {
+            .info-card {
+                grid-template-columns: 1fr;
+            }
+            .close-icon {
+                top: 95px;
+                right: 15px;
+            }
+        }
+    </style>
+</head>
+{% load humanize %}
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <img src="{% static 'images/logo.png' %}" alt="Logo" />
+            </div>
+        </nav>
+    </header>
+
+    <button
+        class="close-icon"
+        onclick="window.location.href='http://127.0.0.1:8000/manager/muser/';"
+    >
+        ×
+    </button>
+
+    <div class="page-title">User Information</div>
+
+    <div class="user-detail-container">
+        <div class="info-card">
+            <div class="form-group">
+                <label>User ID:</label>
+                <input type="text" id="user-id" value="{{ user.user_id }}" disabled />
+            </div>
+            
+            <div class="form-group">
+                <label>User Name:</label>
+                <input type="text" id="user-name" value="{{ user.user_name }}" />
+            </div>
+
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="text" id="email" value="{{ user.email }}" />
+            </div>
+
+            <div class="form-group">
+                <label>Phone:</label>
+                <input type="text" id="phone" value="{{ user.phone }}" />
+            </div>
+
+            <div class="form-group">
+                <label>Address:</label>
+                <input type="text" id="address" value="{{ user.address }}" />
+            </div>
+
+            <div class="form-group">
+                <label>Total purchase price:</label>
+                <input
+    type="text"
+    id="total-price"
+    value="{{ total_price|floatformat:0|intcomma }} VNĐ"
+    disabled
+/>
+            </div>
+        </div>
+
+        <div class="purchase-section">
+            <div class="purchase-label">Purchase History:</div>
+            
+            <table class="purchase-table">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>ID Order</th>
+                        <th>Date of purchase</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ order.order_id }}</td>
+                        <td>{{ order.order_date|date:"d/m/Y" }}</td>
+                        <td>{{ order.total_price_order|floatformat:0 }} vnđ</td>
+                        <td>{{ order.status }}</td>
+
+                        <td>
+                            <button
+    class="detail-btn"
+    onclick="location.href='{% url "order_detail" order.order_id %}'"
+>
+    Information Detail
+</button>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6">No purchase history available.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

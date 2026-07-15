@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favorite Products</title>
+
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'css/user/login.css' %}">
+    <link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <style>
+        .navbar {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background-color: #fff;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+            margin-right: auto;
+            margin-left: 8%;
+        }
+
+        .nav-links li {
+            margin: 0 15px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: rgb(84, 84, 84);
+            font-size: 20px;
+            font-weight: bold;
+            opacity: 0.8;
+            transition: color 0.3s ease, opacity 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: rgb(59, 59, 59);
+            opacity: 1;
+        }
+
+        .logo {
+            margin-left: 10%;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+            gap: 15px;
+            margin-right: 12%;
+        }
+
+        .menu-icon {
+            width: 27px;
+            height: 27px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .user-section img[alt="Notify"] {
+            width: 22px;
+            height: 22px;
+        }
+
+        .user-section img[alt="Cart"] {
+            width: 33px;
+            height: 33px;
+        }
+
+        .menu-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            background-color: #ffffff;
+            padding: 5px 12px;
+            border-radius: 20px;
+            border: 1px solid rgb(150, 150, 150);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .account-icon {
+            width: 25px;
+            height: 25px;
+            margin-right: 8px;
+        }
+
+        .username {
+            font-size: 15px;
+            color: rgb(59, 59, 59);
+            font-weight: bold;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 110%;
+            right: 0;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+            min-width: 220px;
+            z-index: 1000;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: #333;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: #f1f1f1;
+        }
+
+        body {
+            padding-top: 80px;
+            overflow-x: hidden;
+        }
+        .favorite-container{
+    margin-top:120px;
+    width:100%;
+}
+
+.product-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: flex-start;
+    margin-top: 40px;
+    margin-left: 130px;
+}
+
+.product-item {
+    width: calc(23% - 20px);
+    box-sizing: border-box;
+    text-align: center;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 15px;
+    background-color: rgb(244,243,243);
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.product-item img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    border-radius: 8px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.product-item:hover img {
+    transform: scale(1.05);
+}
+
+.product-item h3{
+    margin-top:15px;
+    font-size:18px;
+    color:#333;
+}
+
+.price {
+    font-size: 16px;
+    color: #333;
+    font-weight: bold;
+    margin:10px 0;
+}
+
+.product-item button {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    cursor: pointer;
+    border-radius: 15px;
+    font-size:15px;
+}
+
+.buy-now {
+    background-color: rgb(77,76,76);
+    color: white;
+    border: none;
+}
+
+.buy-now:hover {
+    background-color: rgb(60,60,60);
+}
+
+.add-to-cart {
+    background-color: transparent;
+    color: rgb(77,76,76);
+    border: 1px solid rgb(77,76,76);
+}
+
+.add-to-cart:hover {
+    background-color: #f5f5f5;
+}
+
+.favorite-icon {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-size: 22px;
+    color: rgb(195,43,43);
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.favorite-icon:hover{
+    transform: scale(1.15);
+}
+
+.sold-out-label {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: rgb(195,43,43);
+    color: white;
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 5px;
+}
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    position: relative; /* Để nút X căn chỉnh theo modal */
+    background-color: white;
+    width: 70%;
+    height: 90%;
+    padding: 20px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    text-align: left; /* Căn trái nội dung */
+    display: flex; /* Dùng flex để căn chỉnh */
+}
+
+/* Căn chỉnh lại nút đóng */
+.close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #333;
+}
+.product-item-modal {
+    flex: 1; /* Chiếm 1 phần flex */
+    display: flex;
+    justify-content: flex-start; /* Đưa ảnh sát trái */
+    align-items: center;
+}
+
+.product-item-modal img {
+    width: 50%; /* Tăng kích thước ảnh */
+    max-width: 420px; /* Giới hạn kích thước tối đa */
+    max-height: 90vh; /* Giới hạn chiều cao tối đa theo viewport */
+    height: auto; /* Giữ tỉ lệ ảnh */
+    object-fit: contain;
+    border-radius: 10px; /* Bo góc ảnh */
+    
+}
+.modal-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 5%;
+    margin-bottom: 5%; /* Đẩy modal text lên trên */
+    min-height: 120px;
+}
+
+
+#modal-title {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: left;
+    margin-bottom: 3px; /* Tạo khoảng cách giữa tên và mô tả */
+    line-height: 1.2;
+}
+
+#modal-description {
+    font-size: 16px;
+    color: #555;
+    text-align: left;
+    max-width: 95%;
+    line-height: 1.4;
+}
+#modal-price {
+    font-size: 18px;
+    font-weight: bold;
+    color:rgb(0, 0, 0);
+    text-align: left;
+    margin-top: 5px;
+    margin-top: 10px;
+}
+.modal-size-container {
+    display: flex;
+    align-items: center; /* Căn giữa theo chiều dọc */
+    gap: 10px; /* Khoảng cách giữa chữ "Size:" và các nút */
+    margin-top: 10px;
+}
+
+.size-label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+.modal-sizes {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.size-button {
+    padding: 8px 20px;
+    border: 2px solid #333;
+    background: white;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 20px;
+    transition: all 0.2s;
+}
+
+/* Khi button bị inactive */
+.size-button.inactive {
+    border-color: #aaa;  /* Viền xám */
+    color: #aaa;         /* Chữ xám */
+    cursor: not-allowed; /* Không thể nhấn */
+    opacity: 0.6;        /* Làm mờ */
+}
+
+
+.size-button:hover {
+    background: #f0f0f0;
+}
+
+.size-button.selected {
+    background: #333;
+    color: white;
+    border-color: #333;
+}
+#modal-color {
+    font-size: 16px;
+    color: black;
+    text-align: left;
+    margin-bottom: 5px;
+}
+/* Ẩn mũi tên trong ô nhập số lượng trên Chrome, Safari, Edge, Opera */
+#modal-quantity::-webkit-inner-spin-button, 
+#modal-quantity::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Ẩn mũi tên trên Firefox */
+#modal-quantity {
+    -moz-appearance: textfield;
+}
+.modal-quantity {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.quantity-label {
+    font-size: 16px;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.quantity-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+    font-weight: bold;
+    border: none; /* Xóa viền */
+    background: none; /* Xóa màu nền */
+    cursor: pointer;
+    margin: 0 5px;
+}
+
+
+#modal-quantity {
+    width: 50px;
+    height: 30px;
+    text-align: center;
+    font-size: 16px;
+    border: 2px solid #333;
+    border-radius: 20px;
+    pointer-events: none; /* Ngăn người dùng bấm vào */
+    background-color: white; /* Giữ màu nền trắng */
+    cursor: default; /* Đổi con trỏ về mặc định */
+}
+/* Phần tồn kho */
+#modal-inventory {
+    font-size: 16px;
+    color:rgb(0, 0, 0);
+    border-radius: 5px;
+    display: block; /* Hiển thị theo hàng dọc */
+    margin-top: 10px; /* Đẩy xuống dưới */
+    text-align: center;
+}
+
+/* Số tồn kho */
+#inventory-count {
+    color:rgb(0, 0, 0);
+}
+.modal-actions {
+    display: flex;
+    gap: 15px; /* Khoảng cách giữa hai nút */
+    justify-content: space-between; /* Căn đều hai nút */
+    margin-top: 15px;
+    width: 100%; /* Đảm bảo container chiếm toàn bộ chiều rộng modal */
+}
+
+.modal-button {
+    flex: 1; /* Chia đều chiều rộng giữa hai nút */
+    padding: 14px 0; /* Tăng chiều cao */
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+    background-color: white;
+    color: rgb(77, 76, 76);
+    border: 1px solid rgb(77, 76, 76);
+    border-radius: 15px;
+    text-align: center;
+}
+
+.modal-button:hover {
+    background-color: rgb(240, 240, 240);
+}
+
+.modal-button.primary {
+    background-color: #333;
+    color: white;
+    border: 1px solid #333;
+}
+
+.modal-button.primary:hover {
+    background-color: #555;
+}
+.modal-button.inactive {
+    background-color: #ccc !important;
+    cursor: not-allowed !important;
+    opacity: 0.6;
+}
+
+
+
+/* Ẩn scrollbar và chặn cuộn khi modal mở */
+body.modal-open {
+    overflow: hidden;
+}
+    </style>
+</head>
+
+<body>
+
+<header>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="{% static 'images/logo.png' %}" alt="Logo">
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="http://127.0.0.1:8000/user/home/">Home</a></li>
+            <li><a href="http://127.0.0.1:8000/user/about/">About Us</a></li>
+            <li><a href="http://127.0.0.1:8000/user/product/">Product</a></li>
+            <li><a href="http://127.0.0.1:8000/user/blog/">Blog</a></li>
+        </ul>
+
+        <div class="user-section">
+
+            <a href="http://127.0.0.1:8000/user/favorite/">
+                <img src="{% static 'images/favorite-icon.png' %}"
+                     alt="Favorite"
+                     class="menu-icon">
+            </a>
+
+            <img src="{% static 'images/notify-icon.png' %}"
+                 alt="Notify"
+                 class="menu-icon">
+
+            <a href="http://127.0.0.1:8000/user/cart/">
+                <img src="{% static 'images/cart-icon.png' %}"
+                     alt="Cart"
+                     class="menu-icon">
+            </a>
+
+            <div class="user-info">
+                <img src="{% static 'images/account-icon.png' %}"
+                     alt="Account"
+                     class="account-icon">
+
+                <span class="username" id="username-dropdown">
+                    {% if request.session.user_name %}
+                        {% with request.session.user_name as username %}
+                            {% if username|length > 12 %}
+                                {{ username|slice:":12" }}...
+                            {% else %}
+                                {{ username }}
+                            {% endif %}
+                        {% endwith %}
+                    {% else %}
+                        Guest
+                    {% endif %}
+                </span>
+
+                <div class="dropdown-menu" id="dropdown-menu">
+                    <a href="">Manage Orders</a>
+                    <a href="http://127.0.0.1:8000/user/favorite/">
+                        Your Favorite Products
+                    </a>
+                    <a href="http://127.0.0.1:8000/user/profile/">
+                        Account Information
+                    </a>
+                    <a href="http://127.0.0.1:8000/user/login/">
+                        Logout
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </nav>
+</header>
+<div class="favorite-container">
+    <div class="product-list">
+
+        {% for product in favorite_products %}
+        <div class="product-item">
+
+            <img src="{{ product.image }}" alt="{{ product.product_name }}">
+
+            <h3>{{ product.product_name }}</h3>
+
+            <p class="price">{{ product.price }} đ</p>
+
+            <button class="buy-now"
+                data-product-id="{{ product.product_id }}"
+                data-product-name="{{ product.product_name }}"
+                data-product-image="{{ product.image }}"
+                data-product-description="{{ product.description }}"
+                data-product-price="{{ product.price }}"
+                data-product-size-options="{% if product.is_freesize %}Freesize{% else %}S,M,L{% endif %}"
+                data-quality-s="{{ product.quality_inventory_of_size_S }}"
+                data-quality-m="{{ product.quality_inventory_of_size_M }}"
+                data-quality-l="{{ product.quality_inventory_of_size_L }}"
+                data-quality-total="{{ product.quality_inventory_total }}"
+                data-product-color="{{ product.color }}">
+                Buy Now
+            </button>
+
+            <button class="add-to-cart"
+                data-product-id="{{ product.product_id }}"
+                data-product-name="{{ product.product_name }}"
+                data-product-image="{{ product.image }}"
+                data-product-description="{{ product.description }}"
+                data-product-price="{{ product.price }}"
+                data-product-size-options="{% if product.is_freesize %}Freesize{% else %}S,M,L{% endif %}"
+                data-quality-s="{{ product.quality_inventory_of_size_S }}"
+                data-quality-m="{{ product.quality_inventory_of_size_M }}"
+                data-quality-l="{{ product.quality_inventory_of_size_L }}"
+                data-quality-total="{{ product.quality_inventory_total }}"
+                data-product-color="{{ product.color }}">
+                Add to Cart
+            </button>
+
+            <!-- Tim yêu thích -->
+            <i class="fa fa-heart favorite-icon active"
+               data-product-id="{{ product.product_id }}">
+            </i>
+
+            {% if product.quality_inventory_total == 0 %}
+            <span class="sold-out-label">
+                Sold out
+            </span>
+            {% endif %}
+
+        </div>
+        {% empty %}
+        <h2 style="margin:auto;color:#888;">
+            You have no favorite products.
+        </h2>
+        {% endfor %}
+
+    </div>
+</div>
+<!-- Modal -->
+<div id="product-modal" class="modal">
+    <div class="modal-content">
+        <button class="close">&times;</button>
+
+        <div class="product-item-modal">
+            <img id="modal-image" src="" alt="Product Image">
+
+            <div class="modal-text">
+                <h2 id="modal-title"></h2>
+
+                <p id="modal-description"></p>
+
+                <p id="modal-price" class="price"></p>
+
+                <div class="modal-size-container">
+                    <span class="size-label">Size:</span>
+                    <div id="modal-sizes" class="modal-sizes"></div>
+                </div>
+
+                <p id="modal-color"></p>
+
+                <div class="modal-quantity">
+                    <span class="quantity-label">Quantity:</span>
+
+                    <button class="quantity-btn decrease">−</button>
+
+                    <input type="number"
+                           id="modal-quantity"
+                           value="1"
+                           min="1">
+
+                    <button class="quantity-btn increase">+</button>
+                </div>
+
+                <p id="modal-inventory">
+                    Inventory:
+                    <span id="inventory-count"></span>
+                </p>
+
+                <div class="modal-actions">
+                    <button id="add-to-cart-btn"
+                            class="modal-button">
+                        Add to Cart
+                    </button>
+
+                    <button id="buy-now-btn"
+                            class="modal-button primary">
+                        Buy Now
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const userInfo = document.querySelector(".user-info");
+    const dropdownMenu = document.getElementById("dropdown-menu");
+
+    userInfo.addEventListener("click", function (event) {
+        dropdownMenu.style.display =
+            dropdownMenu.style.display === "block"
+            ? "none"
+            : "block";
+
+        event.stopPropagation();
+    });
+
+    document.addEventListener("click", function (event) {
+        if (
+            !userInfo.contains(event.target)
+        ) {
+            dropdownMenu.style.display = "none";
+        }
+    });
+
+});
+document.addEventListener("DOMContentLoaded", function () {
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+            const cookies = document.cookie.split(";");
+
+            for (let cookie of cookies) {
+                cookie = cookie.trim();
+
+                if (cookie.startsWith(name + "=")) {
+                    cookieValue = decodeURIComponent(
+                        cookie.substring(name.length + 1)
+                    );
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    document.querySelectorAll(".favorite-icon").forEach(icon => {
+
+        icon.addEventListener("click", function () {
+
+            const productId = this.dataset.productId;
+            const card = this.closest(".product-item");
+
+            fetch("/favorite-product/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCookie("csrftoken"),
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    product_id: productId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+
+                if(data.success){
+                    card.remove();
+
+                    if(document.querySelectorAll(".product-item").length == 0){
+                        document.querySelector(".product-list").innerHTML =
+                        "<h2 style='margin:auto;color:#888;'>You have no favorite products.</h2>";
+                    }
+                }
+
+            });
+
+        });
+
+    });
+
+});
+/*--Modal----------------------------------------------------------------------------------------------*/
+document.addEventListener("DOMContentLoaded", function () {
+    const modal = document.getElementById("product-modal");
+    const modalImage = document.getElementById("modal-image");
+    const modalTitle = document.getElementById("modal-title");
+    const modalColor = document.getElementById("modal-color");
+    const modalDescription = document.getElementById("modal-description");
+    const modalPrice = document.getElementById("modal-price");
+    const modalSizes = document.getElementById("modal-sizes");
+    const modalQuantityInput = document.getElementById("modal-quantity");
+    const decreaseBtn = document.querySelector(".decrease");
+    const increaseBtn = document.querySelector(".increase");
+    const closeButton = document.querySelector(".close");
+    const inventoryCount = document.getElementById("inventory-count");
+    const addToCartBtn = document.getElementById("add-to-cart-btn");
+    const buyNowBtn = document.getElementById("buy-now-btn");
+
+    let selectedSize = "";
+    let maxQuantity = 1;
+   
+
+    function openModal(event) {
+        const button = event.currentTarget;
+        
+        
+        // Lấy thông tin sản phẩm từ data attributes
+        const productName = button.getAttribute("data-product-name");
+        const productImage = button.getAttribute("data-product-image");
+        const productColor = button.getAttribute("data-product-color");
+        const productDescription = button.getAttribute("data-product-description");
+        const productPrice = button.getAttribute("data-product-price");
+        const productSizeOptions = button.getAttribute("data-product-size-options").split(",");
+        const qualityS = Number(button.getAttribute("data-quality-s"));
+        const qualityM = Number(button.getAttribute("data-quality-m"));
+        const qualityL = Number(button.getAttribute("data-quality-l"));
+        const productId = button.getAttribute("data-product-id");
+
+        maxQuantity = Number(button.getAttribute("data-quality-total"));
+
+        modalPrice.textContent = `${Number(productPrice).toLocaleString("vi-VN")} đ`;
+        inventoryCount.textContent = maxQuantity;
+
+        modalTitle.textContent = productName;
+        modalColor.textContent = `Color: ${productColor}`;
+        modalImage.src = productImage;
+        modalImage.alt = productName;
+        modalDescription.textContent = productDescription;
+
+        modalQuantityInput.value = 1;
+        updateQuantityButtons();
+
+        modalSizes.innerHTML = "";
+        modal.setAttribute("data-product-id", productId);
+
+        let defaultSelected = null;
+        productSizeOptions.forEach(size => {
+            const sizeButton = document.createElement("button");
+            sizeButton.textContent = size;
+            sizeButton.classList.add("size-button");
+
+            let isDisabled = false;
+            if (maxQuantity === 0) {
+                isDisabled = true;
+            } else {
+                if (size === "S" && qualityS === 0) isDisabled = true;
+                if (size === "M" && qualityM === 0) isDisabled = true;
+                if (size === "L" && qualityL === 0) isDisabled = true;
+            }
+
+            if (isDisabled) {
+                sizeButton.classList.add("inactive");
+                sizeButton.disabled = true;
+            } else {
+                if (!defaultSelected) {
+                    defaultSelected = sizeButton;
+                }
+            }
+
+            sizeButton.addEventListener("click", function () {
+                document.querySelectorAll(".size-button").forEach(btn => btn.classList.remove("selected"));
+                sizeButton.classList.add("selected");
+                selectedSize = size;
+            });
+
+            modalSizes.appendChild(sizeButton);
+        });
+
+        if (defaultSelected) {
+            defaultSelected.classList.add("selected");
+            selectedSize = defaultSelected.textContent;
+        }
+
+        // 🆕 Kiểm tra tồn kho và vô hiệu hóa nút khi hết hàng
+        if (maxQuantity === 0) {
+            addToCartBtn.disabled = true;
+            buyNowBtn.disabled = true;
+            addToCartBtn.classList.add("inactive");
+            buyNowBtn.classList.add("inactive");
+        } else {
+            addToCartBtn.disabled = false;
+            buyNowBtn.disabled = false;
+            addToCartBtn.classList.remove("inactive");
+            buyNowBtn.classList.remove("inactive");
+        }
+
+        modal.style.display = "flex";
+        document.body.classList.add("modal-open");
+    }
+
+    function closeModal() {
+        modal.style.display = "none";
+        document.body.classList.remove("modal-open");
+        selectedSize = "";
+    }
+
+    function updateQuantityButtons() {
+        let currentQuantity = parseInt(modalQuantityInput.value);
+        increaseBtn.disabled = currentQuantity >= maxQuantity;
+        decreaseBtn.disabled = currentQuantity <= 1;
+    }
+
+    increaseBtn.addEventListener("click", function () {
+        let currentQuantity = parseInt(modalQuantityInput.value);
+        if (currentQuantity < maxQuantity) {
+            modalQuantityInput.value = currentQuantity + 1;
+            updateQuantityButtons();
+        }
+    });
+
+    decreaseBtn.addEventListener("click", function () {
+        let currentQuantity = parseInt(modalQuantityInput.value);
+        if (currentQuantity > 1) {
+            modalQuantityInput.value = currentQuantity - 1;
+            updateQuantityButtons();
+        }
+    });
+
+    modalQuantityInput.addEventListener("input", function () {
+        let value = parseInt(modalQuantityInput.value);
+        if (isNaN(value) || value < 1) {
+            modalQuantityInput.value = 1;
+        } else if (value > maxQuantity) {
+            modalQuantityInput.value = maxQuantity;
+        }
+        updateQuantityButtons();
+    });
+
+    closeButton.addEventListener("click", closeModal);
+    modal.addEventListener("click", function (event) {
+        if (event.target === modal) {
+            closeModal();
+        }
+    });
+
+    document.querySelectorAll(".buy-now, .add-to-cart").forEach(button => {
+        button.addEventListener("click", openModal);
+    });
+   
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                cookie = cookie.trim();
+                if (cookie.startsWith(name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    addToCartBtn.addEventListener("click", function () {
+        const productId = modal.getAttribute("data-product-id");  // Lấy từ modal
+        console.log("Product ID from modal:", productId);  // Kiểm tra giá trị của productId
+        
+        if (!productId || productId === 'null' || productId === '') {
+            alert("Sản phẩm không hợp lệ!");
+            return; // Dừng thực hiện nếu sản phẩm không hợp lệ
+        }
+        
+        const csrfToken = getCookie('csrftoken');
+        const productSize = selectedSize;  // Lấy kích thước từ modal
+        const productQuantity = parseInt(modalQuantityInput.value);  // Số lượng sản phẩm trong giỏ hàng
+        console.log("Gửi request add-to-cart với productId:", productId);
+        // Gửi dữ liệu tới server
+        fetch("/add-to-cart/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCookie('csrftoken'),
+            },
+            credentials: "include",  // 💥 Thêm dòng này để gửi cookie theo
+            body: JSON.stringify({
+                product_id: productId,
+                product_size: productSize,
+                product_quality_cart: productQuantity
+            })
+        })
+        
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);  // Kiểm tra phản hồi từ server
+            if (data.success) {
+                alert("Sản phẩm đã được thêm vào giỏ hàng!");
+                closeModal(); // Đóng modal nếu muốn
+            } else {
+                alert("Có lỗi xảy ra: " + data.error);
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+       
+    });
+    buyNowBtn.addEventListener("click", function () {
+        const productId = modal.getAttribute("data-product-id");
+        console.log("Product ID from modal (Buy Now):", productId);
+    
+        if (!productId || productId === 'null' || productId === '') {
+            alert("Sản phẩm không hợp lệ!");
+            return;
+        }
+    
+        const csrfToken = getCookie('csrftoken');
+        const productSize = selectedSize;
+        const productQuantity = parseInt(modalQuantityInput.value);
+    
+        console.log("Gửi request buy-now với productId:", productId);
+    
+        fetch("/buy-now/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrfToken,
+            },
+            credentials: "include",  // Quan trọng để gửi session/cookie
+            body: JSON.stringify({
+                product_id: productId,
+                product_size: productSize,
+                product_quality_cart: productQuantity
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            if (data.success) {
+                alert("Mua hàng thành công!");
+                closeModal();
+                // Có thể redirect nếu muốn
+                // window.location.href = '/checkout/'; 
+            } else {
+                alert("Có lỗi xảy ra: " + data.error);
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+    });
+    
+    modal.style.display = "none";
+   
+  
+});
+
+
+</script>
+
+</body>
+</html>
