@@ -19,8 +19,10 @@ from django.urls import path
 from website import views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.shortcuts import redirect
 
 urlpatterns = [
+    path('', lambda request: redirect('login_user')),
     path('user/login/', views.login_user, name='login_user'),   # Trang user
     path('user/register/', views.register_user, name='register_user'),   # Trang user
     path('user/home/', views.home_user, name='home_user'),   
