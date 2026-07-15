@@ -150,7 +150,7 @@
         <button
           type="button"
           class="register-button"
-          onclick="window.location.href='http://127.0.0.1:8000/user/register/'"
+          onclick="window.location.href='/user/register/'"
         >
           Register
         </button>
@@ -190,7 +190,7 @@
           const emailPhone = document.getElementById("email-phone").value;
           const password = document.getElementById("password").value;
 
-          fetch("http://127.0.0.1:8000/user/login/", {
+          fetch("{% url 'login_user' %}", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
