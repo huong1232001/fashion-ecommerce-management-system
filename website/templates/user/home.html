@@ -175,19 +175,19 @@
                 <img src="{% static 'images/logo.png' %}" alt="Logo" />
             </div>
             <ul class="nav-links">
-                <li><a href="http://127.0.0.1:8000/user/home/">Home</a></li>
-                <li><a href="http://127.0.0.1:8000/user/about/">About Us</a></li>
-                <li><a href="http://127.0.0.1:8000/user/product/">Product</a></li>
-                <li><a href="http://127.0.0.1:8000/user/blog/">Blog</a></li>
+                <a href="{% url 'home' %}">Home</a>
+<a href="{% url 'about' %}">About Us</a>
+<a href="{% url 'product' %}">Product</a>
+<a href="{% url 'blog' %}">Blog</a>
             </ul>
             <div class="user-section">
-                <a href="http://127.0.0.1:8000/user/favorite/">
+                <a href="{% url 'favorite' %}">
     <img src="{% static 'images/favorite-icon.png' %}"
          alt="Favorite"
          class="menu-icon" />
 </a>
                 <img src="{% static 'images/notify-icon.png' %}" alt="Notify" class="menu-icon" />
-                <a href="http://127.0.0.1:8000/user/cart/">
+                <a href="{% url 'cart' %}">
                     <img src="{% static 'images/cart-icon.png' %}" alt="Cart" class="menu-icon" />
                 </a>
                 
@@ -210,8 +210,8 @@
     </span>
     <div class="dropdown-menu" id="dropdown-menu">
         <a href="">Manage Orders</a>
-        <a href="http://127.0.0.1:8000/user/profile/">Account Information</a>
-        <a href="http://127.0.0.1:8000/user/login/">Logout</a>
+        <a href="{% url 'profile' %}">
+<a href="{% url 'login' %}">
     </div>
 </div>
 
