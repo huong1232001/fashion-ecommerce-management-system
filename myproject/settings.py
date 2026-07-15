@@ -52,6 +52,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -91,15 +92,13 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+import os
+import dj_database_url
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',     # Thay 'ten_database' bằng tên database của bạn
-        'USER': 'postgres',         # Thay 'ten_user' bằng username của PostgreSQL
-        'PASSWORD': '@Vitcon20082001',     # Thay 'mat_khau' bằng password của PostgreSQL
-        'HOST': 'localhost',        # Hoặc địa chỉ IP của server PostgreSQL
-        'PORT': '5432',             # Cổng mặc định của PostgreSQL
-    }
+    "default": dj_database_url.config(
+        default=os.environ.get("DATABASE_URL")
+    )
 }
 
 
@@ -155,5 +154,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Đảm bảo sử dụng database backend cho session
 SESSION_COOKIE_NAME = 'sessionid'  # Tên cookie sẽ được sử dụng cho session
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
