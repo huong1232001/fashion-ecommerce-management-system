@@ -29,6 +29,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     'fashion-ecommerce-management-system.onrender.com',
+    'fashion-ecommerce-management-system-1.onrender.com',
     'localhost',
     '127.0.0.1',
 ]
