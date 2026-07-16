@@ -6,7 +6,7 @@
     <title>H.H.U.O.N.G shop</title>
     {% load static %}
     <!-- Link đến tệp CSS -->
-    <link rel="stylesheet" href="{% static 'css/user/login.css' %}" />
+   
     <style>
       .navbar {
         display: flex;
@@ -211,20 +211,20 @@
             <img src="{% static 'images/logo.png' %}" alt="Logo" />
         </div>
         <ul class="nav-links">
-            <li><a href="http://127.0.0.1:8000/user/home/">Home</a></li>
-            <li><a href="http://127.0.0.1:8000/user/about/">About Us</a></li>
-            <li><a href="http://127.0.0.1:8000/user/product/">Product</a></li>
-            <li><a href="http://127.0.0.1:8000/user/blog/">Blog</a></li>
+           <li><a href="{% url 'home_user' %}">Home</a></li>
+    <li><a href="{% url 'about_user' %}">About Us</a></li>
+    <li><a href="{% url 'product_user' %}">Product</a></li>
+    <li><a href="{% url 'blog_user' %}">Blog</a></li>
         </ul>
         <div class="user-section">
-            <a href="http://127.0.0.1:8000/user/favorite/">
+             <a href="{% url 'favorite_user' %}">
     <img src="{% static 'images/favorite-icon.png' %}"
          alt="Favorite"
          class="menu-icon" />
 </a>
             <img src="{% static 'images/notify-icon.png' %}" alt="Notify" class="menu-icon" />
             <!-- Thêm link vào giỏ hàng -->
-            <a href="http://127.0.0.1:8000/user/cart/">
+            <a href="{% url 'cart_user' %}">
                 <img src="{% static 'images/cart-icon.png' %}" alt="Cart" class="menu-icon" />
             </a>
             
@@ -246,8 +246,8 @@
                 </span>
                 <div class="dropdown-menu" id="dropdown-menu">
                     <a href="">Manage Orders</a>
-                    <a href="http://127.0.0.1:8000/user/profile/">Account Information</a>
-                    <a href="http://127.0.0.1:8000/user/login/">Logout</a>
+                     <a href="{% url 'profile_user' %}">
+                       <a href="{% url 'login_user' %}">Logout</a>
                 </div>
             </div>
             

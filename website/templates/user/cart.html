@@ -488,13 +488,13 @@
                 <img src="{% static 'images/logo.png' %}" alt="Logo" />
             </div>
             <ul class="nav-links">
-                <li><a href="http://127.0.0.1:8000/user/home/">Home</a></li>
-                <li><a href="http://127.0.0.1:8000/user/about/">About Us</a></li>
-                <li><a href="http://127.0.0.1:8000/user/product/">Product</a></li>
-                <li><a href="http://127.0.0.1:8000/user/blog/">Blog</a></li>
+                <li><a href="{% url 'home_user' %}">Home</a></li>
+<li><a href="{% url 'about_user' %}">About Us</a></li>
+<li><a href="{% url 'product_user' %}">Product</a></li>
+<li><a href="{% url 'blog_user' %}">Blog</a></li>
             </ul>
             <div class="user-section">
-                <a href="http://127.0.0.1:8000/user/favorite/">
+               <a href="{% url 'favorite_user' %}">
     <img src="{% static 'images/favorite-icon.png' %}"
          alt="Favorite"
          class="menu-icon" />
@@ -519,8 +519,8 @@
                     </span>
                     <div class="dropdown-menu" id="dropdown-menu">
                         <a href="">Manage Orders</a>
-                        <a href="http://127.0.0.1:8000/user/profile/">Account Information</a>
-                        <a href="http://127.0.0.1:8000/user/login/">Logout</a>
+                        <a href="{% url 'profile_user' %}">Account Information</a>
+<a href="{% url 'login_user' %}">Logout</a>
                     </div>
                 </div>
             </div>
@@ -528,7 +528,9 @@
         <!-- Thêm button tiếp tục mua sắm ở dưới menu -->
         <!-- Thêm button tiếp tục mua sắm ở dưới menu -->
 <div class="continue-shopping-container">
-    <a href="http://127.0.0.1:8000/user/product/" class="continue-shopping-btn">Continue Shopping</a>
+    <a href="{% url 'product_user' %}" class="continue-shopping-btn">
+    Continue Shopping
+</a>
     <div class="cart-container">
         <div class="cart-label">CART</div>
 
@@ -596,8 +598,12 @@
         </div>
 
         <div class="cart-action-buttons">
-            <a href="http://127.0.0.1:8000/user/product/" class="btn-continue">Select more products</a>
-            <a href="http://127.0.0.1:8000/user/payment/" class="btn-checkout" id="checkout-btn" disabled>Checkout</a>
+           <a href="{% url 'product_user' %}" class="btn-continue">
+    Select more products
+</a>
+           <a href="{% url 'payment_user' %}" class="btn-checkout" id="checkout-btn" disabled>
+    Checkout
+</a>
         </div>
         {% endif %}
     </div>
@@ -696,8 +702,8 @@ document.addEventListener("DOMContentLoaded", function () {
       const itemTotal = quantity * pricePerUnit;
 
       const orderCartId = checkbox.getAttribute("data-id");
-
-      fetch(`/user/cart/delete/${orderCartId}/`, {
+      const deleteUrl = "{% url 'delete_cart_item' 0 %}".replace("0", orderCartId);
+      fetch(deleteUrl, {
         method: 'DELETE',
         headers: {
           'X-CSRFToken': getCookie('csrftoken')
@@ -844,7 +850,7 @@ document.getElementById("checkout-btn").addEventListener("click", function (e) {
         return;
     }
 
-    fetch('/user/checkout/', {
+    fetch("{% url 'checkout' %}", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -878,7 +884,7 @@ document.getElementById("checkout-btn").addEventListener("click", function () {
     });
 
     // Gửi thông tin đầy đủ đến endpoint mở rộng
-    fetch("/user/checkout/details/", {
+    fetch("{% url 'checkout_details' %}", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
