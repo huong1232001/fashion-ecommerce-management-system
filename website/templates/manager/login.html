@@ -20,7 +20,7 @@
 
       /* Ảnh nằm sát mép trái */
       .background-image {
-        width: 35%;
+        width: 30%;
         height: auto;
         display: block;
       }
@@ -201,6 +201,26 @@ function getCookie(name) {
   }
   return cookieValue;
 }
+document.addEventListener("DOMContentLoaded", function () {
+    const image = document.getElementById("slideshow");
+
+    // Danh sách ảnh
+    const images = [
+        "{% static 'images/background01.jpg' %}",
+        "{% static 'images/background02.jpg' %}",
+        "{% static 'images/background03.jpg' %}"
+    ];
+
+    let index = 0;
+
+    function changeImage() {
+        index = (index + 1) % images.length;
+        image.src = images[index];
+    }
+
+    // Đổi ảnh sau mỗi 3 giây
+    setInterval(changeImage, 3000);
+});
 
     </script>
   </body>

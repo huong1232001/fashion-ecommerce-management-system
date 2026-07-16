@@ -116,7 +116,7 @@
     
     .banner img {
         width: 100%;
-        height: auto; /* Đảm bảo ảnh chiếm toàn bộ chiều cao màn hình */
+        height: 100%; /* Đảm bảo ảnh chiếm toàn bộ chiều cao màn hình */
         object-fit: cover; /* Ảnh sẽ lấp đầy mà không bị méo */
     }
     /* Dropdown menu mặc định ẩn */
@@ -219,14 +219,14 @@
             
         </nav>
         <div class="banner">
-            <img src="{% static 'images/home01.png' %}" alt="Banner" />
+            <img src="{% static 'images/home01.jpg' %}" alt="Banner" />
         </div>
         
     </header>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             let bannerImg = document.querySelector(".banner img"); // Lấy ảnh banner
-            let images = ["{% static 'images/home01.png' %}", "{% static 'images/home02.png' %}"]; // Danh sách ảnh
+            let images = ["{% static 'images/home01.jpg' %}"]; // Danh sách ảnh
             let index = 0; // Bắt đầu từ ảnh đầu tiên
         
             function changeImage() {
