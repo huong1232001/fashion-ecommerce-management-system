@@ -7,7 +7,7 @@
 
     {% load static %}
 
-    <link rel="stylesheet" href="{% static 'css/user/login.css' %}">
+    
     <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <style>
@@ -507,15 +507,15 @@ body.modal-open {
         </div>
 
         <ul class="nav-links">
-            <li><a href="http://127.0.0.1:8000/user/home/">Home</a></li>
-            <li><a href="http://127.0.0.1:8000/user/about/">About Us</a></li>
-            <li><a href="http://127.0.0.1:8000/user/product/">Product</a></li>
-            <li><a href="http://127.0.0.1:8000/user/blog/">Blog</a></li>
+            <li><a href="{% url 'home_user' %}">Home</a></li>
+<li><a href="{% url 'about_user' %}">About Us</a></li>
+<li><a href="{% url 'product_user' %}">Product</a></li>
+<li><a href="{% url 'blog_user' %}">Blog</a></li>
         </ul>
 
         <div class="user-section">
 
-            <a href="http://127.0.0.1:8000/user/favorite/">
+            <a href="{% url 'favorite_user' %}">
                 <img src="{% static 'images/favorite-icon.png' %}"
                      alt="Favorite"
                      class="menu-icon">
@@ -525,7 +525,7 @@ body.modal-open {
                  alt="Notify"
                  class="menu-icon">
 
-            <a href="http://127.0.0.1:8000/user/cart/">
+            <a href="{% url 'cart_user' %}">
                 <img src="{% static 'images/cart-icon.png' %}"
                      alt="Cart"
                      class="menu-icon">
@@ -552,13 +552,13 @@ body.modal-open {
 
                 <div class="dropdown-menu" id="dropdown-menu">
                     <a href="">Manage Orders</a>
-                    <a href="http://127.0.0.1:8000/user/favorite/">
+                    <a href="{% url 'favorite_user' %}">
                         Your Favorite Products
                     </a>
-                    <a href="http://127.0.0.1:8000/user/profile/">
+                    <a href="{% url 'profile_user' %}">
                         Account Information
                     </a>
-                    <a href="http://127.0.0.1:8000/user/login/">
+                    <a href="{% url 'login_user' %}">
                         Logout
                     </a>
                 </div>
@@ -737,7 +737,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const productId = this.dataset.productId;
             const card = this.closest(".product-item");
 
-            fetch("/favorite-product/", {
+            fetch("{% url 'favorite_product' %}", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -953,7 +953,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const productQuantity = parseInt(modalQuantityInput.value);  // Số lượng sản phẩm trong giỏ hàng
         console.log("Gửi request add-to-cart với productId:", productId);
         // Gửi dữ liệu tới server
-        fetch("/add-to-cart/", {
+        fetch("{% url 'add_to_cart' %}", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

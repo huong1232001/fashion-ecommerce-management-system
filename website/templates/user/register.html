@@ -6,7 +6,7 @@
     <title>H.H.U.O.N.G shop</title>
     {% load static %}
     <!-- Link đến tệp CSS -->
-    <link rel="stylesheet" href="{% static 'css/user/login.css' %}" />
+   
 
     <!-- CSS nội tuyến -->
     <style>
@@ -120,7 +120,10 @@
 
   <body>
     <!-- Nút đóng -->
-    <button class="close-button" onclick="window.location.href='http://127.0.0.1:8000/user/login/'">&times;</button>
+    <button class="close-button"
+onclick="window.location.href='http://127.0.0.1:8000/user/login/'">
+    &times;
+</button>
 
     <!-- Phần hình ảnh -->
     <img id="slideshow" src="{% static 'images/background01.jpg' %}" alt="Background Test" class="background-image" />
@@ -136,7 +139,7 @@
 
     <!-- Form đăng ký -->
     <div class="register-form-container">
-      <form class="register-form" action="/user/register/" method="POST">
+      <form class="register-form" action="{% url 'register_user' %}" method="POST">
         {% csrf_token %}
 
         <input type="text" id="username" name="username" placeholder="Username" required />
@@ -258,7 +261,7 @@ form.addEventListener("submit", function (e) {
 
   const formData = new FormData(form);
 
-  fetch("/user/register/", {
+  fetch("{% url 'register_user' %}", {
     method: "POST",
     headers: {
       "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value, // Lấy CSRF token
@@ -271,7 +274,7 @@ form.addEventListener("submit", function (e) {
       alert(data.error);
     } else {
       alert("Đăng ký thành công!");
-      window.location.href = "/user/login/"; // Chuyển hướng sau khi đăng ký
+      window.location.href = "{% url 'login_user' %}"; // Chuyển hướng sau khi đăng ký
     }
   })
   .catch(error => console.error("Lỗi:", error)); 

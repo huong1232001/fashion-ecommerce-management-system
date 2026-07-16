@@ -8,7 +8,7 @@
     <title>H.H.U.O.N.G shop</title>
     {% load static %}
     <!-- Link đến tệp CSS -->
-    <link rel="stylesheet" href="{% static 'css/user/login.css' %}" />
+   
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
       .navbar {
@@ -662,14 +662,14 @@ body {
       </div>
 
       <ul class="nav-links">
-        <li><a href="http://127.0.0.1:8000/user/home/">Home</a></li>
-        <li><a href="http://127.0.0.1:8000/user/about/">About Us</a></li>
-        <li><a href="http://127.0.0.1:8000/user/product/">Product</a></li>
-        <li><a href="http://127.0.0.1:8000/user/blog/">Blog</a></li>
+        <li><a href="{% url 'home_user' %}">Home</a></li>
+<li><a href="{% url 'about_user' %}">About Us</a></li>
+<li><a href="{% url 'product_user' %}">Product</a></li>
+<li><a href="{% url 'blog_user' %}">Blog</a></li>
       </ul>
 
       <div class="user-section">
-        <a href="http://127.0.0.1:8000/user/favorite/">
+       <a href="{% url 'favorite_user' %}">
     <img src="{% static 'images/favorite-icon.png' %}"
          alt="Favorite"
          class="menu-icon" />
@@ -677,7 +677,7 @@ body {
         <img src="{% static 'images/notify-icon.png' %}" alt="Notify" class="menu-icon" />
 
         <!-- Giỏ hàng -->
-        <a href="http://127.0.0.1:8000/user/cart/">
+       <a href="{% url 'cart_user' %}">
           <img src="{% static 'images/cart-icon.png' %}" alt="Cart" class="menu-icon" />
         </a>
 
@@ -699,15 +699,17 @@ body {
           </span>
           <div class="dropdown-menu" id="dropdown-menu">
             <a href="">Manage Orders</a>
-            <a href="http://127.0.0.1:8000/user/profile/">Account Information</a>
-            <a href="http://127.0.0.1:8000/user/login/">Logout</a>
+            <a href="{% url 'profile_user' %}">Account Information</a>
+    <a href="{% url 'login_user' %}">Logout</a>
           </div>
         </div>
       </div>
     </nav>
 
     <div class="back-to-cart" data-id="{{ item.order_payment_id }}">
-      <a href="http://127.0.0.1:8000/user/cart/" id="back-to-cart-btn">← Back to Cart</a>
+       <a href="{% url 'cart_user' %}" id="back-to-cart-btn">
+        ← Back to Cart
+    </a>
     </div>
 
     <div class="cart-payment-wrapper">
@@ -1002,7 +1004,7 @@ const price = priceText.replace(/[^\d]/g, ""); // chỉ giữ lại số
         formData.append("note", note);
         formData.append("products", JSON.stringify(allProducts));
 
-        fetch("/api/create-order/", {
+        fetch("{% url 'create_order' %}", {
           method: "POST",
           headers: { "X-CSRFToken": csrfToken },
           body: formData,
@@ -1011,7 +1013,7 @@ const price = priceText.replace(/[^\d]/g, ""); // chỉ giữ lại số
           .then((data) => {
             if (data.success) {
               alert("Đơn hàng đã được tạo thành công! Mã đơn hàng: " + data.order_id);
-              window.location.href = "/user/cart/";
+              window.location.href = "{% url 'cart_user' %}";
             } else {
               alert("Tạo đơn hàng thất bại: " + data.message);
             }

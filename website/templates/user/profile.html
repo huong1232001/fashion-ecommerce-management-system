@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>H.H.U.O.N.G shop</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/user/login.css' %}" />
+    
     <style>
       /* --- Reset & Base Styles --- */
       * {
@@ -307,10 +307,10 @@
                 <img src="{% static 'images/logo.png' %}" alt="Logo" />
             </div>
             <ul class="nav-links">
-                <li><a href="http://127.0.0.1:8000/user/home/">Home</a></li>
-                <li><a href="http://127.0.0.1:8000/user/about/">About Us</a></li>
-                <li><a href="http://127.0.0.1:8000/user/product/">Product</a></li>
-                <li><a href="http://127.0.0.1:8000/user/blog/">Blog</a></li>
+                <li><a href="{% url 'home_user' %}">Home</a></li>
+                <li><a href="{% url 'about_user' %}">About Us</a></li>
+                <li><a href="{% url 'product_user' %}">Product</a></li>
+                <li><a href="{% url 'blog_user' %}">Blog</a></li>
             </ul>
             <div class="user-section">
                 <img src="{% static 'images/favorite-icon.png' %}" alt="Favorite" class="menu-icon" />
@@ -334,8 +334,8 @@
                     </span>
                     <div class="dropdown-menu" id="dropdown-menu">
                         <a href="">Manage Orders</a>
-                        <a href="http://127.0.0.1:8000/user/profile/">Account Information</a>
-                        <a href="http://127.0.0.1:8000/user/login/">Logout</a>
+                        <a href="{% url 'profile_user' %}">Account Information</a>
+                       <a href="{% url 'login_user' %}">Logout</a>
                     </div>
                 </div>
             </div>
@@ -447,8 +447,8 @@
         try {
 
             const response = await fetch(
-                "/user/update-profile/",
-                {
+    "{% url 'update_profile_user' %}",
+    {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
