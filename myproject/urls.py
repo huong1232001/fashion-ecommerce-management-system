@@ -22,7 +22,7 @@ from django.conf.urls.static import static
 from django.shortcuts import redirect
 
 urlpatterns = [
-    path('', lambda request: redirect('login_user')),
+    path('', lambda request: redirect('login_manager')),
     path('user/login/', views.login_user, name='login_user'),   # Trang user
     path('user/register/', views.register_user, name='register_user'),   # Trang user
     path('user/home/', views.home_user, name='home_user'),   
