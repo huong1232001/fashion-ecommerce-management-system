@@ -613,7 +613,7 @@
             <span class="managername" id="manager-name">{{ manager_name }}</span>
 
             <div class="dropdown-menu" id="dropdown-menu">
-              <a href="http://127.0.0.1:8000/manager/login/">Logout</a>
+              <a href="{% url 'login_manager' %}">Logout</a>
             </div>
           </div>
         </div>
@@ -691,7 +691,10 @@
     </form>
   </div>
 </div>
-<button id="back-button" onclick="window.location.href='http://127.0.0.1:8000/manager/homemproduct/'">←</button>
+<button id="back-button"
+onclick="window.location.href='{% url 'home_product_manager' %}'">
+←
+</button>
 
 
       
@@ -786,7 +789,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Check if type_code already exists
-    const checkResponse = await fetch(`/manager/check-product-type-code/?type_code=${typeCode}`);
+    const checkResponse = await fetch(`{% url 'check_product_type_code' %}?type_code=${typeCode}`);
     const checkData = await checkResponse.json();
 
     if (checkData.exists) {
@@ -795,7 +798,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // If not exists, send POST request to add
-    const addResponse = await fetch('/manager/add-product-type/', {
+    const addResponse = await fetch("{% url 'add_product_type' %}", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -855,7 +858,7 @@ document.querySelector('.delete-button').addEventListener('click', function() {
       return;
   }
 
-  fetch('/manager/delete-product-types/', {
+  fetch("{% url 'delete_product_types' %}", {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json',
@@ -969,7 +972,7 @@ document.querySelector('.confirm-button').addEventListener('click', function() {
 
     // Check từng type_code có bị trùng trong database không
     Promise.all(updates.map(update => 
-        fetch(`/manager/check-product-type-code/?type_code=${encodeURIComponent(update.type_code)}`)
+        fetch(`{% url 'check_product_type_code' %}?type_code=${encodeURIComponent(update.type_code)}`)
             .then(response => response.json())
     )).then(results => {
         for (let i = 0; i < results.length; i++) {
@@ -981,7 +984,7 @@ document.querySelector('.confirm-button').addEventListener('click', function() {
         }
 
         // Nếu không bị trùng thì gửi dữ liệu lên server
-        fetch('/manager/update-product-types/', {
+        fetch("{% url 'update_product_types' %}", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

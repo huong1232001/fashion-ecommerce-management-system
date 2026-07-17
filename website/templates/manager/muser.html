@@ -402,7 +402,7 @@
             <img src="{% static 'images/account-icon.png' %}" alt="Account" class="account-icon" />
             <span class="managername" id="manager-name">{{ manager_name }}</span>
             <div class="dropdown-menu" id="dropdown-menu">
-              <a href="http://127.0.0.1:8000/manager/login/">Logout</a>
+              <a href="{% url 'login_manager' %}">Logout</a>
             </div>
           </div>
         </div>
@@ -453,7 +453,7 @@
               <button
     class="detail-btn {% if user.delete_flag %}inactive{% endif %}"
     {% if user.delete_flag %}disabled{% endif %}
-    onclick="window.location.href='/manager/muserdetail/{{ user.user_id }}/'"
+    onclick="window.location.href='{% url 'user_manage_detail' user.user_id %}'"
 >
     Information Detail
 </button>
@@ -565,7 +565,7 @@
       // ===== Close button redirect =====
       const closeBtn = document.getElementById("close-page");
       closeBtn.addEventListener("click", function () {
-        window.location.href = "http://127.0.0.1:8000/manager/home/";
+        window.location.href = "{% url 'home_manager' %}";
       });
     </script>
   </body>

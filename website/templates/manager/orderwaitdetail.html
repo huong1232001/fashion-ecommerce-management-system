@@ -410,7 +410,11 @@
   </head>
 
   <body>
-    <button class="close-icon" onclick="window.location.href='http://127.0.0.1:8000/manager/morderwait/'">×</button>
+    <button
+    class="close-icon"
+    onclick="window.location.href='{% url 'order_wait_confirm_management' %}'">
+×
+</button>
 
     <header>
       <nav class="navbar">
@@ -426,7 +430,9 @@
             <span class="managername" id="manager-name">{{ manager_name }}</span>
 
             <div class="dropdown-menu" id="dropdown-menu">
-              <a href="http://127.0.0.1:8000/manager/login/">Logout</a>
+              <a href="{% url 'login_manager' %}">
+    Logout
+</a>
             </div>
           </div>
         </div>
@@ -524,7 +530,11 @@
 
     <div class="order-actions">
       <div class="left-buttons">
-        <button class="btn btn-back" onclick="window.location.href='http://127.0.0.1:8000/manager/morderwait/'">Back</button>
+        <button
+    class="btn btn-back"
+    onclick="window.location.href='{% url 'order_wait_confirm_management' %}'">
+    Back
+</button>
       </div>
       <div class="right-buttons">
         <button class="btn btn-delete">Delete</button>
@@ -597,7 +607,8 @@
             const product_id = row.querySelector(".product-id").value;
             const type_id = row.querySelector(".type-id").value;
             const product_size = row.cells[4].innerText.trim();
-            const quality = row.cells[5].innerText.trim();
+            const quantityText = row.cells[5].innerText;
+const quality = parseInt(quantityText);
             const price_product = row.cells[6].innerText.replace(/[^\d]/g, "");
 
             product_details.push({
@@ -621,7 +632,7 @@
             product_details,
           };
 
-          fetch("/manager/order-header/create/", {
+          fetch("{% url 'create_order_header' %}", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -633,7 +644,7 @@
             .then((data) => {
               if (data.success) {
                 alert("✅ " + data.message);
-                window.location.href = "/manager/morderwait/";
+                window.location.href = "{% url 'order_wait_confirm_management' %}";
               } else {
                 alert("❌ " + data.message);
               }

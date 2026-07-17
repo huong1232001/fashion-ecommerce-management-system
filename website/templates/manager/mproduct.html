@@ -963,7 +963,7 @@ body {
             <span class="managername" id="manager-name">{{ manager_name }}</span>
 
             <div class="dropdown-menu" id="dropdown-menu">
-              <a href="http://127.0.0.1:8000/manager/login/">Logout</a>
+              <a href="{% url 'login_manager' %}">Logout</a>
             </div>
           </div>
         </div>
@@ -971,13 +971,16 @@ body {
       <div class="product-title">
         <h2>Manage Product List</h2>
       </div>
-      <button id="back-button" onclick="window.location.href='http://127.0.0.1:8000/manager/homemproduct/'">←</button>
+      <button id="back-button"
+onclick="window.location.href='{% url 'home_product_manager' %}'">
+←
+</button>
       <!-- Cả hai nút đều nằm trong một container với class chung -->
       <div class="buttons-container">
         <!-- Button Download Excel -->
   <button
     class="button download-button"
-    onclick="window.location.href='/manager/export-products/'"
+    onclick="window.location.href='{% url 'export_products_excel' %}'"
 >
     <i class="fas fa-file-download"></i>
     Download Excel
@@ -987,7 +990,7 @@ body {
         </button>
         <form
     id="uploadForm"
-    action="/manager/import-products/"
+    action="{% url 'import_products_excel' %}"
     method="post"
     enctype="multipart/form-data"
 >
@@ -1124,7 +1127,7 @@ body {
     <div class="modal-content">
       <span class="close">&times;</span>
       <h2>Add New Product</h2>
-      <form method="post" action="/manager/add-product/" enctype="multipart/form-data">
+      <form method="post" action="{% url 'add_product' %}" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="form-group">
           <label>Product Code:</label>
@@ -1219,7 +1222,7 @@ body {
     <div class="modal-content-edit">
       <span class="close-edit">&times;</span>
       <h2>Edit Product</h2>
-      <form method="post" action="/manager/edit-product/" enctype="multipart/form-data">
+      <form method="post" action="{% url 'edit_product' %}" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="form-group-edit">
           <label>Product Code:</label>
@@ -1510,8 +1513,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // ✅ Nếu đúng 1 checkbox
     const productId = checkedBoxes[0].dataset.productId;
-
-    fetch(`/api/product/${productId}/`)
+    const url = "{% url 'get_product_details' 0 %}".replace("0", productId);
+    fetch(url)
       .then(response => response.json())
       .then(data => {
         if (data.success) {
@@ -1560,7 +1563,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (!confirm('Are you sure you want to delete selected products?')) return;
 
-    fetch('/manager/delete-products/', {
+    fetch("{% url 'delete_selected_products' %}", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

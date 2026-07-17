@@ -439,11 +439,11 @@ body {
 
 <body>
 
-   <button
-  class="close-icon"
-  onclick="history.back();"
+  <button
+    class="close-icon"
+    onclick="location.href='{% url 'order_wait_confirm_management' %}'"
 >
-  ×
+    ×
 </button>
 
     <!-- HEADER -->
@@ -472,7 +472,7 @@ body {
 </span>
 
                     <div class="dropdown-menu" id="dropdown-menu">
-                        <a href="#">Logout</a>
+                         <a href="{% url 'login_manager' %}">Logout</a>
                     </div>
                 </div>
             </div>
