@@ -320,7 +320,7 @@
             <span class="managername" id="manager-name">{{ manager_name }}</span>
 
             <div class="dropdown-menu" id="dropdown-menu">
-              <a href="http://127.0.0.1:8000/manager/login/">Logout</a>
+              <a href="{% url 'login_manager' %}">Logout</a>
             </div>
           </div>
         </div>
@@ -335,19 +335,19 @@
       </div>
 
       <div class="button-container">
-        <a href="http://127.0.0.1:8000/manager/homemorder/" class="btn-order">
+        <a href="{% url 'home_order_manager' %}" class="btn-order">
           <span class="btn-text">Order Management</span>
         </a>
-        <a href="http://127.0.0.1:8000/manager/homemproduct/" class="btn-product">
+        <a href="{% url 'home_product_manager' %}" class="btn-product">
           <span class="btn-text">Product Management</span>
         </a>
       </div>
 
       <div class="button-container">
-        <a href="http://127.0.0.1:8000/manager/muser/" class="btn-user">
+        <a href="{% url 'user_manage' %}" class="btn-user">
           <span class="btn-text">User Management</span>
         </a>
-        <a href="http://127.0.0.1:8000/manager/revenue/" class="btn-revenue">
+        <a href="{% url 'manage_revenue' %}" class="btn-revenue">
           <span class="btn-text">Revenue Management</span>
         </a>
       </div>

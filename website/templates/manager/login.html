@@ -125,7 +125,8 @@
 
     <!-- Form đăng nhập được tách ra -->
     <div class="login-form-container">
-      <form class="login-form" action="/manager/login/" method="POST">
+      <form class="login-form" action="{% url 'login_manager' %}" method="POST">
+    {% csrf_token %}
         <label for="email-phone">Enter your phone or email</label>
         <input
           type="text"
@@ -164,7 +165,7 @@
       return;
     }
 
-    fetch("/manager/login/", {
+    fetch("{% url 'login_manager' %}", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

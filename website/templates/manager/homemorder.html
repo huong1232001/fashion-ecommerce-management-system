@@ -348,7 +348,7 @@
             <span class="managername" id="manager-name">{{ manager_name }}</span>
 
             <div class="dropdown-menu" id="dropdown-menu">
-              <a href="http://127.0.0.1:8000/manager/login/">Logout</a>
+              <a href="{% url 'login_manager' %}">Logout</a>
             </div>
           </div>
         </div>
@@ -362,15 +362,15 @@
         <div class="divider-line"></div> </div>
 
       <div class="button-grid">
-        <a href="http://127.0.0.1:8000/manager/morderwait/" class="menu-card">
+        <a href="{% url 'order_wait_confirm_management' %}" class="menu-card">
           <span class="card-text">Order Waiting<br>Confirmation</span>
         </a>
         
-        <a href="http://127.0.0.1:8000/manager/createorder/" class="menu-card">
+        <a href="{% url 'create_order_manage' %}" class="menu-card">
           <span class="card-text">Create New Order</span>
         </a>
         
-        <a href="http://127.0.0.1:8000/manager/allorder/" class="menu-card">
+        <a href="{% url 'all_order' %}" class="menu-card">
           <span class="card-text">View All Orders</span>
         </a>
       </div>
@@ -399,8 +399,8 @@
       });
       
       function goBack() {
-        window.location.href = "/manager/home/";
-      }
+    window.location.href = "{% url 'home_manager' %}";
+}
     </script>
   </body>
 </html>

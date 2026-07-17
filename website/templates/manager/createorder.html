@@ -637,7 +637,7 @@
             <span class="managername" id="manager-name">{{ manager_name }}</span>
 
             <div class="dropdown-menu" id="dropdown-menu">
-              <a href="http://127.0.0.1:8000/manager/login/">Logout</a>
+              <a href="{% url 'login_manager' %}">Logout</a>
             </div>
           </div>
         </div>
@@ -1117,11 +1117,11 @@ function calculateTotalPrice() {
       });
 
       document.getElementById("closeModalBtn").addEventListener("click", function () {
-        window.location.href = "http://127.0.0.1:8000/manager/homemorder/";
-      });
+    window.location.href = "{% url 'home_order_manager' %}";
+});
       document.getElementById("backBtn").addEventListener("click", function () {
-        window.location.href = "http://127.0.0.1:8000/manager/homemorder/";
-      });
+    window.location.href = "{% url 'home_order_manager' %}";
+});
       document.addEventListener("input", function(e){
 
     if(
@@ -1140,9 +1140,7 @@ document
 
         if (!phone) return;
 
-        fetch(
-            `/manager/get-user-by-phone/?phone=${phone}`
-        )
+        fetch(`{% url 'get_user_by_phone' %}?phone=${phone}`)
         .then(response => response.json())
         .then(data => {
 
@@ -1198,7 +1196,7 @@ document
         return;
     }
 
-    fetch("/save-order/", {
+    fetch("{% url 'save_order' %}", {
     method: "POST",
     headers: {
         "Content-Type": "application/json",
@@ -1236,7 +1234,7 @@ document
             );
 
             window.location.href =
-                "http://127.0.0.1:8000/manager/homemorder/";
+    "{% url 'home_order_manager' %}";
 
         }else{
 

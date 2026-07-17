@@ -402,7 +402,7 @@ body {
             <span class="managername" id="manager-name">{{ manager_name }}</span>
 
             <div class="dropdown-menu" id="dropdown-menu">
-              <a href="http://127.0.0.1:8000/manager/login/">Logout</a>
+              <a href="{% url 'login_manager' %}">Logout</a>
             </div>
           </div>
         </div>
@@ -440,7 +440,8 @@ body {
   <div class="order-grid">
     {% if orders %}
       {% for order in orders %}
-        <div class="order-card" onclick="window.location.href='/manager/orderwaitdetail/{{ order.order_id }}/'">
+        <div class="order-card"
+     onclick="window.location.href='{% url 'order_wait_confirm_detail' order.order_id %}'">
           <h3>Order ID: {{ order.order_id }}</h3>
           <p>User ID: {{ order.user.user_id }}</p>
           <p>Total Price: {{ order.total_price_order|floatformat:0 }} VNĐ</p>
@@ -578,7 +579,7 @@ function getDate(card, label) {
   return new Date(0);
 }
 function goBack() {
-  window.location.href = "/manager/homemorder/";
+  window.location.href = "{% url 'home_order_manager' %}";
 }
     </script>
   </body>

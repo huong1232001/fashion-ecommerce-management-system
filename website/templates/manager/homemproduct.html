@@ -344,7 +344,7 @@
             <span class="managername" id="manager-name">{{ manager_name }}</span>
 
             <div class="dropdown-menu" id="dropdown-menu">
-              <a href="http://127.0.0.1:8000/manager/login/">Logout</a>
+              <a href="{% url 'login_manager' %}">Logout</a>
             </div>
           </div>
         </div>
@@ -359,10 +359,10 @@
       </div>
 
       <div class="button-grid-row">
-        <a href="http://127.0.0.1:8000/manager/mproduct/" class="btn-mproduct">
+        <a href="{% url 'mproduct_manager' %}" class="btn-mproduct">
           <span class="btn-text">Product Management</span>
         </a>
-        <a href="http://127.0.0.1:8000/manager/mproducttype/" class="btn-mproducttype">
+        <a href="{% url 'mproducttype_manager' %}" class="btn-mproducttype">
           <span class="btn-text">Product Type Management</span>
         </a>
       </div>
@@ -392,8 +392,8 @@
 
       // Hàm quay lại trang chủ quản lý của bạn
       function goBack() {
-        window.location.href = "http://127.0.0.1:8000/manager/home/";
-      }
+    window.location.href = "{% url 'home_manager' %}";
+}
     </script>
   </body>
 </html>

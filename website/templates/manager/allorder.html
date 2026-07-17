@@ -434,7 +434,7 @@
             <span class="managername">{{ manager_name }}</span>
 
             <div class="dropdown-menu" id="dropdown-menu">
-              <a href="http://127.0.0.1:8000/manager/login/">Logout</a>
+              <a href="{% url 'login_manager' %}">Logout</a>
             </div>
           </div>
         </div>
@@ -516,7 +516,7 @@
 data-urgent="{% if order.is_urgent %}Urgent{% else %}Not Urgent{% endif %}">
   
    <td>
-    <a href="/manager/orderdetail/{{ order.order_id }}/"
+    <a href="{% url 'order_detail' order.order_id %}"
    class="order-link">
     {{ order.order_id }}
 </a>
@@ -746,7 +746,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 // back-----------------------------------------------------------------------------------------------------
 function goBack() {
-    window.location.href = "http://127.0.0.1:8000/manager/homemorder/";
+    window.location.href = "{% url 'home_order_manager' %}";
 }
 // SEARCH ORDERS
 document.getElementById("search-btn").addEventListener("click", function () {
